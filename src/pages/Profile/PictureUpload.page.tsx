@@ -21,6 +21,15 @@ function PictureUpload() {
         method: 'POST',
     }, { manual: true });
 
+    const [getPicturesReq, getPictures] = useAxios({
+        url: '/user/getImages',
+    });
+
+    const [deletePicturesReq, deletePicture] = useAxios({
+        url: '/user/deleteImage',
+        method: 'DELETE'
+    });
+
     const formik = useFormik({
         initialValues: {
             price: '',
@@ -34,9 +43,9 @@ function PictureUpload() {
             //@ts-ignore
             data.append("picture", values.file)
             return sendFile({ data })
-            .then(() => {
-                alert.show('Image Uploaded!')
-            })
+                .then(() => {
+                    alert.show('Image Uploaded!')
+                })
         },
         validate: values => {
             const errors: any = {};
@@ -59,88 +68,30 @@ function PictureUpload() {
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
-                                <div className="mix col-sm-4 page1 page4 margin30">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/2.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
+                                {getPicturesReq.loading ? <p>Loading...</p> : getPicturesReq.data?.map((p: any) => {
+                                    return (
+                                        <div className="mix col-sm-4 page1 page4 margin30">
+                                            <div className="item-img-wrap ">
+                                                <img src={p.imageName} className="img-responsive" alt="workimg" />
+                                                <div className="item-img-overlay">
+                                                    <a href="#" onClick={(e) => {
+                                                        e.preventDefault()
+                                                        deletePicture({ data: { imageId: p.id }})
+                                                        .then(() => {
+                                                            alert.show('Image deleted!')
+                                                            getPictures();
+                                                        })
+                                                    }} className="show-image">
+                                                        <span className="item-img_text">
+                                                            <i className="fa fa-times" aria-hidden="true"></i>
+                                                            Delete
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4 page2 page3 margin30">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/1.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4  page3 page2 margin30 ">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/3.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4  page4 margin30">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/4.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4 page1 margin30 ">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/5.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4  page2 margin30">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/6.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4  page3 margin30">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/7.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mix col-sm-4 page4  margin30">
-                                    <div className="item-img-wrap ">
-                                        <img src="img/Photos/8.jpg" className="img-responsive" alt="workimg" />
-                                        <div className="item-img-overlay">
-                                            <a href="#" className="show-image">
-                                                <span className="item-img_text"><i className="fa fa-times" aria-hidden="true"></i> &nbsp; Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-
+                                    );
+                                })}
 
                                 <div className="mix col-sm-4 page4  margin30">
                                     <div className="upload-btn-wrapper">
@@ -178,13 +129,14 @@ function PictureUpload() {
                         title="Upload picture"
                         footer={() => <button onClick={() => {
                             formik.submitForm()
-                            .then(() => {
-                                setShowUploadModel(false)
-                            })
+                                .then(() => {
+                                    setShowUploadModel(false)
+                                    getPictures();  
+                                })
                         }} type="button" className="btn btn-default">Save</button>}
                     >
                         <div role="form">
-                            <div style={{ justifyContent: 'space-between', display: 'flex'}} className="upload-btn-wrapper">
+                            <div style={{ justifyContent: 'space-between', display: 'flex' }} className="upload-btn-wrapper">
                                 <button style={{ alignSelf: "center", width: '30%' }} onClick={() => setShowUploadModel(true)} className="btn">
                                     Select
                                 </button>

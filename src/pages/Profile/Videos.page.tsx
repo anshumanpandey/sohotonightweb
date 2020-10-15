@@ -5,6 +5,7 @@ import '../../css/Videos.css';
 import '../../css/cover.css';
 import '../../css/timeline.css';
 import '../../css/Profile.css';
+import ProfileHeader from './ProfileHeader';
 
 function VideosPage() {
     return (
@@ -12,30 +13,7 @@ function VideosPage() {
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <div className="cover profile">
-                                <div className="wrapper">
-                                    <div className="image">
-                                        <img src="img/Cover/profile-cover.jpg" className="show-in-modal" alt="people" />
-                                    </div>
-
-                                </div>
-                                <div className="cover-info">
-                                    <div className="avatar">
-                                        <img src="img/Photos/2.jpg" alt="people" />
-                                    </div>
-                                    <div className="name"><a href="#">John Breakgrow jr.</a></div>
-                                    <ul className="cover-nav">
-                                        <li><a href="profile.html"><i className="fa fa-fw fa-bars"></i> Timeline</a></li>
-                                        <li><a href="about.html"><i className="fa fa-fw fa-user"></i> About</a></li>
-                                        <li><a href="https://sohotonight.azurewebsites.net/picture.html"><i className="fa fa-picture-o"></i>&nbsp; Picture</a></li>
-                                        <li className="active"><a href="https://sohotonight.azurewebsites.net/video.html"><i className="fa fa-video-camera"></i>&nbsp; Video</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <ProfileHeader />
 
 
                     <div className="row">

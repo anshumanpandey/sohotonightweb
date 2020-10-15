@@ -52,7 +52,8 @@
     position: absolute;
     top: 25px;
     right: 25px;
-    background: url(assets/plugins/superbox/img/close.gif) center center no-repeat;
+    /* TODO: import image */
+    /*background: url(assets/plugins/superbox/img/close.gif) center center no-repeat;*/
     width: 35px;
     height: 35px
 }

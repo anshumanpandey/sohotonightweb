@@ -13,6 +13,11 @@ import LoginPage from './pages/login/Login.page';
 import RegisterPage from './pages/Register/RegisterPage.page';
 import ListPostPage from './pages/ListPosts/ListPost.page';
 import ProtectedRoute from './partials/ProtectedRoute';
+import ProfileEditPage from './pages/Profile/ProfileEdit.page';
+import ProfilePage from './pages/Profile/Profile.page';
+import VideosPage from './pages/Profile/Videos.page';
+import PicturesPage from './pages/Profile/Pictures.page';
+import AboutPage from './pages/Profile/About.page';
 
 function App() {
   return (
@@ -35,6 +40,11 @@ function App() {
           <LoginPage />
         </Route>
         <ProtectedRoute path="/list-post" component={ListPostPage} />
+        <ProtectedRoute path="/profile" component={ProfilePage} />
+        <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
+        <ProtectedRoute path="/profile-video" component={VideosPage} />
+        <ProtectedRoute path="/profile-pictures" component={PicturesPage} />
+        <ProtectedRoute path="/profile-about" component={AboutPage} />        
       </Switch>
     </Router>
   </body>

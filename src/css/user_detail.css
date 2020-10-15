@@ -14,7 +14,8 @@
     border-radius: 24px;
     cursor: pointer;
     box-shadow: 0 4px 5px #d8d8d8;
-    background: #39bee8 url("../../img/icon-edit.png") no-repeat 50% 50%;
+    /* TODO: import image */
+    /* background: #39bee8 url("../../img/icon-edit.png") no-repeat 50% 50%; */
 }
 .contact .controls .icon {
     position: absolute;

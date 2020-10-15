@@ -4,9 +4,8 @@ import NavBar from '../../partials/NavBar';
 import '../../css/ProfileEdit.css';
 import '../../css/cover.css';
 import '../../css/timeline.css';
-import '../../css/Profile.css';
 
-function ProfilePage() {
+function ProfileEditPage() {
     return (
         <>
             <NavBar />
@@ -27,10 +26,10 @@ function ProfilePage() {
                                     </div>
                                     <div className="name"><a href="#">John Breakgrow jr.</a></div>
                                     <ul className="cover-nav">
-                                        <li className="active"><a href="profile.html"><i className="fa fa-fw fa-bars"></i> Timeline</a></li>
-                                        <li><a href="about.html"><i className="fa fa-fw fa-user"></i> About</a></li>
-                                        <li><a href="https://sohotonight.azurewebsites.net/picture.html"><i className="fa fa-picture-o"></i>&nbsp; Picture</a></li>
-                                        <li><a href="https://sohotonight.azurewebsites.net/video.html"><i className="fa fa-video-camera"></i>&nbsp; Video</a></li>
+                                        <li className="active"><a href="https://sohotonight.azurewebsites.net/profile-edite.html?"><i className="fa fa-fw fa-bars"></i> Timeline</a></li>
+                                        <li><a href="https://sohotonight.azurewebsites.net/about-edit.html"><i className="fa fa-fw fa-user"></i> About</a></li>
+                                        <li><a href="https://sohotonight.azurewebsites.net/picture-edite.html"><i className="fa fa-picture-o"></i>&nbsp; Picture</a></li>
+                                        <li><a href="https://sohotonight.azurewebsites.net/video-edite.html"><i className="fa fa-video-camera"></i>&nbsp; Video</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -44,7 +43,7 @@ function ProfilePage() {
                                     <div className="pic_pic_link">
                                         <ul>
                                             <li>Picture</li>
-                                            <li><a href="https://sohotonight.azurewebsites.net/picture.html">View All</a></li>
+                                            <li><a href="https://sohotonight.azurewebsites.net/picture-edite.html"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -108,7 +107,7 @@ function ProfilePage() {
                                     <div className="pic_pic_link">
                                         <ul>
                                             <li>Video</li>
-                                            <li><a href="https://sohotonight.azurewebsites.net/video.html">View All</a></li>
+                                            <li><a href="https://sohotonight.azurewebsites.net/video-edite.html"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -152,7 +151,12 @@ function ProfilePage() {
 
                             <div className="widget">
                                 <div className="widget-header">
-                                    <h3 className="widget-caption">About</h3>
+                                    <div className="pic_pic_link">
+                                        <ul>
+                                            <li>About</li>
+                                            <li><a href="https://sohotonight.azurewebsites.net/about-edit.html"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div className="widget-body bordered-top bordered-sky">
                                     <ul className="list-unstyled profile-about margin-none">
@@ -171,7 +175,7 @@ function ProfilePage() {
                                         <li className="padding-v-5">
                                             <div className="row">
                                                 <div className="col-sm-4"><span className="text-muted">Gender</span></div>
-                                                <div className="col-sm-8">Female</div>
+                                                <div className="col-sm-8">Male</div>
                                             </div>
                                         </li>
                                         <li className="padding-v-5">
@@ -201,14 +205,19 @@ function ProfilePage() {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <div className="box profile-info n-border-top phone_cont">
-                                                <div className="phone_no_area">
-                                                    <ul>
-                                                        <li>Message Me At</li>
-                                                        <li><i className="fa fa-phone-square" aria-hidden="true"></i>&nbsp; 012 3456 7891</li>
+                                            <div className="box profile-info n-border-top">
+                                                <form>
+                                                    <textarea className="form-control input-lg p-text-area" rows={2} placeholder="Whats in your mind today?"></textarea>
+                                                </form>
+                                                <div className="box-footer box-form">
+                                                    <button type="button" className="btn btn-azure pull-right">Post</button>
+                                                    <ul className="nav nav-pills">
+                                                        <li><a href="#"><i className="fa fa-map-marker"></i></a></li>
+                                                        <li><a href="#"><i className="fa fa-camera"></i></a></li>
+                                                        <li><a href="#"><i className=" fa fa-film"></i></a></li>
+                                                        <li><a href="#"><i className="fa fa-microphone"></i></a></li>
                                                     </ul>
                                                 </div>
-                                                <div className="skype_msg"><a href="#"><i className="fa fa-video-camera"></i>&nbsp;  See Me</a></div>
                                             </div>
 
                                             <div className="box box-widget">
@@ -218,11 +227,15 @@ function ProfilePage() {
                                                         <span className="username"><a href="#">John Breakgrow jr.</a></span>
                                                         <span className="description">Shared publicly - 7:30 PM Today</span>
                                                     </div>
+
+                                                    <div className="user-block2">
+                                                        <a href="https://sohotonight.azurewebsites.net/video.html"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit</a>
+                                                    </div>
                                                 </div>
 
                                                 <div className="box-body" style={{ display: "block" }}>
                                                     <img className="img-responsive show-in-modal" src="img/Photos/profile-image.jpg" alt="Photo" />
-                                                    <p style={{ margin: "7px 0 0 0" }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                                                    <p style={{ margin: "7px 0 0 0 " }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
 
                                                 </div>
 
@@ -242,4 +255,4 @@ function ProfilePage() {
         </>
     );
 }
-export default ProfilePage;
+export default ProfileEditPage;

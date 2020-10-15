@@ -47,7 +47,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: url(../../img/plus.png) no-repeat center center rgba(0, 0, 0, 0.7);
+  /* TODO: import image */
+  /*background: url(../../img/plus.png) no-repeat center center rgba(0, 0, 0, 0.7);*/
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   opacity: 0;

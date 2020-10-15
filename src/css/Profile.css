@@ -1,0 +1,157 @@
+.navbar .navbar-brand {
+	/* font-weight: 600; */
+	margin: 5px 0px;
+	padding: 0 15px;
+	font-size: 20px;
+}
+.navbar .navbar-brand img {
+	width: 60%;
+	float: left;
+}
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+	color: #fff;
+	background-color: #d32a6b;
+	padding: 8px 15px;
+	border: 1px #d32a6b solid;
+	margin: 15px 0 0 0;
+}	
+.cover.profile .wrapper .image {
+	width: 100%;
+	padding-right: 0;
+	overflow-y: hidden;
+	position: relative;
+}
+.phone_cont {
+	padding: 0 0 16px 0;
+}
+.phone_no_area {
+	padding: 15px 0 28px 0;
+	font-weight: bold;
+	margin: 0 0 39px 0;
+}
+.phone_no_area ul {
+	padding:0px;
+	margin:0px;
+	list-style:none;
+}
+.phone_no_area ul li {
+	text-align: center;
+	font-size: 35px;
+	color: #d32a6b;
+	text-align: left;
+	width: 70%;
+	display: inline-block;
+	position: absolute;
+	right: 0;
+}
+.phone_no_area ul li:first-child {
+	font-size: 16px;
+	color: #d32a6b;
+	text-align: right;
+	width: 29%;
+	/* margin: -6px 0 0 0; */
+	position: absolute;
+	padding: 11px 15px 16px 0;
+	left: 0;
+}
+.skype_msg{
+	text-align:center;
+	padding:0 0 10px 0;
+}
+.skype_msg a{
+	border:2px #d32a6b solid;
+	border-radius:5px;
+	color:#d32a6b;
+	padding:7px 15px;
+}
+.bordered-sky {
+	border-color:#d32a6b !important;
+}
+.box {
+	position: relative;
+	border-radius: 3px;
+	background: #ffffff;
+	border-top: 3px solid #d32a6b;
+	margin-bottom: 20px;
+	width: 100%;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+ul.img-grid li {
+	float: left;
+	margin: 0;
+	width: auto;
+	width: 80px;
+	height: 80px;
+}
+ul.img-grid li iframe{
+	width: 72px;
+	height: 72px;
+}
+.pic_pic_link {
+	padding: 2px 0 0 0;
+	color:#333;
+}
+.pic_pic_link ul{
+	padding:0px;
+	margin:0px;
+	list-style:none;
+	display:inline-block;
+	width:100%;
+}
+.pic_pic_link ul li{
+	list-style:none;
+	display:inline-block;
+	width:49%;
+	text-align:left;
+	font-weight:bold;
+}
+.pic_pic_link ul li:last-child {
+	text-align: right;
+	padding: 0 21px 0 0;
+	font-weight:normal;
+}
+.pic_pic_link ul li a{
+color:#d32a6b;;
+}
+.widget-header {
+	position: relative;
+	min-height: 26px;
+	background: #fff;
+	color: #555;
+	padding-left: 12px;
+	text-align: right;
+}
+
+/*==================================*/
+
+.cover.profile .cover-info .cover-nav > li > a {
+	line-height: 20px;
+	padding: 18px 15px;
+	color:#6c6c6c;
+	font-size: 14px;
+	font-weight: 500;
+	display: block;
+}
+.cover.profile .cover-info .cover-nav > li > a i {
+  font-size: 20px;
+  vertical-align: middle;
+  color: #6c6c6c;
+}
+.cover.profile .cover-info .cover-nav > li > a:hover {
+  background: none;
+  color: #d32a6b;
+  text-decoration: none;
+}
+.cover.profile .cover-info .cover-nav > li > a:hover i {
+  color: #d32a6b;
+}
+.cover.profile .cover-info .cover-nav > li.active > a {
+  background: none;
+  color: #d32a6b;
+}
+.cover.profile .cover-info .cover-nav > li.active > a i {
+  color: #d32a6b;
+}
+

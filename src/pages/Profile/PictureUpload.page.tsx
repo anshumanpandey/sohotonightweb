@@ -15,6 +15,8 @@ import ErrorLabel from '../../partials/ErrorLabel';
 function PictureUpload() {
     const alert = useAlert()
     const [showUploadModel, setShowUploadModel] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(1);
+    const itemsPerPage = 10
 
     const [{ data, loading, error }, sendFile] = useAxios({
         url: '/user/addPicture',
@@ -28,7 +30,7 @@ function PictureUpload() {
     const [deletePicturesReq, deletePicture] = useAxios({
         url: '/user/deleteImage',
         method: 'DELETE'
-    });
+    }, { manual: true });
 
     const formik = useFormik({
         initialValues: {
@@ -68,7 +70,7 @@ function PictureUpload() {
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
-                                {getPicturesReq.loading ? <p>Loading...</p> : getPicturesReq.data?.map((p: any) => {
+                                {getPicturesReq.loading ? <p>Loading...</p> : getPicturesReq.data?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
                                         <div className="mix col-sm-4 page1 page4 margin30">
                                             <div className="item-img-wrap ">
@@ -105,17 +107,17 @@ function PictureUpload() {
                         <div className="col-sm-6">
                             <ul className="pagination">
                                 <li>
-                                    <a href="#" aria-label="Previous">
+                                    <a onClick={() => setCurrentIndex(1)} href="#" aria-label="Previous">
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
-                                <li className="active"><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
+                                {Array(Math.floor((getPicturesReq?.data?.length || 1) / 10) + 1).fill(1).map((_ , idx) => {
+                                    return <li className={currentIndex == (idx + 1) ? "active": undefined}>
+                                        <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
+                                    </li>
+                                })}
                                 <li>
-                                    <a href="#" aria-label="Next">
+                                    <a onClick={() => setCurrentIndex(Math.floor((getPicturesReq?.data?.length || 1) / 10) + 1)} href="#" aria-label="Next">
                                         <span aria-hidden="true">»</span>
                                     </a>
                                 </li>

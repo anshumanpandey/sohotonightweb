@@ -80,7 +80,6 @@ function LoginPage() {
                                                 initialValues={formInitialValues}
                                                 validationSchema={validationSchema}
                                                 onSubmit={(data, { setSubmitting }) => {
-                                                    console.log(data)
                                                     doLogin({ data })
                                                 }}
                                             >

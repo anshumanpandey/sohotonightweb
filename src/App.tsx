@@ -12,6 +12,7 @@ import AboutUs from './pages/AboutUs/AboutUs.page';
 import LoginPage from './pages/login/Login.page';
 import RegisterPage from './pages/Register/RegisterPage.page';
 import ListPostPage from './pages/ListPosts/ListPost.page';
+import ProtectedRoute from './partials/ProtectedRoute';
 
 function App() {
   return (
@@ -33,9 +34,7 @@ function App() {
         <Route path="/login">
           <LoginPage />
         </Route>
-        <Route path="/list-post">
-          <ListPostPage />
-        </Route>
+        <ProtectedRoute path="/list-post" component={ListPostPage} />
       </Switch>
     </Router>
   </body>

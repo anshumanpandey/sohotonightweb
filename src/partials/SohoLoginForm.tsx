@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
+import useAxios from 'axios-hooks'
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../state/GlobalState';
+import { Redirect } from 'react-router-dom';
 
 function SohoLoginForm() {
+    const [redirect, setRedirect] = useState(false)
+    const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST'}, { manual: true });
+
+    if (redirect) {
+        return <Redirect to="list-post" />
+    }
+
     return (
         <Formik
             initialValues={{ nickname: '', password: '' }}
@@ -9,20 +19,19 @@ function SohoLoginForm() {
                 const errors: any = {};
                 if (!values.nickname) {
                     errors.nickname = 'Required';
-                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.nickname)) {
-                    errors.nickname = 'Invalid email address';
                 }
-
                 if (!values.password) {
                     errors.password = 'Required';
                 }
                 return errors;
             }}
-            onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                }, 400);
+            onSubmit={(data, { setSubmitting }) => {
+                doLogin({ data })
+                .then(({ data }) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token})
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data})
+                    setRedirect(true)
+                })
             }}
         >
             {({
@@ -62,7 +71,7 @@ function SohoLoginForm() {
                         </div>
 
                         <div className="form-group">
-                            <input type="button" value="Submit" />
+                            <input onClick={() => handleSubmit()} type="button" value="Submit" />
                         </div>
                     </div>
                 )}

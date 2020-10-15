@@ -27,4 +27,4 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-export const { dispatch: dispatchGlobalState, useGlobalState } = createStore(reducer, initialState);
+export const { dispatch: dispatchGlobalState, useGlobalState, getState: getGlobalState } = createStore(reducer, initialState);

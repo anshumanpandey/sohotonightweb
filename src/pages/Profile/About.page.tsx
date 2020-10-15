@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import '../../css/user_detail.css';
@@ -8,6 +8,7 @@ import '../../css/Profile.css';
 import ProfileHeader from './ProfileHeader';
 
 function AboutPage() {
+    const [editing, setEditing] = useState(false);
     return (
         <>
             <NavBar />
@@ -21,6 +22,20 @@ function AboutPage() {
                         <div className="col-md-12">
                             <div className="widget">
                                 <div className="widget-body">
+                                    <div className="pic_pic_link">
+                                        <ul>
+                                            <li></li>
+                                            <li>
+                                                {editing == false && <a onClick={() => setEditing(true)} href="#"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit</a>}
+                                                {editing == true && (
+                                                    <>
+                                                        <a onClick={() => setEditing(false)} href="#"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Cancel</a>
+                                                        <a onClick={() => setEditing(true)} href="#"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Save</a>
+                                                    </>
+                                                )}
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div className="row">
                                         <div className="col-md-5 col-md-5 col-xs-12">
                                             <div className="row content-info">
@@ -124,8 +139,12 @@ function AboutPage() {
 
                                         </div>
                                         <div className="col-lg-7 col-md-7 col-xs-12">
-                                            <h3>Lorem ipsum dolor sit amet</h3>
-                                            <p className="contact-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                                            {editing == true && <textarea style={{ width: '100%', height: '100%'}} value=""></textarea>}
+                                            {editing == false && (
+                                                <p className="contact-description">
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

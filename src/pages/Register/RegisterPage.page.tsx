@@ -1,8 +1,9 @@
 import React from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
+import SohoLoginForm from '../../partials/SohoLoginForm';
 
-function RegisterPage() {
+function LoginPage() {
     return (
         <>
             <NavBar />
@@ -18,21 +19,7 @@ function RegisterPage() {
                                     </div>
                                     <div className="widget-body">
                                         <div className="collapse in">
-                                            <form role="form" action="https://sohotonight.azurewebsites.net/profile-edite.html">
-
-                                                <div className="form-group">
-                                                    <label htmlFor="xsinput">Nickname</label>
-                                                    <input type="text" className="form-control input-sm" id="xsinput" placeholder="Nickname" />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label htmlFor="sminput">Password</label>
-                                                    <input type="text" className="form-control input-sm" id="sminput" placeholder="Passwordt" />
-                                                </div>
-
-                                                <div className="form-group">
-                                                    <input type="submit" value="Submit" />
-                                                </div>
-                                                </form>
+                                            <SohoLoginForm />
                                         </div>
                                     </div>
                                 </div>
@@ -208,4 +195,4 @@ You can change this seatting at any time</span>
         </>
     );
 }
-export default RegisterPage;
+export default LoginPage;

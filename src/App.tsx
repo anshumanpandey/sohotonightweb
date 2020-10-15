@@ -22,6 +22,7 @@ import VideosPage from './pages/Profile/Videos.page';
 import PicturesPage from './pages/Profile/Pictures.page';
 import AboutPage from './pages/Profile/About.page';
 import PictureUpload from './pages/Profile/PictureUpload.page';
+import VideoUpload from './pages/Profile/VideoUpload.page';
 
 const options = {
   // you can also just use 'bottom center'
@@ -60,6 +61,7 @@ function App() {
         <ProtectedRoute path="/profile-pictures" component={PicturesPage} />
         <ProtectedRoute path="/profile-about" component={AboutPage} />        
         <ProtectedRoute path="/picture-upload" component={PictureUpload} />
+        <ProtectedRoute path="/video-upload" component={VideoUpload} />
       </Switch>
       </AlertProvider>
     </Router>

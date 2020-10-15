@@ -110,7 +110,7 @@ function ProfilePage() {
                                             <li>
                                                 {AuthenticatedFactory({
                                                     authenticated: () => {
-                                                        return (<Link to="/profile-pictures">
+                                                        return (<Link to="/video-upload">
                                                             <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
                                                         </Link>);
                                                     },

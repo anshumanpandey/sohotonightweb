@@ -4,8 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
+import "./utils/AxiosBootstrap"
 import Landing from './pages/landing/landing.page';
 import ContactUs from './pages/contactus/ContactUs.page';
 import AboutUs from './pages/AboutUs/AboutUs.page';

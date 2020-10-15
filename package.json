@@ -11,12 +11,17 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.6",
+    "@types/yup": "^0.29.8",
+    "axios": "^0.20.0",
+    "axios-hooks": "^2.1.0",
+    "country-list-js": "^3.1.7",
     "formik": "^2.2.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -2,6 +2,7 @@ import React from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import SohoLoginForm from '../../partials/SohoLoginForm';
+import "../../css/login_register.css"
 
 function LoginPage() {
     return (

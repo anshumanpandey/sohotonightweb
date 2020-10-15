@@ -1,0 +1,116 @@
+.unit .avatar img {
+	width: 100px !important;
+	height: 100px !important;
+}
+.activities .unit .avatar {
+	display: block;
+	width: 120px;
+	height: 120px;
+	position: absolute;
+	top: 20px;
+	left: 0;
+}
+.activities .unit {
+	border-bottom: 1px solid #d8d8d8;
+	padding: 20px 0 22px 117px;
+	min-height: 80px;
+	position: relative;
+	overflow: hidden;
+}
+.main-box {
+	background: #FFFFFF;
+	-webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	-moz-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	-o-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	-ms-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	box-shadow: 1px 1px 2px 0 #CCCCCC;
+	margin-bottom: 16px;
+	padding: 10px;
+}
+label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	 font-weight:normal; 
+}
+.activities .unit .field a {
+	font-weight: bold;
+	color: #fff;
+	float: right;
+	margin: 0 0 0 7px;
+}
+.activities .unit .field2 a {
+	font-weight: bold;
+	color:#333333;
+}
+.btn-azure, .btn-azure:focus {
+	background-color: #d32a6b !important;
+	border-color: #d32a6b;
+	color: #fff;
+}
+.btn-azure, .btn-azure:focus {
+	background-color: #d32a6b !important;
+	border-color: #d32a6b;
+	color: #fff;
+}
+.btn-azure:hover, .open .btn-azure.dropdown-toggle {
+	background-color: #d32a6b !important;
+	border-color: #d32a6b;
+	color: #fff;
+}
+.bordered-sky {
+	border-color: #d32a6b !important;
+}
+.navbar .navbar-brand {
+	/* font-weight: 600; */
+	margin: 5px 0px;
+	padding: 0 15px;
+	font-size: 20px;
+}
+.navbar .navbar-brand img {
+	width: 60%;
+	float: left;
+}
+.list_tab{
+	background-color:#FFF; 
+	padding:10px 5px;
+	 margin:0 0 7px 0;
+}
+.list_tab ul {
+	display: inline-block;
+	list-style: none;
+	margin: 0 0 0 9px;
+	padding: 0px;
+}
+.list_tab ul li {
+	display: inline-block;
+	list-style: none;
+	border-right: #CCC 1px solid;
+	padding: 0 9px 0 0;
+	margin: 0 4px 0 4px;
+	color:#999;
+}
+.list_tab ul li:first-child {
+	display: inline-block;
+	list-style: none;
+	border-right: #CCC 0px solid;
+	padding: 0 9px 0 0;
+	margin: 0 4px 0 4px;
+	color:#d32a6b;
+}
+.list_tab ul li:last-child {
+	display: inline-block;
+	list-style: none;
+	border-right: #CCC 0px solid;
+	padding: 0 9px 0 0;
+	margin: 0 4px 0 4px;
+}
+.add_cont{
+	background-color:#FFF;
+	padding:10px;
+}
+.add_area{
+	border-color: #d32a6b;
+	padding:5px;
+	margin:0 0 10px 0;
+}

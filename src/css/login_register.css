@@ -35,7 +35,8 @@
 }
 
 .parallax .parallax-image {
-    background: url(../../img/bg.png);
+    /*TODO: add image*/
+    /*background: url(../../img/bg.png);*/
     height: 100%;
 }
 

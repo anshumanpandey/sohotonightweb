@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 
@@ -63,8 +64,9 @@ function Landing() {
 
 
                                     <ul>
-                                        <li><a href="https://sohotonight.azurewebsites.net/list_posts.html">Continue</a></li>
-
+                                        <li>
+                                            <Link to="list-post">Continue</Link>
+                                        </li>
                                     </ul>
 
                                 </div>

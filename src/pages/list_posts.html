@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/favicon.png">
+    <title>Soho Tonight</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome.4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/animate.min.css" rel="stylesheet">
+    <link href="assets/css/timeline.css" rel="stylesheet">
+    <link href="assets/css/cover.css" rel="stylesheet">
+    <link href="assets/css/forms.css" rel="stylesheet">
+    <link href="assets/css/buttons.css" rel="stylesheet">
+    <link href="assets/css/list_posts.css" rel="stylesheet">
+    <script src="assets/js/jquery.1.11.1.min.js"></script>
+    <script src="bootstrap.3.3.6/js/bootstrap.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    
+    <style>
+	.unit .avatar img {
+	width: 100px !important;
+	height: 100px !important;
+}
+.activities .unit .avatar {
+	display: block;
+	width: 120px;
+	height: 120px;
+	position: absolute;
+	top: 20px;
+	left: 0;
+}
+.activities .unit {
+	border-bottom: 1px solid #d8d8d8;
+	padding: 20px 0 22px 117px;
+	min-height: 80px;
+	position: relative;
+	overflow: hidden;
+}
+.main-box {
+	background: #FFFFFF;
+	-webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	-moz-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	-o-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	-ms-box-shadow: 1px 1px 2px 0 #CCCCCC;
+	box-shadow: 1px 1px 2px 0 #CCCCCC;
+	margin-bottom: 16px;
+	padding: 10px;
+}
+label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	 font-weight:normal; 
+}
+.activities .unit .field a {
+	font-weight: bold;
+	color: #fff;
+	float: right;
+	margin: 0 0 0 7px;
+}
+.activities .unit .field2 a {
+	font-weight: bold;
+	color:#333333;
+}
+.btn-azure, .btn-azure:focus {
+	background-color: #d32a6b !important;
+	border-color: #d32a6b;
+	color: #fff;
+}
+.btn-azure, .btn-azure:focus {
+	background-color: #d32a6b !important;
+	border-color: #d32a6b;
+	color: #fff;
+}
+.btn-azure:hover, .open .btn-azure.dropdown-toggle {
+	background-color: #d32a6b !important;
+	border-color: #d32a6b;
+	color: #fff;
+}
+.bordered-sky {
+	border-color: #d32a6b !important;
+}
+.navbar .navbar-brand {
+	/* font-weight: 600; */
+	margin: 5px 0px;
+	padding: 0 15px;
+	font-size: 20px;
+}
+.navbar .navbar-brand img {
+	width: 60%;
+	float: left;
+}
+.list_tab{
+	background-color:#FFF; 
+	padding:10px 5px;
+	 margin:0 0 7px 0;
+}
+.list_tab ul {
+	display: inline-block;
+	list-style: none;
+	margin: 0 0 0 9px;
+	padding: 0px;
+}
+.list_tab ul li {
+	display: inline-block;
+	list-style: none;
+	border-right: #CCC 1px solid;
+	padding: 0 9px 0 0;
+	margin: 0 4px 0 4px;
+	color:#999;
+}
+.list_tab ul li:first-child {
+	display: inline-block;
+	list-style: none;
+	border-right: #CCC 0px solid;
+	padding: 0 9px 0 0;
+	margin: 0 4px 0 4px;
+	color:#d32a6b;
+}
+.list_tab ul li:last-child {
+	display: inline-block;
+	list-style: none;
+	border-right: #CCC 0px solid;
+	padding: 0 9px 0 0;
+	margin: 0 4px 0 4px;
+}
+.add_cont{
+	background-color:#FFF;
+	padding:10px;
+}
+.add_area{
+	border-color: #d32a6b;
+	padding:5px;
+	margin:0 0 10px 0;
+}
+	</style>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"><img src="img/Photos/logo.png" alt="" class="profile-img img-responsive center-block show-in-modal"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://sohotonight.azurewebsites.net/">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+                      </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container page-content ">
+      <div class="row">
+      
+      
+    <div class="col-md-3 col-xs-12">
+          <div class="row-xs">
+            <div class="main-box clearfix">
+              <h4>Advanced Search</h4>
+              
+             
+              
+              <div class="profile-details">
+                <div class="widget-body bordered-top bordered-sky">
+              <div class="form-group">
+                                      
+                                     <h5 style="font-weight:normal;">Gender</h5>
+                                      
+                                      <div class="checkbox">
+                                      <label>
+                                          <input type="checkbox" >
+                                          <span class="text">Male</span>
+                                      </label>
+                                  </div>
+                                  <div class="checkbox">
+                                      <label>
+                                          <input type="checkbox" >
+                                          <span class="text">Female</span>
+                                      </label>
+                                  </div>
+                                  <div class="checkbox">
+                                      <label>
+                                          <input type="checkbox" >
+                                          <span class="text">Couple</span>
+                                      </label>
+                                  </div>
+                                  <div class="checkbox">
+                                      <label>
+                                          <input type="checkbox" >
+                                          <span class="text">Trans</span>
+                                      </label>
+                                  </div>
+                                      
+
+
+<h5 style="font-weight:normal;">Region</h5>
+                                      
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Channel Islands</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">London</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Northen Ireland</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">South West</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Yorkshire & the Humber</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">East Midlands</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">North East</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Scotland</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Wales</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">East of England (Anglia)</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">North West</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">South East</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">West Midlands</span>
+</label>
+</div>
+
+                                     
+<label for="lginput">Location</label>
+<input type="text" class="form-control" id="lginput" placeholder="Location" style="border-radius: 4px !important; margin:0 0 5px 0;">
+                                      
+<h5 style=" font-weight:normal;">Orientation</h5>
+                                      
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Bi-curious</span>
+</label>
+</div> 
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Bi-sexual</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Gay</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Straight</span>
+</label>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Orientation </span>
+</label>
+</div>                                     
+                                       
+                                     
+                                     
+                                  </div>
+            </div>
+              </div>
+              
+              
+            </div>
+          </div>
+        </div>
+      
+      
+      
+      
+      
+      
+        <div class="col-md-7 ">
+        
+        <div class="list_tab">
+        
+        <ul>
+        <li><strong>Order BY :</strong></li>
+        <li><a href="#">Popularity / Views</a></li>
+        <li><a href="#">Age</a></li>
+        <li><a href="#">Proximity</a></li>
+        </ul>
+        
+        </div>
+        
+        
+        
+            <div class="col-inside-lg decor-default activities animated fadeInUp" id="activities">
+            
+            
+            
+            
+            
+            
+                <h3>Model List</h3>
+                
+                <div class="unit">
+                    <a class="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/1.jpg" class="img-responsive" alt="profile"></a>
+                    <div class="field2 title">
+                        <a href="https://sohotonight.azurewebsites.net/profile.html">Emmac xxx</a> 
+                    </div>
+                    <div class="field date">
+                        <p>Bi-curious 27 year old Female</p> 
+                        
+                        <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
+                        
+                        
+                        
+<a href="#" class="btn btn-azure">View Post</a>
+
+<a href="https://sohotonight.azurewebsites.net/video.html" class="btn btn-azure">View Video</a>
+
+<a href="https://sohotonight.azurewebsites.net/picture.html" class="btn btn-azure">View Picture</a>
+                    </div>
+                    
+                </div>
+                
+                <div class="unit">
+                    <a class="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/2.jpg" class="img-responsive" alt="profile"></a>
+                    <div class="field2 title">
+                        <a href="https://sohotonight.azurewebsites.net/profile.html">Alisa Smith</a> 
+                    </div>
+                    <div class="field date">
+                        <p>Bi-curious 27 year old Female</p> 
+                        
+                        <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
+                        
+                        
+                        
+<a href="#" class="btn btn-azure">View Post</a>
+
+<a href="https://sohotonight.azurewebsites.net/video.html" class="btn btn-azure">View Video</a>
+
+<a href="https://sohotonight.azurewebsites.net/picture.html" class="btn btn-azure">View Picture</a>
+                    </div>
+                    
+                </div>
+                
+                <div class="unit">
+                    <a class="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/3.jpg" class="img-responsive" alt="profile"></a>
+                    <div class="field2 title">
+                        <a href="https://sohotonight.azurewebsites.net/profile.html">Bryony Williams</a> 
+                    </div>
+                    <div class="field date">
+                        <p>Bi-curious 27 year old Female</p> 
+                        
+                        <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
+                        
+                        
+                        
+<a href="#" class="btn btn-azure">View Post</a>
+
+<a href="https://sohotonight.azurewebsites.net/video.html" class="btn btn-azure">View Video</a>
+
+<a href="https://sohotonight.azurewebsites.net/picture.html" class="btn btn-azure">View Picture</a>
+                    </div>
+                    
+                </div>
+                
+                <div class="unit">
+                    <a class="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/4.jpg" class="img-responsive" alt="profile"></a>
+                    <div class="field2 title">
+                        <a href="https://sohotonight.azurewebsites.net/profile.html">Catriona Jones</a> 
+                    </div>
+                    <div class="field date">
+                        <p>Bi-curious 27 year old Female</p> 
+                        
+                        <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
+                        
+                        
+                        
+<a href="#" class="btn btn-azure">View Post</a>
+
+<a href="https://sohotonight.azurewebsites.net/video.html" class="btn btn-azure">View Video</a>
+
+<a href="https://sohotonight.azurewebsites.net/picture.html" class="btn btn-azure">View Picture</a>
+                    </div>
+                    
+                </div>
+                
+                <div class="unit">
+                    <a class="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/5.jpg" class="img-responsive" alt="profile"></a>
+                    <div class="field2 title">
+                        <a href="https://sohotonight.azurewebsites.net/profile.html">Dottie Davies</a> 
+                    </div>
+                    <div class="field date">
+                        <p>Bi-curious 27 year old Female</p> 
+                        
+                        <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
+                        
+                        
+                        
+<a href="#" class="btn btn-azure">View Post</a>
+
+<a href="https://sohotonight.azurewebsites.net/video.html" class="btn btn-azure">View Video</a>
+
+<a href="https://sohotonight.azurewebsites.net/picture.html" class="btn btn-azure">View Picture</a>
+                    </div>
+                    
+                </div>
+                
+               
+                
+               
+            </div>
+        </div>
+        <div class="col-md-2 ">
+        <div class="add_cont">
+        <div class="add_area"><img src="img/Photos/add1.jpg" alt="" class="profile-img img-responsive center-block show-in-modal"></div>
+        <div class="add_area"><img src="img/Photos/add2.jpg" alt="" class="profile-img img-responsive center-block show-in-modal"></div>
+        <div class="add_area"><img src="img/Photos/add3.jpg" alt="" class="profile-img img-responsive center-block show-in-modal"></div>
+        
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+      </div>
+    </footer>
+  </body>
+</html>

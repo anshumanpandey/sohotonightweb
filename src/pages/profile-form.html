@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/favicon.png">
+    <title>Soho Tonight</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome.4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/animate.min.css" rel="stylesheet">
+    <link href="assets/css/timeline.css" rel="stylesheet">
+    <link href="assets/css/profile2.css" rel="stylesheet">
+    <link href="assets/css/buttons.css" rel="stylesheet">
+    <script src="assets/js/jquery.1.11.1.min.js"></script>
+    <script src="bootstrap.3.3.6/js/bootstrap.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+.navbar .navbar-brand {
+	/* font-weight: 600; */
+	margin: 5px 0px;
+	padding: 0 15px;
+	font-size: 20px;
+}
+.navbar .navbar-brand img {
+	width: 60%;
+	float: left;
+}
+	.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+	color: #576373;
+	border-color: #C5D0DC #C5D0DC transparent;
+	border-top: 2px solid #cf2c6b;
+	background-color: #FFF;
+	z-index: 1;
+	line-height: 18px;
+	margin-top: -1px;
+	box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, .15);
+}
+label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-weight:normal;
+}
+.checkbox, .radio {
+	position: relative;
+	display: block;
+	 margin-top: 0px; 
+	 margin-bottom: 0px; 
+}
+.form_btn{
+	background-color:#cf2c6b;
+	color:#fff;
+	padding:5px 10px;
+	border:1px #cf2c6b solid;
+	margin:20px 0 0 0;
+}
+.checkbox label, .radio label {
+	min-height: 20px;
+	padding-left: 20px;
+	margin-bottom: 0;
+	font-weight: 400;
+	cursor: pointer;
+	margin: 0 0 12px 0;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn {
+	border:2px solid #cf2c6b;
+	color: #cf2c6b;
+	background-color: white;
+	padding: 5px 20px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: normal;
+	cursor:pointer;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}	
+
+.pic_up_cont{
+	padding: 0 0 0 188px;
+	margin: 0 0 20px 0;
+	font-weight: bold;
+}
+.pic_up_cont ul{
+	padding:0px;
+	margin:0px;
+	list-style:none;
+}
+.pic_up_cont ul li {
+	/* float: left; */
+	width: 49%;
+	display: inline-block;
+}
+.pic_up_cont ul li:last-child {
+
+	padding: 0 0 0 21px;
+}
+.nav-tabs > li > a, .nav-tabs > li > a:focus {
+	/*border-radius: 0 !important;*/
+	border-color: #C5D0DC;
+	background-color: #F9F9F9;
+	color: #999;
+	margin-right: -1px;
+	line-height: 18px;
+	position: relative;
+	border-top-right-radius:10px!important;
+	border-top-left-radius:10px!important;
+}
+.nav > li {
+	position: relative;
+	display: block;
+	margin: 0 4px 0 0;
+}
+.nav > li > a {
+	position: relative;
+	display: block;
+	padding: 5px 30px;
+	font-weight: bold;
+}
+	</style>
+  </head>
+
+  <body class="animated fadeIn">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"><img src="img/Photos/logo.png" alt="" class="profile-img img-responsive center-block show-in-modal"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://sohotonight.azurewebsites.net/">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+                     </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container page-content">
+      <div class="row" id="user-profile">
+        
+        
+        <div class="col-md-12 col-xs-12">
+          <div class="row-xs">
+            <div class="main-box clearfix">
+              
+              
+              <div class="tabs-wrapper profile-tabs">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#general" data-toggle="tab">General</a></li>
+                  <li><a href="#personal-details" data-toggle="tab">Personal Details</a></li>
+                  <li><a href="#media" data-toggle="tab">Media</a></li>
+                </ul>
+                
+                <div class="tab-content">
+                  <div class="tab-pane fade in active" id="general">
+                    <form action="#personal-details">
+                    <h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Contact Details</h5>
+                    
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">First Name:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="First Name">
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Last Name:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="Last Name">
+</div>
+</div>
+
+<div class="form-group row">
+    <label for="" class="col-sm-2 col-md-offset-2 col-form-label">Nickname:</label>
+    <div class="col-sm-10 col-md-6">
+      <input type="text" readonly class="form-control-plaintext" id="" value="anshu2812" style="border:0px;">
+    </div>
+  </div>
+  
+<div class="form-group row">
+    <label for="" class="col-sm-2 col-md-offset-2 col-form-label">Password:</label>
+    <div class="col-sm-10 col-md-6">
+      <input type="password" readonly class="form-control-plaintext" id="" value="Password:" style="border:0px;">
+    </div>
+  </div>  
+  
+  
+  <div class="form-group row">
+    <label for="" class="col-sm-2 col-md-offset-2 col-form-label">Email Address</label>
+    <div class="col-sm-10 col-md-6">
+      <input type="text" readonly class="form-control-plaintext" id="" value="anshumanpandey71@@gmail.com" style="border:0px;">
+    </div>
+  </div>
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Mobile/Cell Number:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="Mobile/Cell Number">
+</div>
+</div>  
+  
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Location Details</h5> 
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Town:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="Town">
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">County/Area:</label>
+<div class="col-sm-10 col-md-6">
+<select style="width:100%;" class="form-control">
+<option>Select</option>
+</select>
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Post Code:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="Post Code">
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Nearest Rail/Tube Station:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="Nearest Rail/Tube Station">
+</div>
+</div>
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Other Setting</h5> 
+
+<div class="form-group row">
+<div class="col-sm-2 col-md-offset-2 col-form-label">Social Media Advertising:</div>
+<div class="col-sm-10 col-md-6">
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Allow My Profile</span>
+</label>
+</div>
+</div>
+</div>
+<div class="form-group row">
+<div class="col-sm-2 col-md-offset-2 col-form-label">Skype:</div>
+<div class="col-sm-10 col-md-6">
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Subscribe Now</span>
+</label>
+</div>
+</div>
+</div>
+
+ 
+<div style="text-align:right">
+<input type="submit" value="Save and Next" class="form_btn">
+
+</div> 
+  
+</form>
+</div>
+                  
+
+
+
+<div class="tab-pane fade" id="personal-details">
+<form action="#media">
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Personal Information</h5>
+                    
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Date of Birth:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="dd/mm/yyyy">
+</div>
+</div>
+
+  
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Gender:</label>
+<div class="col-sm-10 col-md-3">
+<select style="width:100%;" class="form-control">
+<option>Select</option>
+</select>
+</div>
+<div class="col-sm-10 col-md-3">
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">Trans</span>
+</label>
+</div>
+</div>
+</div>
+
+
+<div class="form-group row">
+<div class="col-sm-2 col-md-offset-2 col-form-label">Orientation:</div>
+<div class="col-sm-10 col-md-6">
+<div class="radio">
+<label>
+<input name="form-field-radio" type="radio" class="colored-blue">
+<span class="text">Bi-curious</span>
+</label>
+</div>
+                              
+<div class="radio">
+<label>
+<input name="form-field-radio" type="radio" class="colored-blue">
+<span class="text">Bi-sexual</span>
+</label>
+</div>
+                              
+<div class="radio">
+<label>
+<input name="form-field-radio" type="radio" class="colored-blue">
+<span class="text">Gay</span>
+</label>
+</div>
+                              
+<div class="radio">
+<label>
+<input name="form-field-radio" type="radio" class="colored-blue">
+<span class="text">Straight</span>
+</label>
+</div>
+</div>
+</div>
+
+  
+  
+  
+  
+  
+  
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">About You</h5> 
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Summary:</label>
+<div class="col-sm-10 col-md-6">
+<input type="text" class="form-control" id="" placeholder="Summary">
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-2 col-md-offset-2 col-form-label">Details:</label>
+<div class="col-sm-10 col-md-6">
+<textarea name="" cols="" rows="" class="form-control" style="height:100px; resize:none;"></textarea>
+</div>
+</div>
+
+
+
+
+ 
+<div style="text-align:right">
+<input type="submit" value="Save and Next" class="form_btn">
+
+</div> 
+  
+</form>
+                  </div>
+                  
+                  <div class="tab-pane fade" id="media">
+                    <form action="https://sohotonight.azurewebsites.net/profile.html">
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Personal Information</h5>
+<div class="pic_up_cont">
+<ul>
+<li>Description</li>  
+<li>Upload Now</li>
+</ul>
+</div> 
+
+<div>
+               
+<div class="form-group row">
+<label for="" class="col-sm-1 col-md-offset-2 col-form-label">1.</label>
+<div class="col-sm-10 col-md-4">
+<input type="text" class="form-control" id="" placeholder="dd/mm/yyyy">
+</div>
+<div class="col-sm-10 col-md-4">
+<div class="upload-btn-wrapper">
+  <button class="btn">Upload a file</button>
+  <input type="file" name="myfile" />
+</div>
+</div>
+</div>
+
+ <div class="form-group row">
+<label for="" class="col-sm-1 col-md-offset-2 col-form-label">2.</label>
+<div class="col-sm-10 col-md-4">
+<input type="text" class="form-control" id="" placeholder="dd/mm/yyyy">
+</div>
+<div class="col-sm-10 col-md-4">
+<div class="upload-btn-wrapper">
+  <button class="btn">Upload a file</button>
+  <input type="file" name="myfile" />
+</div>
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-1 col-md-offset-2 col-form-label">3.</label>
+<div class="col-sm-10 col-md-4">
+<input type="text" class="form-control" id="" placeholder="dd/mm/yyyy">
+</div>
+<div class="col-sm-10 col-md-4">
+<div class="upload-btn-wrapper">
+  <button class="btn">Upload a file</button>
+  <input type="file" name="myfile" />
+</div>
+</div>
+</div> 
+
+<div>
+<p>Use this section to upload some images of yourself. These images are the first that any customer will see as they are show in search results and on home pages so you may want to try and use them to entice people to click on your profile</p>
+
+<p>Please remember not to include images that have contact information, URLs or others sites's watermarks on them</p>
+
+<p>If your profile pictures are not square, you should specify which area should be used as a square version here.</p>
+
+</div>
+
+
+
+</div>
+
+
+
+  
+ 
+  
+  
+  
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Adult Content Certification</h5> 
+
+<div>
+<p>Member are strongly encouraged to ensure their Soho Tonight proile is compliant with the laws in their county. For more information of what's expected please visit this page. To review your free-to-view content,</p>
+</div>
+
+<div class="checkbox">
+<label>
+<input type="checkbox" >
+<span class="text">I certify that have reviewed all of the free to view content on my profile it's associated pages and have removed any images that are unsuitable for minors. Furthermore, any image I upload to these areas in future will also conform to these standards.</span>
+</label>
+</div>
+
+
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Profile Authentication</h5>
+<div>
+<p>There are few things you can do to help authenticate your profile and be included in certain searc</p>
+</div>
+<div class="form-group row">
+<label for="" class="col-sm-6 col-form-label">Upload a Verification Photo to your profile</label>
+
+<div class="col-sm-10 col-md-4">
+<div class="upload-btn-wrapper">
+  <button class="btn">Upload Now</button>
+  <input type="file" name="myfile" />
+</div>
+</div>
+</div>
+
+<div class="form-group row">
+<label for="" class="col-sm-6 col-form-label">Upload an Introductory Movie</label>
+
+<div class="col-sm-10 col-md-4">
+<div class="upload-btn-wrapper">
+  <button class="btn">Upload One</button>
+  <input type="file" name="myfile" />
+</div>
+</div>
+</div>
+
+
+<h5 style="border-bottom: 2px solid #cf2c6b; margin:26px 0 25px 0; padding:0 0 7px 0; font-weight:bold; ">Upload Your Picture and Movies, and Make Money!</h5>
+<div class="form-group row">
+<label for="" class="col-sm-6 col-form-label">Upload picture to your Gallery</label>
+
+<div class="col-sm-10 col-md-4">
+<div class="upload-btn-wrapper">
+  <button class="btn">Upload One</button>
+  <input type="file" name="myfile" />
+</div>
+</div>
+</div>
+
+
+
+ 
+<div style="text-align:right">
+<input type="submit" value="Save" class="form_btn">
+
+</div> 
+  
+</form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Online users sidebar content-->
+    <!-- Online users sidebar content-->
+
+    <!-- Modal -->
+    
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+      </div>
+    </footer>
+  </body>
+</html>

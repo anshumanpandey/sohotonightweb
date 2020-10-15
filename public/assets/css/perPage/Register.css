@@ -1,0 +1,9 @@
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+	color: #fff;
+	background-color: #d32a6b;
+	padding: 8px 15px;
+	border: 1px #d32a6b solid;
+	margin: 15px 0 0 0;
+}

@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/favicon.png">
+    <title>Soho Tonight</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome.4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/animate.min.css" rel="stylesheet">
+    <link href="assets/css/timeline.css" rel="stylesheet">
+    <link href="assets/css/cover.css" rel="stylesheet">
+    <link href="assets/css/forms.css" rel="stylesheet">
+    <link href="assets/css/buttons.css" rel="stylesheet">
+    <link href="assets/css/photos1.css" rel="stylesheet">
+    <script src="assets/js/jquery.1.11.1.min.js"></script>
+    <script src="bootstrap.3.3.6/js/bootstrap.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+     <style>
+	.cover.profile .wrapper .image {
+	width: 100%;
+	padding-right: 0;
+	overflow-y: hidden;
+	position: relative;
+}
+	.user-block_ds img{
+		border-radius:50%;
+	}
+	
+	.user-block_ds_text_area{
+		float:left;
+	}
+	.navbar .navbar-brand {
+	/* font-weight: 600; */
+	margin: 5px 0px;
+	padding: 0 15px;
+	font-size: 20px;
+}
+.navbar .navbar-brand img {
+	width: 60%;
+	float: left;
+}
+.btn-azure, .btn-azure:focus {
+	background-color:#d32a6b !important;
+	border-color:#d32a6b;
+	color: #fff;
+}
+.btn-azure:hover, .open .btn-azure.dropdown-toggle {
+	background-color:#d32a6b !important;
+	border-color:#d32a6b;
+	color: #fff;
+}
+.bordered-sky {
+	border-color:#d32a6b !important;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+	color: #576373;
+	border-color: #C5D0DC #C5D0DC transparent;
+	border-top: 2px solid #cf2c6b;
+	background-color: #FFF;
+	z-index: 1;
+	line-height: 18px;
+	margin-top: -1px;
+	box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, .15);
+}
+.box {
+	position: relative;
+	border-radius: 3px;
+	background: #ffffff;
+	border-top: 3px solid #cf2c6b;
+	margin-bottom: 20px;
+	width: 100%;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	margin: 10px 0 0 0;
+}
+.item-img-overlay span {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: no-repeat center center rgba(0, 0, 0, 0.7);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	opacity: 0;
+	-moz-transition: opacity 250ms linear;
+	-o-transition: opacity 250ms linear;
+	-webkit-transition: opacity 250ms linear;
+	transition: opacity 250ms linear;
+	color: #fff;
+	padding: 158px 0 0 0;
+	font-size:20px;
+}
+.item-img_text{
+	position:absolute;
+}
+.item-img-wrap iframe{
+	width: 100%;
+	height: 180px;
+}
+
+.upload-btn-wrapper {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	width: 100%;
+	/* top: 50; */
+}
+
+.btn {
+	border: 2px solid #cf2c6b;
+	color: #cf2c6b;
+	background-color: transparent;
+	padding: 8px 20px;
+	border-radius: 8px;
+	font-size: 20px;
+	font-weight: bold;
+	width: 100%;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.margin30_2 {
+	margin-bottom: 30px;
+	position: absolute;
+	/* top: 50%; */
+	border: 30%;
+	bottom: 13%;
+	right: 0;
+}
+.cross_icon {
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #FFF;
+	position: relative;
+	float: right;
+	padding: 3px 9px;
+	margin: -33px 0 0 0;
+}
+
+/*==================================*/
+
+.cover.profile .cover-info .cover-nav > li > a {
+	line-height: 20px;
+	padding: 18px 15px;
+	color:#6c6c6c;
+	font-size: 14px;
+	font-weight: 500;
+	display: block;
+}
+.cover.profile .cover-info .cover-nav > li > a i {
+  font-size: 20px;
+  vertical-align: middle;
+  color: #6c6c6c;
+}
+.cover.profile .cover-info .cover-nav > li > a:hover {
+  background: none;
+  color: #d32a6b;
+  text-decoration: none;
+}
+.cover.profile .cover-info .cover-nav > li > a:hover i {
+  color: #d32a6b;
+}
+.cover.profile .cover-info .cover-nav > li.active > a {
+  background: none;
+  color: #d32a6b;
+}
+.cover.profile .cover-info .cover-nav > li.active > a i {
+  color: #d32a6b;
+}
+	</style>
+    
+    
+  </head>
+
+  <body class="animated fadeIn">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"><img src="img/Photos/logo.png" alt="" class="profile-img img-responsive center-block show-in-modal"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://sohotonight.azurewebsites.net/">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Logout</a></li>
+            <!--<li><a href="https://sohotonight.azurewebsites.net/register.html">Register</a></li>-->
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="row page-content">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="cover profile">
+              <div class="wrapper">
+                <div class="image">
+                  <img src="img/Cover/profile-cover.jpg" class="show-in-modal" alt="people">
+                </div>
+                
+              </div>
+              <div class="cover-info">
+                <div class="avatar">
+                  <img src="img/Photos/2.jpg" alt="people">
+                </div>
+                <div class="name"><a href="#">John Breakgrow jr.</a></div>
+                <ul class="cover-nav">
+                <li><a href="https://sohotonight.azurewebsites.net/profile-edite.html?"><i class="fa fa-fw fa-bars"></i> Timeline</a></li>
+                <li><a href="https://sohotonight.azurewebsites.net/about-edit.html"><i class="fa fa-fw fa-user"></i> About</a></li>
+                <li><a href="https://sohotonight.azurewebsites.net/picture-edite.html"><i class="fa fa-picture-o"></i>&nbsp; Picture</a></li>
+                <li class="active"><a href="https://sohotonight.azurewebsites.net/video-edite.html"><i class="fa fa-video-camera"></i>&nbsp; Video</a></li>
+              </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <div id="grid" class="row" style="padding-top: 20px;">
+                <div class="mix col-sm-4 page1 page4 margin30">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4 page2 page3 margin30">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4  page3 page2 margin30 ">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4  page4 margin30">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4 page1 margin30 ">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4  page2 margin30">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4  page3 margin30">
+                  <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div> 
+                </div>
+                <div class="mix col-sm-4 page4  margin30">
+                    <div class="item-img-wrap ">
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/VXhRSJILId0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="cross_icon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                        
+                    </div> 
+                </div> 
+                
+                <div class="mix col-sm-4 page4  margin30_2">
+                    <div class="upload-btn-wrapper">
+  <button class="btn">Upload A New Video</button>
+  <input type="file" name="myfile" />
+</div> 
+                </div>
+                                                                           
+            </div><!-- grid-->
+          </div>
+        </div>
+        <div class="row gallery-bottom">
+          <div class="col-sm-6">
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            </ul>
+          </div>
+          <div class="col-sm-6 text-right">
+          <em>Displaying 1 to 8 (of 100 photos)</em>
+          </div>     
+        </div>
+        </div>
+      </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body text-centers">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+      </div>
+    </footer>
+  </body>
+</html>

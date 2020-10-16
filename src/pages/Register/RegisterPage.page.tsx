@@ -44,7 +44,6 @@ function LoginPage() {
         dayOfBirth: Yup.string().required('Required'),
         monthOfBirth: Yup.string().required('Required'),
         yearOfBirth: Yup.string().required('Required'),
-        country: Yup.string().required('Required'),
         acceptPolicies: Yup.boolean().oneOf([true], "Must Accept Concent"),
     });
 
@@ -84,7 +83,7 @@ function LoginPage() {
                                             <Formik
                                                 initialValues={formInitialValues}
                                                 validationSchema={validationSchema}
-                                                onSubmit={(data, { setSubmitting }) => {
+                                                onSubmit={(data, { setStatus }) => {
                                                     doLogin({ data })
                                                     .then(() => setRegistered(true))
                                                 }}
@@ -93,13 +92,13 @@ function LoginPage() {
                                                     values,
                                                     errors,
                                                     touched,
+                                                    status,
                                                     handleChange,
                                                     handleBlur,
                                                     handleSubmit,
-                                                    isSubmitting,
                                                     /* and other goodies */
                                                 }) => (
-                                                        <div>
+                                                        <div> 
                                                             <div className="form-group">
                                                                 <label htmlFor="xsinput">Nickname</label>
                                                                 <input
@@ -207,110 +206,6 @@ function LoginPage() {
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-
-                                                            <div className="form-group">
-                                                                <label htmlFor="lginput">Country</label>
-                                                                <select
-                                                                    style={{ width: "100%" }}
-                                                                    name={"country"}
-                                                                    onChange={handleChange}
-                                                                    onBlur={handleBlur}
-                                                                    value={values.country}
-                                                                >
-                                                                    <option>Select</option>
-                                                                    {country.names().sort((a: string, b: string) => a.localeCompare(b)).map((c: any) => {
-                                                                        return <option value={c}>{c}</option>
-                                                                    })}
-                                                                </select>
-                                                                {errors.country && touched.country && <ErrorLabel message={errors.country} />}
-                                                            </div>
-
-
-                                                            <h5>Select Service</h5>
-
-
-                                                            <div className="row">
-                                                                <div className="col-md-6 col-sm-6 col-xs-6">
-                                                                    <div className="checkbox">
-                                                                        <label>
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                name={"escortServices"}
-                                                                                onChange={handleChange}
-                                                                                onBlur={handleBlur}
-                                                                                checked={values.escortServices}
-                                                                            />
-                                                                            <span className="text">Escort Services</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6 col-sm-6 col-xs-6">
-                                                                    <div className="checkbox">
-                                                                        <label>
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                name={"webcamWork"}
-                                                                                onChange={handleChange}
-                                                                                onBlur={handleBlur}
-                                                                                checked={values.webcamWork}
-                                                                            />
-                                                                            <span className="text">Webcame Work</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6 col-sm-6 col-xs-6">
-                                                                    <div className="checkbox">
-                                                                        <label>
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                name={"phoneChat"}
-                                                                                onChange={handleChange}
-                                                                                onBlur={handleBlur}
-                                                                                checked={values.phoneChat}
-                                                                            />
-                                                                            <span className="text">Phone Chat</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6 col-sm-6 col-xs-6">
-                                                                    <div className="checkbox">
-                                                                        <label>
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                name={"contentProducer"}
-                                                                                onChange={handleChange}
-                                                                                onBlur={handleBlur}
-                                                                                checked={values.contentProducer}
-                                                                            />
-                                                                            <span className="text">Content Producer</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6 col-sm-6 col-xs-6">
-                                                                    <div className="checkbox">
-                                                                        <label>
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                name={"contentProducer"}
-                                                                                onChange={handleChange}
-                                                                                onBlur={handleBlur}
-                                                                                checked={values.contentProducer}
-                                                                            />
-                                                                            <span className="text">Alternative <a href="#">Choose Practices</a></span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6 col-sm-6 col-xs-6">
-                                                                    <div className="checkbox">
-                                                                        <label>
-                                                                            <input type="checkbox" />
-                                                                            <span className="text">Other Services <a href="#">Specify Now</a></span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
                                                             <h5>Privacy & Legal</h5>
 
                                                             <div className="row">

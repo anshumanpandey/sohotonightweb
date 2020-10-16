@@ -6,12 +6,14 @@ export enum GLOBAL_STATE_ACIONS {
   ABOVE_18,
   TOGGLE_ABOVE_18,
   LOGOUT,
+  ERROR,
 }
 
 const token = localStorage.getItem("jwtToken")
 const userData = localStorage.getItem("userData")
 
 const initialState = {
+  error: null,
   jtwToken: !token ? null : JSON.parse(token),
   userData: !userData ? null : JSON.parse(userData),
   above18: localStorage.getItem("above18") && localStorage.getItem("above18") == "1" ? true : false,
@@ -19,6 +21,7 @@ const initialState = {
 
 const reducer = (state: any, action: any) => {
   switch (action.type) {
+    case GLOBAL_STATE_ACIONS.ERROR: return { ...state, error: action.payload }
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
       return { ...state, jwtToken: action.payload }

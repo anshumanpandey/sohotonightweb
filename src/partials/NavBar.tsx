@@ -28,19 +28,10 @@ function NavBar() {
                             authenticated: () => {
                                 return (
                                     <>
-                                    <li><Link to="/profile-edit">Edit Profile</Link></li>
                                     <li><Link to="/logout">Logout</Link></li>
                                     </>
                                 );
                             },
-                            nonAuthenticated: () => {
-                                return (
-                                    <>
-                                    <li><Link to="/login">Login</Link></li>
-                                    <li><Link to="/register">Register</Link></li>
-                                    </>
-                                );
-                            }
                         })}
                     </ul>
                 </div>

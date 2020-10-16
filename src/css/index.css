@@ -57,7 +57,7 @@
   }
 
   .enter_bg {
-    background:  url('../../img/Photos/enter-bg.jpg') no-repeat center center;
+    background:  url('../img/Photos/enter-bg.jpg') no-repeat center center;
 background-color:#FFF;
 -webkit-background-size: cover;
 -moz-background-size: cover;
@@ -83,7 +83,7 @@ background-size: cover;
   body {
     background: #e9eaed;
     overflow-x: hidden;
-    background: url('../../img/Photos/enter-bg.jpg') no-repeat center center;
+    background: url('../img/Photos/enter-bg.jpg') no-repeat center center;
     background-color: #FFF;
     -webkit-background-size: cover;
     -moz-background-size: cover;

@@ -21,11 +21,10 @@ function Landing() {
 
                         <div className="row">
                             <div className="col-md-12 col-sm-12 col-xs-12">
-                                <div className="widget enter_bg">
-                                    <div className="list_tab_link">Offering Services? <a
-                                        href="https://sohotonight.azurewebsites.net/register.html">Register Here</a></div>
+                                <div className="widget">
+                                    <div className="list_tab_link">Offering Services? <Link to="/register">Register Here</Link></div>
 
-                                    <div className="list_tab">
+                                    <div className="">
                                         <h3 style={{ color: "#d32a6b" }}>Welcome Soho Tonight</h3>
               Soho Tonight is committed to providing a safe and anonymous environment where individuala can distribute
               and market their own adult products, services and content. Those who seek to avail themselves of such

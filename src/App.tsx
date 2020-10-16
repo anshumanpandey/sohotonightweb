@@ -24,6 +24,7 @@ import AboutPage from './pages/Profile/About.page';
 import PictureUpload from './pages/Profile/PictureUpload.page';
 import VideoUpload from './pages/Profile/VideoUpload.page';
 import LogoutPage from './pages/logout/logout.page';
+import "./css/index.css"
 
 const options = {
   // you can also just use 'bottom center'
@@ -41,6 +42,9 @@ function App() {
     <AlertProvider template={AlertTemplate} {...options}>
       <Switch>
         <Route exact path="/">
+          <Landing />
+        </Route>
+        <Route exact path="/preview">
           <Landing />
         </Route>
         <Route path="/contact-us">

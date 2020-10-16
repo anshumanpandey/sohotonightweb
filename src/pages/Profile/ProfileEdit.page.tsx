@@ -9,18 +9,18 @@ import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 
 var months: { [k: string]: string } = {
-    'Jan': '01',
-    'Feb': '02',
-    'Mar': '03',
-    'Apr': '04',
+    'January': '01',
+    'February': '02',
+    'March': '03',
+    'April': '04',
     'May': '05',
-    'Jun': '06',
-    'Jul': '07',
-    'Aug': '08',
-    'Sep': '09',
-    'Oct': '10',
-    'Nov': '11',
-    'Dec': '12'
+    'June': '06',
+    'July': '07',
+    'August': '08',
+    'September': '09',
+    'October': '10',
+    'November': '11',
+    'December': '12'
 }
 
 function ProfileEditPage() {
@@ -231,33 +231,6 @@ function ProfileEditPage() {
                                                         />
                                                     </div>
                                                 </div>
-                                                <h5
-                                                    style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>
-                                                    Other Setting</h5>
-
-                                                <div className="form-group row">
-                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Social Media Advertising:</div>
-                                                    <div className="col-sm-10 col-md-6">
-                                                        <div className="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" />
-                                                                <span className="text">Allow My Profile</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="form-group row">
-                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Skype:</div>
-                                                    <div className="col-sm-10 col-md-6">
-                                                        <div className="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" />
-                                                                <span className="text">Subscribe Now</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
 
                                                 <div style={{ textAlign: "right" }}>
                                                     <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />

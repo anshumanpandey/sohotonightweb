@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import SohoLoginForm from '../../partials/SohoLoginForm';
@@ -8,10 +8,12 @@ import * as Yup from 'yup';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
 import "../../css/login_register.css"
+import { Redirect } from 'react-router-dom';
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 function LoginPage() {
+    const [registered, setRegistered] = useState(false)
     const formInitialValues = {
         nickname: '',
         password: '',
@@ -48,6 +50,10 @@ function LoginPage() {
 
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/register', method: 'POST'}, { manual: true });
 
+    if (registered) {
+        return <Redirect to="/login" />
+    }
+
     return (
         <>
             <NavBar />
@@ -80,6 +86,7 @@ function LoginPage() {
                                                 validationSchema={validationSchema}
                                                 onSubmit={(data, { setSubmitting }) => {
                                                     doLogin({ data })
+                                                    .then(() => setRegistered(true))
                                                 }}
                                             >
                                                 {({

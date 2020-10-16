@@ -1,0 +1,812 @@
+[
+    {
+      "Rank": 1,
+      "County": "Greater London",
+      "Type": "administrative area",
+      "Region": "London",
+      "Population": "81,96,700",
+      "Density": "5,223",
+      "Area": "1,569"
+    },
+    {
+      "Rank": 2,
+      "County": "West Midlands",
+      "Type": "metropolitan county",
+      "Region": "West Midlands",
+      "Population": "27,39,800",
+      "Density": "3,039",
+      "Area": 902
+    },
+    {
+      "Rank": 3,
+      "County": "Greater Manchester",
+      "Type": "metropolitan county",
+      "Region": "North West",
+      "Population": "26,85,400",
+      "Density": "2,105",
+      "Area": "1,276"
+    },
+    {
+      "Rank": 4,
+      "County": "West Yorkshire",
+      "Type": "metropolitan county",
+      "Region": "Yorkshire and the Humber",
+      "Population": "22,27,400",
+      "Density": "1,098",
+      "Area": "2,029"
+    },
+    {
+      "Rank": 5,
+      "County": "Kent",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "14,66,500",
+      "Density": 413,
+      "Area": "3,544"
+    },
+    {
+      "Rank": 6,
+      "County": "Essex",
+      "Type": "two-tier",
+      "Region": "East",
+      "Population": "13,96,600",
+      "Density": 403,
+      "Area": "3,464"
+    },
+    {
+      "Rank": 7,
+      "County": "Merseyside",
+      "Type": "metropolitan county",
+      "Region": "North West",
+      "Population": "13,80,800",
+      "Density": "2,141",
+      "Area": 645
+    },
+    {
+      "Rank": 8,
+      "County": "South Yorkshire",
+      "Type": "metropolitan county",
+      "Region": "Yorkshire and the Humber",
+      "Population": "13,43,900",
+      "Density": 866,
+      "Area": "1,552"
+    },
+    {
+      "Rank": 9,
+      "County": "Hampshire",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "13,22,300",
+      "Density": 359,
+      "Area": "3,679"
+    },
+    {
+      "Rank": 10,
+      "County": "Lancashire",
+      "Type": "two-tier",
+      "Region": "North West",
+      "Population": "11,71,600",
+      "Density": 404,
+      "Area": "2,903"
+    },
+    {
+      "Rank": 11,
+      "County": "Surrey",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "11,35,500",
+      "Density": 683,
+      "Area": "1,663"
+    },
+    {
+      "Rank": 12,
+      "County": "Hertfordshire",
+      "Type": "two-tier",
+      "Region": "East",
+      "Population": "11,19,800",
+      "Density": 682,
+      "Area": "1,643"
+    },
+    {
+      "Rank": 13,
+      "County": "Tyne and Wear",
+      "Type": "metropolitan county",
+      "Region": "North East",
+      "Population": "11,04,100",
+      "Density": "2,044",
+      "Area": 540
+    },
+    {
+      "Rank": 14,
+      "County": "Norfolk",
+      "Type": "two-tier",
+      "Region": "East",
+      "Population": "8,59,400",
+      "Density": 160,
+      "Area": "5,371"
+    },
+    {
+      "Rank": 15,
+      "County": "Staffordshire",
+      "Type": "two-tier",
+      "Region": "West Midlands",
+      "Population": "8,49,600",
+      "Density": 324,
+      "Area": "2,620"
+    },
+    {
+      "Rank": 16,
+      "County": "West Sussex",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "8,08,900",
+      "Density": 406,
+      "Area": "1,990"
+    },
+    {
+      "Rank": 17,
+      "County": "Nottinghamshire",
+      "Type": "two-tier",
+      "Region": "East Midlands",
+      "Population": "7,86,700",
+      "Density": 377,
+      "Area": "2,085"
+    },
+    {
+      "Rank": 18,
+      "County": "Derbyshire",
+      "Type": "two-tier",
+      "Region": "East Midlands",
+      "Population": "7,70,600",
+      "Density": 303,
+      "Area": "2,547"
+    },
+    {
+      "Rank": 19,
+      "County": "Devon",
+      "Type": "two-tier",
+      "Region": "South West",
+      "Population": "7,47,900",
+      "Density": 114,
+      "Area": "6,564"
+    },
+    {
+      "Rank": 20,
+      "County": "Suffolk",
+      "Type": "two-tier",
+      "Region": "East",
+      "Population": "7,30,100",
+      "Density": 192,
+      "Area": "3,800"
+    },
+    {
+      "Rank": 21,
+      "County": "Lincolnshire",
+      "Type": "two-tier",
+      "Region": "East Midlands",
+      "Population": "7,14,800",
+      "Density": 121,
+      "Area": "5,921"
+    },
+    {
+      "Rank": 22,
+      "County": "Northamptonshire",
+      "Type": "two-tier",
+      "Region": "East Midlands",
+      "Population": "6,93,900",
+      "Density": 294,
+      "Area": "2,364"
+    },
+    {
+      "Rank": 23,
+      "County": "Oxfordshire",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "6,54,800",
+      "Density": 251,
+      "Area": "2,605"
+    },
+    {
+      "Rank": 24,
+      "County": "Leicestershire",
+      "Type": "two-tier",
+      "Region": "East Midlands",
+      "Population": "6,51,200",
+      "Density": 313,
+      "Area": "2,083"
+    },
+    {
+      "Rank": 25,
+      "County": "Cambridgeshire",
+      "Type": "two-tier",
+      "Region": "East",
+      "Population": "6,22,200",
+      "Density": 204,
+      "Area": "3,046"
+    },
+    {
+      "Rank": 26,
+      "County": "North Yorkshire",
+      "Type": "two-tier",
+      "Region": "Yorkshire and the Humber",
+      "Population": "6,01,200",
+      "Density": 75,
+      "Area": "8,038"
+    },
+    {
+      "Rank": 27,
+      "County": "Gloucestershire",
+      "Type": "two-tier",
+      "Region": "South West",
+      "Population": "5,98,300",
+      "Density": 226,
+      "Area": "2,653"
+    },
+    {
+      "Rank": 28,
+      "County": "Worcestershire",
+      "Type": "two-tier",
+      "Region": "West Midlands",
+      "Population": "5,66,500",
+      "Density": 325,
+      "Area": "1,741"
+    },
+    {
+      "Rank": 29,
+      "County": "Warwickshire",
+      "Type": "two-tier",
+      "Region": "West Midlands",
+      "Population": "5,46,500",
+      "Density": 277,
+      "Area": "1,975"
+    },
+    {
+      "Rank": 30,
+      "County": "Cornwall",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "5,33,800",
+      "Density": 151,
+      "Area": "3,546"
+    },
+    {
+      "Rank": 31,
+      "County": "Somerset",
+      "Type": "two-tier",
+      "Region": "South West",
+      "Population": "5,31,600",
+      "Density": 154,
+      "Area": "3,451"
+    },
+    {
+      "Rank": 32,
+      "County": "East Sussex",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "5,27,200",
+      "Density": 308,
+      "Area": "1,709"
+    },
+    {
+      "Rank": 33,
+      "County": "County Durham",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "5,13,000",
+      "Density": 230,
+      "Area": "2,226"
+    },
+    {
+      "Rank": 34,
+      "County": "Buckinghamshire",
+      "Type": "two-tier",
+      "Region": "South East",
+      "Population": "5,06,700",
+      "Density": 324,
+      "Area": "1,565"
+    },
+    {
+      "Rank": 35,
+      "County": "Cumbria",
+      "Type": "two-tier",
+      "Region": "North West",
+      "Population": "4,99,800",
+      "Density": 74,
+      "Area": "6,767"
+    },
+    {
+      "Rank": 36,
+      "County": "Wiltshire",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "4,74,300",
+      "Density": 146,
+      "Area": "3,255"
+    },
+    {
+      "Rank": 37,
+      "County": "Bristol",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "4,28,100",
+      "Density": "3,906",
+      "Area": 110
+    },
+    {
+      "Rank": 38,
+      "County": "Dorset",
+      "Type": "two-tier",
+      "Region": "South West",
+      "Population": "4,13,800",
+      "Density": 163,
+      "Area": "2,542"
+    },
+    {
+      "Rank": 39,
+      "County": "Cheshire East",
+      "Type": "unitary",
+      "Region": "North West",
+      "Population": "3,70,700",
+      "Density": 318,
+      "Area": "1,166"
+    },
+    {
+      "Rank": 40,
+      "County": "East Riding of Yorkshire",
+      "Type": "unitary",
+      "Region": "Yorkshire and the Humber",
+      "Population": "3,34,700",
+      "Density": 139,
+      "Area": "2,408"
+    },
+    {
+      "Rank": 41,
+      "County": "Leicester",
+      "Type": "unitary",
+      "Region": "East Midlands",
+      "Population": "3,29,600",
+      "Density": "4,494",
+      "Area": 73
+    },
+    {
+      "Rank": 42,
+      "County": "Cheshire West and Chester",
+      "Type": "unitary",
+      "Region": "North West",
+      "Population": "3,29,500",
+      "Density": 359,
+      "Area": 917
+    },
+    {
+      "Rank": 43,
+      "County": "Northumberland",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "3,16,300",
+      "Density": 63,
+      "Area": "5,013"
+    },
+    {
+      "Rank": 44,
+      "County": "Shropshire",
+      "Type": "unitary",
+      "Region": "West Midlands",
+      "Population": "3,07,100",
+      "Density": 96,
+      "Area": "3,197"
+    },
+    {
+      "Rank": 45,
+      "County": "Nottingham",
+      "Type": "unitary",
+      "Region": "East Midlands",
+      "Population": "3,03,900",
+      "Density": "4,073",
+      "Area": 75
+    },
+    {
+      "Rank": 46,
+      "County": "Brighton & Hove",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "2,73,000",
+      "Density": "3,302",
+      "Area": 83
+    },
+    {
+      "Rank": 47,
+      "County": "Medway",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "2,64,900",
+      "Density": "1,379",
+      "Area": 192
+    },
+    {
+      "Rank": 48,
+      "County": "South Gloucestershire",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "2,63,400",
+      "Density": 530,
+      "Area": 497
+    },
+    {
+      "Rank": 49,
+      "County": "Plymouth",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "2,56,600",
+      "Density": "3,216",
+      "Area": 80
+    },
+    {
+      "Rank": 50,
+      "County": "Hull",
+      "Type": "unitary",
+      "Region": "Yorkshire and the Humber",
+      "Population": "2,56,100",
+      "Density": "3,584",
+      "Area": 71
+    },
+    {
+      "Rank": 51,
+      "County": "Central Bedfordshire",
+      "Type": "unitary",
+      "Region": "East",
+      "Population": "2,55,600",
+      "Density": 357,
+      "Area": 716
+    },
+    {
+      "Rank": 52,
+      "County": "Milton Keynes",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "2,49,900",
+      "Density": 810,
+      "Area": 309
+    },
+    {
+      "Rank": 53,
+      "County": "Derby",
+      "Type": "unitary",
+      "Region": "East Midlands",
+      "Population": "2,48,900",
+      "Density": "3,190",
+      "Area": 78
+    },
+    {
+      "Rank": 54,
+      "County": "Stoke-on-Trent",
+      "Type": "unitary",
+      "Region": "West Midlands",
+      "Population": "2,48,700",
+      "Density": "2,661",
+      "Area": 93
+    },
+    {
+      "Rank": 55,
+      "County": "Southampton",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "2,35,900",
+      "Density": "4,733",
+      "Area": 50
+    },
+    {
+      "Rank": 56,
+      "County": "Swindon",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "2,09,700",
+      "Density": 911,
+      "Area": 230
+    },
+    {
+      "Rank": 57,
+      "County": "Portsmouth",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "2,05,400",
+      "Density": "5,089",
+      "Area": 40
+    },
+    {
+      "Rank": 58,
+      "County": "Luton",
+      "Type": "unitary",
+      "Region": "East",
+      "Population": "2,03,600",
+      "Density": "4,696",
+      "Area": 43
+    },
+    {
+      "Rank": 59,
+      "County": "North Somerset",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "2,03,100",
+      "Density": 543,
+      "Area": 374
+    },
+    {
+      "Rank": 60,
+      "County": "Warrington",
+      "Type": "unitary",
+      "Region": "North West",
+      "Population": "2,02,700",
+      "Density": "1,122",
+      "Area": 181
+    },
+    {
+      "Rank": 61,
+      "County": "York",
+      "Type": "unitary",
+      "Region": "Yorkshire and the Humber",
+      "Population": "1,97,800",
+      "Density": 727,
+      "Area": 272
+    },
+    {
+      "Rank": 62,
+      "County": "Stockton-on-Tees",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "1,91,800",
+      "Density": 941,
+      "Area": 204
+    },
+    {
+      "Rank": 63,
+      "County": "Peterborough",
+      "Type": "unitary",
+      "Region": "East",
+      "Population": "1,84,500",
+      "Density": 537,
+      "Area": 343
+    },
+    {
+      "Rank": 64,
+      "County": "Herefordshire",
+      "Type": "unitary",
+      "Region": "West Midlands",
+      "Population": "1,83,600",
+      "Density": 84,
+      "Area": "2,180"
+    },
+    {
+      "Rank": 65,
+      "County": "Bournemouth",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "1,83,500",
+      "Density": "3,974",
+      "Area": 46
+    },
+    {
+      "Rank": 66,
+      "County": "Bath and North East Somerset",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "1,75,500",
+      "Density": 508,
+      "Area": 346
+    },
+    {
+      "Rank": 67,
+      "County": "Southend-on-Sea",
+      "Type": "unitary",
+      "Region": "East",
+      "Population": "1,74,300",
+      "Density": "4,174",
+      "Area": 42
+    },
+    {
+      "Rank": 68,
+      "County": "North Lincolnshire",
+      "Type": "unitary",
+      "Region": "Yorkshire and the Humber",
+      "Population": "1,67,500",
+      "Density": 198,
+      "Area": 846
+    },
+    {
+      "Rank": 69,
+      "County": "Telford and Wrekin",
+      "Type": "unitary",
+      "Region": "West Midlands",
+      "Population": "1,66,800",
+      "Density": 575,
+      "Area": 290
+    },
+    {
+      "Rank": 70,
+      "County": "North East Lincolnshire",
+      "Type": "unitary",
+      "Region": "Yorkshire and the Humber",
+      "Population": "1,59,700",
+      "Density": 832,
+      "Area": 192
+    },
+    {
+      "Rank": 71,
+      "County": "Thurrock",
+      "Type": "unitary",
+      "Region": "East",
+      "Population": "1,58,300",
+      "Density": 969,
+      "Area": 163
+    },
+    {
+      "Rank": 72,
+      "County": "Bedford",
+      "Type": "unitary",
+      "Region": "East",
+      "Population": "1,57,800",
+      "Density": 331,
+      "Area": 476
+    },
+    {
+      "Rank": 73,
+      "County": "Reading",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,55,300",
+      "Density": "3,844",
+      "Area": 40
+    },
+    {
+      "Rank": 74,
+      "County": "Wokingham",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,54,900",
+      "Density": 866,
+      "Area": 179
+    },
+    {
+      "Rank": 75,
+      "County": "West Berkshire",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,54,100",
+      "Density": 219,
+      "Area": 704
+    },
+    {
+      "Rank": 76,
+      "County": "Poole",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "1,48,100",
+      "Density": "2,287",
+      "Area": 65
+    },
+    {
+      "Rank": 77,
+      "County": "Blackburn with Darwen",
+      "Type": "unitary",
+      "Region": "North West",
+      "Population": "1,47,700",
+      "Density": "1,078",
+      "Area": 137
+    },
+    {
+      "Rank": 78,
+      "County": "Windsor and Maidenhead",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,45,100",
+      "Density": 738,
+      "Area": 197
+    },
+    {
+      "Rank": 79,
+      "County": "Blackpool",
+      "Type": "unitary",
+      "Region": "North West",
+      "Population": "1,42,100",
+      "Density": "4,077",
+      "Area": 35
+    },
+    {
+      "Rank": 80,
+      "County": "Slough",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,40,700",
+      "Density": "4,323",
+      "Area": 33
+    },
+    {
+      "Rank": 81,
+      "County": "Middlesbrough",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "1,38,400",
+      "Density": "2,569",
+      "Area": 54
+    },
+    {
+      "Rank": 82,
+      "County": "Isle of Wight",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,38,400",
+      "Density": 364,
+      "Area": 380
+    },
+    {
+      "Rank": 83,
+      "County": "Redcar and Cleveland",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "1,35,200",
+      "Density": 552,
+      "Area": 245
+    },
+    {
+      "Rank": 84,
+      "County": "Torbay",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "1,31,200",
+      "Density": "2,086",
+      "Area": 63
+    },
+    {
+      "Rank": 85,
+      "County": "Halton",
+      "Type": "unitary",
+      "Region": "North West",
+      "Population": "1,25,700",
+      "Density": "1,589",
+      "Area": 79
+    },
+    {
+      "Rank": 86,
+      "County": "Bracknell Forest",
+      "Type": "unitary",
+      "Region": "South East",
+      "Population": "1,13,700",
+      "Density": "1,039",
+      "Area": 109
+    },
+    {
+      "Rank": 87,
+      "County": "Darlington",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "1,05,600",
+      "Density": 535,
+      "Area": 197
+    },
+    {
+      "Rank": 88,
+      "County": "Hartlepool",
+      "Type": "unitary",
+      "Region": "North East",
+      "Population": "92,100",
+      "Density": 981,
+      "Area": 94
+    },
+    {
+      "Rank": 89,
+      "County": "Rutland",
+      "Type": "unitary",
+      "Region": "East Midlands",
+      "Population": "37,600",
+      "Density": 99,
+      "Area": 382
+    },
+    {
+      "Rank": 90,
+      "County": "Isles of Scilly",
+      "Type": "unitary",
+      "Region": "South West",
+      "Population": "2,200",
+      "Density": 134,
+      "Area": 16
+    }
+  ]

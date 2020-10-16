@@ -7,6 +7,7 @@ import '../../css/timeline.css';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
 import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
+import UkCounties from "../../utils/UkCounties.json"
 
 var months: { [k: string]: string } = {
     'January': '01',
@@ -196,8 +197,18 @@ function ProfileEditPage() {
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">County/Area:</label>
                                                     <div className="col-sm-10 col-md-6">
-                                                        <select style={{ width: "100%" }} className="form-control">
+                                                        <select
+                                                            style={{ width: "100%" }}
+                                                            className="form-control"
+                                                            name="county"
+                                                            value={formik.values.county}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                        >
                                                             <option>Select</option>
+                                                            {UkCounties.map(c => {
+                                                                return <option value={c.County}>{c.County}</option>;
+                                                            }) }
                                                         </select>
                                                     </div>
                                                 </div>

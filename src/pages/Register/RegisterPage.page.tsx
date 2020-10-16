@@ -3,13 +3,12 @@ import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import SohoLoginForm from '../../partials/SohoLoginForm';
 import { Formik } from 'formik';
-import country from 'country-list-js';
 import * as Yup from 'yup';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
-import "../../css/login_register.css"
 import { Redirect } from 'react-router-dom';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../../state/GlobalState';
+import "../../css/login_register.css"
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 

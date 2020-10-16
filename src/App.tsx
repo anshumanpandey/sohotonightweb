@@ -24,7 +24,8 @@ import AboutPage from './pages/Profile/About.page';
 import PictureUpload from './pages/Profile/PictureUpload.page';
 import VideoUpload from './pages/Profile/VideoUpload.page';
 import LogoutPage from './pages/logout/logout.page';
-import "./css/index.css"
+import ComingSoon from './pages/comingSoon/CominSoon.page';
+import enter from './img/Photos/enter-bg.jpg';
 
 const options = {
   // you can also just use 'bottom center'
@@ -37,51 +38,51 @@ const options = {
 
 function App() {
   return (
-  <body style={{ backgroundColor: '#e9eaed'}}>
-    <Router>
-    <AlertProvider template={AlertTemplate} {...options}>
-      <Switch>
-        <Route exact path="/">
-          <Landing />
-        </Route>
-        <Route exact path="/preview">
-          <Landing />
-        </Route>
-        <Route path="/contact-us">
-          <ContactUs />
-        </Route>
-        <Route path="/about-us">
-          <AboutUs />
-        </Route>
-        <Route path="/register">
-          <RegisterPage />
-        </Route>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/list-post">
-          <ListPostPage />
-        </Route>
-        <Route path="/profile/:id?">
-          <ProfilePage />
-        </Route>
-        <Route path="/profile-about/:id?">
-          <AboutPage />
-        </Route>
-        <Route path="/profile-video/:id?">
-          <VideosPage />
-        </Route>
-        <Route path="/profile-pictures/:id?">
-          <PicturesPage />
-        </Route>
-        <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
-        <ProtectedRoute path="/picture-upload/:id?" component={PictureUpload} />
-        <ProtectedRoute path="/video-upload/:id?" component={VideoUpload} />
-        <ProtectedRoute path="/logout" component={LogoutPage} />
-      </Switch>
-      </AlertProvider>
-    </Router>
-  </body>
+    <body style={{ minHeight: '100vh',backgroundColor: '#e9eaed', backgroundImage: `url(${enter})`, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
+      <Router>
+        <AlertProvider template={AlertTemplate} {...options}>
+          <Switch>
+            <Route exact path="/">
+              <ComingSoon />
+            </Route>
+            <Route exact path="/preview">
+              <Landing />
+            </Route>
+            <Route path="/contact-us">
+              <ContactUs />
+            </Route>
+            <Route path="/about-us">
+              <AboutUs />
+            </Route>
+            <Route path="/register">
+              <RegisterPage />
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/list-post">
+              <ListPostPage />
+            </Route>
+            <Route path="/profile/:id?">
+              <ProfilePage />
+            </Route>
+            <Route path="/profile-about/:id?">
+              <AboutPage />
+            </Route>
+            <Route path="/profile-video/:id?">
+              <VideosPage />
+            </Route>
+            <Route path="/profile-pictures/:id?">
+              <PicturesPage />
+            </Route>
+            <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
+            <ProtectedRoute path="/picture-upload/:id?" component={PictureUpload} />
+            <ProtectedRoute path="/video-upload/:id?" component={VideoUpload} />
+            <ProtectedRoute path="/logout" component={LogoutPage} />
+          </Switch>
+        </AlertProvider>
+      </Router>
+    </body>
   );
 }
 

@@ -1,27 +1,39 @@
 import { createStore } from 'react-hooks-global-state';
 
 export enum GLOBAL_STATE_ACIONS {
-    JWT_TOKEN,
-    USER_DATA,
+  JWT_TOKEN,
+  USER_DATA,
+  ABOVE_18,
+  TOGGLE_ABOVE_18
 }
 
 const token = localStorage.getItem("jwtToken")
 const userData = localStorage.getItem("userData")
 
 const initialState = {
-    jtwToken: !token ? null: JSON.parse(token),
-    userData: !userData ? null: JSON.parse(userData),
+  jtwToken: !token ? null : JSON.parse(token),
+  userData: !userData ? null : JSON.parse(userData),
+  above18: localStorage.getItem("above18") && localStorage.getItem("above18") == "1" ? true : false,
 };
 
 const reducer = (state: any, action: any) => {
   switch (action.type) {
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
-        localStorage.setItem("jwtToken", JSON.stringify(action.payload))
-        return { ...state, jwtToken: action.payload }
+      localStorage.setItem("jwtToken", JSON.stringify(action.payload))
+      return { ...state, jwtToken: action.payload }
     };
     case GLOBAL_STATE_ACIONS.USER_DATA: {
-        localStorage.setItem("userData", JSON.stringify(action.payload))
-        return { ...state, userData: action.payload };
+      localStorage.setItem("userData", JSON.stringify(action.payload))
+      return { ...state, userData: action.payload };
+    }
+    case GLOBAL_STATE_ACIONS.ABOVE_18: {
+      localStorage.setItem("above18", action.payload == true ? "1" : "0")
+      return { ...state, above18: action.payload };
+    }
+    case GLOBAL_STATE_ACIONS.TOGGLE_ABOVE_18: {
+      const newState = !state.above18
+      localStorage.setItem("above18", newState == true ? "1" : "0")
+      return { ...state, above18: newState };
     }
     default: return state;
   }

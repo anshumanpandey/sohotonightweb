@@ -1,9 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
 
 function Landing() {
+    const [above18, setAbove18] = useState(false);
+    const [isAbove18] = useGlobalState("above18")
+
+    if (isAbove18) {
+        return <Redirect to="list-post" />
+    }
     return (
         <>
             <NavBar />
@@ -57,15 +64,22 @@ function Landing() {
                                 <div className="enter_contener">
                                     <div className="checkbox">
                                         <label>
-                                            <input type="checkbox" />
+                                            <input
+                                                type="checkbox"
+                                                checked={above18}
+                                                onChange={() => {
+                                                    setAbove18(!above18)
+                                                }} />
                                             <span className="text">I agree I am 18+ years of age.</span>
                                         </label>
                                     </div>
 
 
                                     <ul>
-                                        <li>
-                                            <Link to="list-post">Continue</Link>
+                                        <li style={{ pointerEvents: above18 ? undefined: "none", cursor: above18 ? 'pointer' : "not-allowed"}}>
+                                            <Link onClick={() => dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.ABOVE_18, payload: above18 })} to="list-post">
+                                                Continue
+                                            </Link>
                                         </li>
                                     </ul>
 

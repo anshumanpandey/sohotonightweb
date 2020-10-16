@@ -14,7 +14,7 @@ const userData = localStorage.getItem("userData")
 
 const initialState = {
   error: null,
-  jtwToken: !token ? null : JSON.parse(token),
+  jwtToken: !token ? null : JSON.parse(token),
   userData: !userData ? null : JSON.parse(userData),
   above18: localStorage.getItem("above18") && localStorage.getItem("above18") == "1" ? true : false,
 };

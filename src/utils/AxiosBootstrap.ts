@@ -6,8 +6,7 @@ const AxiosInstance = Axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 })
 AxiosInstance.interceptors.request.use((r) => {
-  console.log(getGlobalState())
-  const token = getGlobalState().jtwToken
+  const token = getGlobalState().jwtToken
   if (token) {
     r.headers.Authorization = `Bearer ${token}`
   }

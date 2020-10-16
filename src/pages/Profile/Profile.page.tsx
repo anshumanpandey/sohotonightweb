@@ -44,12 +44,12 @@ function ProfilePage() {
                                             <li>
                                                 {AuthenticatedFactory({
                                                     authenticated: () => {
-                                                        return (<Link to="/picture-upload">
+                                                        return (<Link to={`/picture-upload/${id}`}>
                                                             <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
                                                         </Link>);
                                                     },
                                                     nonAuthenticated: () => {
-                                                        return (<Link to="/profile-pictures">
+                                                        return (<Link to={`/profile-pictures/${id}`}>
                                                             View All
                                                         </Link>);
                                                     }
@@ -86,12 +86,12 @@ function ProfilePage() {
                                             <li>
                                                 {AuthenticatedFactory({
                                                     authenticated: () => {
-                                                        return (<Link to="/video-upload">
+                                                        return (<Link to={`/video-upload/${id}`}>
                                                             <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
                                                         </Link>);
                                                     },
                                                     nonAuthenticated: () => {
-                                                        return (<Link to="/profile-video">
+                                                        return (<Link to={`/profile-video/${id}`}>
                                                             View All
                                                         </Link>);
                                                     }

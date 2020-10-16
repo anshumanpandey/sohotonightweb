@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import ProfileHeader from './ProfileHeader';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../../css/cover.css';
 import photo1 from '../../img/Photos/1.jpg';
 import photo2 from '../../img/Photos/2.jpg';
@@ -13,18 +13,29 @@ import photo6 from '../../img/Photos/6.jpg';
 import photo7 from '../../img/Photos/7.jpg';
 import photo8 from '../../img/Photos/8.jpg';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
-
+import useAxios from 'axios-hooks'
 
 function ProfilePage() {
+    let { id } = useParams<{ id: string }>();
+    const [user, setUser] = useState<any>({});
+
+    const [{ data, loading, error }, getUser] = useAxios({
+        url: `/user/public/getUser/${id}`,
+    }, { manual: true });
+
+    useEffect(() => {
+        getUser()
+            .then(({ data }) => setUser(data))
+    }, [id])
+
     return (
         <>
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <ProfileHeader />
+                    <ProfileHeader user={user} />
                     <div className="row">
                         <div className="col-md-5">
-
                             <div className="widget widget-friends">
                                 <div className="widget-header">
                                     <div className="pic_pic_link">
@@ -51,51 +62,16 @@ function ProfilePage() {
                                     <div className="row">
                                         <div className="col-md-12">
                                             <ul className="img-grid" style={{ margin: "0 auto" }}>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo1} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo2} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo3} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo4} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo5} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li className="clearfix">
-                                                    <a href="#">
-                                                        <img src={photo6} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo7} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo8} alt="image" />
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <img src={photo8} alt="image" />
-                                                    </a>
-                                                </li>
+                                                {user?.Pictures?.length == 0 && <p>No images</p>}
+                                                {user?.Pictures?.length != 0 && user?.Pictures?.map((p: any) => {
+                                                    return (
+                                                        <li>
+                                                            <a href="#">
+                                                                <img src={p.imageName} alt="image" />
+                                                            </a>
+                                                        </li>
+                                                    );
+                                                })}
                                             </ul>
                                         </div>
                                     </div>
@@ -128,33 +104,16 @@ function ProfilePage() {
                                     <div className="row">
                                         <div className="col-md-12">
                                             <ul className="img-grid" style={{ margin: "0 auto" }}>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li className="clearfix">
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
-                                                <li>
-                                                    <iframe src="https://www.youtube.com/embed/VXhRSJILId0" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                                </li>
+                                                {user?.Videos?.length == 0 && <p>No Videos</p>}
+                                                {user?.Videos?.length != 0 && user?.Videos?.map((p: any) => {
+                                                    return (
+                                                        <li>
+                                                            <a href="#">
+                                                                <video controls style={{ height: 80}} src={p.videoUrl} />
+                                                            </a>
+                                                        </li>
+                                                    );
+                                                })}
                                             </ul>
                                         </div>
                                     </div>
@@ -162,12 +121,13 @@ function ProfilePage() {
                             </div>
 
 
-                            <div className="widget">    
+                            <div className="widget">
                                 <div className="widget-header">
                                     <div className="pic_pic_link">
                                         <ul>
                                             <li>About</li>
-                                            <li>
+                                            <li></li>
+                                            {/*<li>
                                                 {AuthenticatedFactory({
                                                     authenticated: () => {
                                                         return (<Link to="/about-edit">
@@ -180,7 +140,7 @@ function ProfilePage() {
                                                         </Link>);
                                                     }
                                                 })}
-                                            </li>
+                                            </li>*/}
                                         </ul>
                                     </div>
                                 </div>
@@ -190,31 +150,13 @@ function ProfilePage() {
                                         <li className="padding-v-5">
                                             <div className="row">
                                                 <div className="col-sm-4"><span className="text-muted">Date of Birth</span></div>
-                                                <div className="col-sm-8">12 January 1990</div>
-                                            </div>
-                                        </li>
-                                        <li className="padding-v-5">
-                                            <div className="row">
-                                                <div className="col-sm-4"><span className="text-muted">Job</span></div>
-                                                <div className="col-sm-8">Ninja developer</div>
+                                                <div className="col-sm-8">{user?.dayOfBirth} {user?.monthOfBirth} {user?.yearOfBirth}</div>
                                             </div>
                                         </li>
                                         <li className="padding-v-5">
                                             <div className="row">
                                                 <div className="col-sm-4"><span className="text-muted">Gender</span></div>
-                                                <div className="col-sm-8">Female</div>
-                                            </div>
-                                        </li>
-                                        <li className="padding-v-5">
-                                            <div className="row">
-                                                <div className="col-sm-4"><span className="text-muted">Lives in</span></div>
-                                                <div className="col-sm-8">Miami, FL, USA</div>
-                                            </div>
-                                        </li>
-                                        <li className="padding-v-5">
-                                            <div className="row">
-                                                <div className="col-sm-4"><span className="text-muted">Credits</span></div>
-                                                <div className="col-sm-8">249</div>
+                                                <div className="col-sm-8">{user?.gender}</div>
                                             </div>
                                         </li>
                                     </ul>
@@ -229,19 +171,10 @@ function ProfilePage() {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <div className="box profile-info n-border-top phone_cont">
-                                                <div className="phone_no_area">
-                                                    <ul>
-                                                        <li>Message Me At</li>
-                                                        <li><i className="fa fa-phone-square" aria-hidden="true"></i>&nbsp; 012 3456 7891</li>
-                                                    </ul>
-                                                </div>
-                                                <div className="skype_msg"><a href="#"><i className="fa fa-video-camera"></i>&nbsp;  See Me</a></div>
-                                            </div>
                                             {AuthenticatedFactory({
                                                 authenticated: () => {
                                                     return (
-                                                        <div className="box profile-info n-border-top">
+                                                        <div style={{ margin: 0 }} className="box profile-info n-border-top">
                                                             <form>
                                                                 <textarea className="form-control input-lg p-text-area" rows={2} placeholder="Whats in your mind today?"></textarea>
                                                             </form>
@@ -263,7 +196,7 @@ function ProfilePage() {
                                                 <div className="box-header with-border">
                                                     <div className="user-block">
                                                         <img className="img-circle" src="img/Photos/2.jpg" alt="User Image" />
-                                                        <span className="username"><a href="#">John Breakgrow jr.</a></span>
+                                                        <span className="username"><a href="#">{user?.firstName} {user?.lastName}</a></span>
                                                         <span className="description">Shared publicly - 7:30 PM Today</span>
                                                     </div>
                                                 </div>

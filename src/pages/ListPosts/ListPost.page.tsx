@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
+import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
+import { Link } from 'react-router-dom';
 
 function ListPostPage() {
+    const [{ data, loading, error }, getUser] = useAxios({
+        url: '/user/public/getUsers',
+    }, { manual: true });
+
+    useEffect(() => {
+        getUser()
+    }, [])
+
     return (
         <>
             <NavBar />
             <div className="container page-content">
                 <div className="row">
-
-
                     <div className="col-md-3 col-xs-12">
                         <div className="row-xs">
                             <div className="main-box clearfix">
                                 <h4>Advanced Search</h4>
-
-
 
                                 <div className="profile-details">
                                     <div className="widget-body bordered-top bordered-sky">
@@ -196,11 +202,6 @@ function ListPostPage() {
                         </div>
                     </div>
 
-
-
-
-
-
                     <div className="col-md-7 ">
 
                         <div className="list_tab">
@@ -217,121 +218,34 @@ function ListPostPage() {
 
 
                         <div className="col-inside-lg decor-default activities animated fadeInUp" id="activities">
-
-
-
-
-
-
                             <h3>Model List</h3>
-
-                            <div className="unit">
-                                <a className="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/1.jpg" className="img-responsive" alt="profile" /></a>
-                                <div className="field2 title">
-                                    <a href="https://sohotonight.azurewebsites.net/profile.html">Emmac xxx</a>
-                                </div>
-                                <div className="field date">
-                                    <p>Bi-curious 27 year old Female</p>
-
-                                    <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
-
-
-
-                                    <a href="#" className="btn btn-azure">View Post</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/video.html" className="btn btn-azure">View Video</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/picture.html" className="btn btn-azure">View Picture</a>
-                                </div>
-
-                            </div>
-
-                            <div className="unit">
-                                <a className="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/2.jpg" className="img-responsive" alt="profile" /></a>
-                                <div className="field2 title">
-                                    <a href="https://sohotonight.azurewebsites.net/profile.html">Alisa Smith</a>
-                                </div>
-                                <div className="field date">
-                                    <p>Bi-curious 27 year old Female</p>
-
-                                    <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
-
-
-
-                                    <a href="#" className="btn btn-azure">View Post</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/video.html" className="btn btn-azure">View Video</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/picture.html" className="btn btn-azure">View Picture</a>
-                                </div>
-
-                            </div>
-
-                            <div className="unit">
-                                <a className="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/3.jpg" className="img-responsive" alt="profile" /></a>
-                                <div className="field2 title">
-                                    <a href="https://sohotonight.azurewebsites.net/profile.html">Bryony Williams</a>
-                                </div>
-                                <div className="field date">
-                                    <p>Bi-curious 27 year old Female</p>
-
-                                    <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
-
-
-
-                                    <a href="#" className="btn btn-azure">View Post</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/video.html" className="btn btn-azure">View Video</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/picture.html" className="btn btn-azure">View Picture</a>
-                                </div>
-
-                            </div>
-
-                            <div className="unit">
-                                <a className="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/4.jpg" className="img-responsive" alt="profile" /></a>
-                                <div className="field2 title">
-                                    <a href="https://sohotonight.azurewebsites.net/profile.html">Catriona Jones</a>
-                                </div>
-                                <div className="field date">
-                                    <p>Bi-curious 27 year old Female</p>
-
-                                    <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
-
-
-
-                                    <a href="#" className="btn btn-azure">View Post</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/video.html" className="btn btn-azure">View Video</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/picture.html" className="btn btn-azure">View Picture</a>
-                                </div>
-
-                            </div>
-
-                            <div className="unit">
-                                <a className="avatar" href="https://sohotonight.azurewebsites.net/profile.html"><img src="img/Photos/5.jpg" className="img-responsive" alt="profile" /></a>
-                                <div className="field2 title">
-                                    <a href="https://sohotonight.azurewebsites.net/profile.html">Dottie Davies</a>
-                                </div>
-                                <div className="field date">
-                                    <p>Bi-curious 27 year old Female</p>
-
-                                    <p>New movie added. Stunning slut with a naughty northen accent. 4K webcam and plenty of toys to play with. Taboo and feties new webcam group. Custom content.</p>
-
-
-
-                                    <a href="#" className="btn btn-azure">View Post</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/video.html" className="btn btn-azure">View Video</a>
-
-                                    <a href="https://sohotonight.azurewebsites.net/picture.html" className="btn btn-azure">View Picture</a>
-                                </div>
-
-                            </div>
-
-
-
+                            {data && data.map((g: any) => {
+                                return (
+                                    <div className="unit">
+                                        <Link className="avatar" to={`/profile/${g.id}`}>
+                                            <img src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                        </Link>
+                                        <div className="field2 title">
+                                            <Link to={`/profile/${g.id}`}>
+                                                {g.firstName} {g.lastName}
+                                            </Link>
+                                        </div>
+                                        <div className="field date">
+                                            <p>{g.orientation} 27 year old {g.gender}</p>
+                                            {g.aboutYouSummary && <p>{g.aboutYouSummary}</p>}
+                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile/${g.id}`}>
+                                                View Post
+                                            </Link>
+                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-video/${g.id}`}>
+                                                View Video
+                                            </Link>
+                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-pictures/${g.id}`}>
+                                                View Picture
+                                            </Link>
+                                        </div>
+                                    </div>
+                                );
+                            })}
 
                         </div>
                     </div>

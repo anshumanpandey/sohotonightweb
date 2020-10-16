@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import ProfileHeader from './ProfileHeader';
@@ -11,9 +11,12 @@ import SohoModal from '../../partials/SohoModal';
 import { Formik, useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
+import { useParams } from 'react-router-dom';
 
 function VideoUpload() {
+    let { id } = useParams<{ id: string }>();
     const alert = useAlert()
+    const [user, setUser] = useState<any>({});
     const [showUploadModel, setShowUploadModel] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(1);
     const itemsPerPage = 10
@@ -23,9 +26,14 @@ function VideoUpload() {
         method: 'POST',
     }, { manual: true });
 
-    const [getPicturesReq, getPictures] = useAxios({
-        url: '/user/getVideos',
-    });
+    const [getUserReq, getUser] = useAxios({
+        url: `/user/public/getUser/${id}`,
+    }, { manual: true });
+
+    useEffect(() => {
+        getUser()
+            .then(({ data }) => setUser(data))
+    }, [id])
 
     const [deletePicturesReq, deletePicture] = useAxios({
         url: '/user/deleteVideo',
@@ -66,11 +74,11 @@ function VideoUpload() {
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <ProfileHeader />
+                    <ProfileHeader user={user} />
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
-                                {getPicturesReq.loading ? <p>Loading...</p> : getPicturesReq.data?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
+                                {getUserReq.loading ? <p>Loading...</p> : getUserReq.data?.Videos?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
                                         <div className="mix col-sm-4 page1 page4 margin30">
                                             <div className="item-img-wrap ">
@@ -81,7 +89,7 @@ function VideoUpload() {
                                                         deletePicture({ data: { videoId: p.id }})
                                                         .then(() => {
                                                             alert.show('Image deleted!')
-                                                            getPictures();
+                                                            getUser();
                                                         })
                                                     }} className="show-image">
                                                         <span className="item-img_text">
@@ -111,13 +119,13 @@ function VideoUpload() {
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
-                                {Array(Math.floor((getPicturesReq?.data?.length || 1) / 10) + 1).fill(1).map((_ , idx) => {
+                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_ , idx) => {
                                     return <li className={currentIndex == (idx + 1) ? "active": undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}
                                 <li>
-                                    <a onClick={() => setCurrentIndex(Math.floor((getPicturesReq?.data?.length || 1) / 10) + 1)} href="#" aria-label="Next">
+                                    <a onClick={() => setCurrentIndex(Math.floor((getUserReq?.data?.length || 1) / 10) + 1)} href="#" aria-label="Next">
                                         <span aria-hidden="true">»</span>
                                     </a>
                                 </li>
@@ -133,7 +141,7 @@ function VideoUpload() {
                             formik.submitForm()
                                 .then(() => {
                                     setShowUploadModel(false)
-                                    getPictures();  
+                                    getUser();  
                                 })
                         }} type="button" className="btn btn-default">Save</button>}
                     >

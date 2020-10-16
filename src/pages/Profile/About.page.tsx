@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import '../../css/user_detail.css';
@@ -6,15 +6,29 @@ import '../../css/cover.css';
 import '../../css/timeline.css';
 import '../../css/Profile.css';
 import ProfileHeader from './ProfileHeader';
+import useAxios from 'axios-hooks'
+import { useParams } from 'react-router-dom';
 
 function AboutPage() {
+    let { id } = useParams<{ id: string }>();
     const [editing, setEditing] = useState(false);
+    const [user, setUser] = useState<any>({});
+
+    const [{ data, loading, error }, getUser] = useAxios({
+        url: `/user/public/getUser/${id}`,
+    }, { manual: true });
+
+    useEffect(() => {
+        getUser()
+            .then(({ data }) => setUser(data))
+    }, [id])
+
     return (
         <>
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <ProfileHeader />
+                    <ProfileHeader user={user} />
                 </div>
 
                 <div className="col-md-10 col-md-offset-1">
@@ -25,7 +39,7 @@ function AboutPage() {
                                     <div className="pic_pic_link">
                                         <ul>
                                             <li></li>
-                                            <li>
+                                            {/*<li>
                                                 {editing == false && <a onClick={() => setEditing(true)} href="#"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit</a>}
                                                 {editing == true && (
                                                     <>
@@ -33,7 +47,7 @@ function AboutPage() {
                                                         <a onClick={() => setEditing(true)} href="#"><i className="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Save</a>
                                                     </>
                                                 )}
-                                            </li>
+                                                </li>*/}
                                         </ul>
                                     </div>
                                     <div className="row">
@@ -43,7 +57,7 @@ function AboutPage() {
                                                     First Name:
                   </div>
                                                 <div className="col-xs-7">
-                                                    Olivia
+                                                    {user?.firstName}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -51,7 +65,7 @@ function AboutPage() {
                                                     Last Name:
                   </div>
                                                 <div className="col-xs-7">
-                                                    Sallow:
+                                                    {user?.lastName}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -59,7 +73,7 @@ function AboutPage() {
                                                     Gender:
                   </div>
                                                 <div className="col-xs-7">
-                                                    Female
+                                                    {user?.gender}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -67,7 +81,7 @@ function AboutPage() {
                                                     Email Address:
                   </div>
                                                 <div className="col-xs-7">
-                                                    olivia@gmail.com
+                                                    {user?.emailAddress}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -75,7 +89,7 @@ function AboutPage() {
                                                     Date Of Birth:
                   </div>
                                                 <div className="col-xs-7">
-                                                    03/02/2000
+                                                    {user?.dayOfBirth}/{user?.monthOfBirth}/{user?.yearOfBirth}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -92,7 +106,7 @@ function AboutPage() {
                                                     Mobile/Cell Number:
                   </div>
                                                 <div className="col-xs-7">
-                                                    012 3456 7891
+                                                    {user?.phoneNumber}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -108,7 +122,10 @@ function AboutPage() {
                                                     Select Service:
                   </div>
                                                 <div className="col-xs-7">
-                                                    Escort Services, Webcame Work, Phone Chat
+                                                    {user?.escortServices && "Escort Services"}
+                                                    {user?.phoneChat && "Phone chat"}
+                                                    {user?.webcamWork && "Webcame Work"}
+                                                    {user?.contentProducer && "Content Producer"}
                   </div>
                                             </div>
                                             <div className="row content-info">
@@ -133,16 +150,16 @@ function AboutPage() {
                                                     Orientation:
                   </div>
                                                 <div className="col-xs-7">
-                                                    Straight
+                                                    {user?.orientation}
                   </div>
                                             </div>
 
                                         </div>
                                         <div className="col-lg-7 col-md-7 col-xs-12">
-                                            {editing == true && <textarea style={{ width: '100%', height: '100%'}} value=""></textarea>}
+                                            {editing == true && <textarea style={{ width: '100%', height: '100%' }} value=""></textarea>}
                                             {editing == false && (
                                                 <p className="contact-description">
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                                                    {user?.aboutYouDetail}
                                                 </p>
                                             )}
                                         </div>

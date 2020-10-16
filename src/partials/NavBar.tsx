@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthenticatedFactory from '../utils/AuthenticatedFactory';
+import logo from '../img/Photos/logo.png'
 
 function NavBar() {
     return (
@@ -14,8 +15,9 @@ function NavBar() {
                         <span className="icon-bar"></span>
                         <span className="icon-bar"></span>
                     </button>
-                    <a className="navbar-brand" href="index.html"><img src="img/Photos/logo.png" alt=""
-                        className="profile-img img-responsive center-block show-in-modal" /></a>
+                    <Link className="navbar-brand" to="">
+                        <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" />
+                    </Link>
                 </div>
                 <div id="navbar" className="navbar-collapse collapse">
                     <ul className="nav navbar-nav navbar-right">
@@ -27,6 +29,7 @@ function NavBar() {
                                 return (
                                     <>
                                     <li><Link to="/profile-edit">Edit Profile</Link></li>
+                                    <li><Link to="/logout">Logout</Link></li>
                                     </>
                                 );
                             },

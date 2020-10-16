@@ -4,7 +4,8 @@ export enum GLOBAL_STATE_ACIONS {
   JWT_TOKEN,
   USER_DATA,
   ABOVE_18,
-  TOGGLE_ABOVE_18
+  TOGGLE_ABOVE_18,
+  LOGOUT,
 }
 
 const token = localStorage.getItem("jwtToken")
@@ -34,6 +35,12 @@ const reducer = (state: any, action: any) => {
       const newState = !state.above18
       localStorage.setItem("above18", newState == true ? "1" : "0")
       return { ...state, above18: newState };
+    }
+    case GLOBAL_STATE_ACIONS.LOGOUT: {
+      const newState = !state.above18
+      localStorage.removeItem("jwtToken")
+      localStorage.removeItem("userData")
+      return { ...state, jwtToken: null, userData: null };
     }
     default: return state;
   }

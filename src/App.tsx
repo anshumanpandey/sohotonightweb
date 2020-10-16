@@ -23,6 +23,7 @@ import PicturesPage from './pages/Profile/Pictures.page';
 import AboutPage from './pages/Profile/About.page';
 import PictureUpload from './pages/Profile/PictureUpload.page';
 import VideoUpload from './pages/Profile/VideoUpload.page';
+import LogoutPage from './pages/logout/logout.page';
 
 const options = {
   // you can also just use 'bottom center'
@@ -54,14 +55,25 @@ function App() {
         <Route path="/login">
           <LoginPage />
         </Route>
-        <ProtectedRoute path="/list-post" component={ListPostPage} />
-        <ProtectedRoute path="/profile" component={ProfilePage} />
+        <Route path="/list-post">
+          <ListPostPage />
+        </Route>
+        <Route path="/profile/:id?">
+          <ProfilePage />
+        </Route>
+        <Route path="/profile-about/:id?">
+          <AboutPage />
+        </Route>
+        <Route path="/profile-video/:id?">
+          <VideosPage />
+        </Route>
+        <Route path="/profile-pictures/:id?">
+          <PicturesPage />
+        </Route>
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
-        <ProtectedRoute path="/profile-video" component={VideosPage} />
-        <ProtectedRoute path="/profile-pictures" component={PicturesPage} />
-        <ProtectedRoute path="/profile-about" component={AboutPage} />        
-        <ProtectedRoute path="/picture-upload" component={PictureUpload} />
-        <ProtectedRoute path="/video-upload" component={VideoUpload} />
+        <ProtectedRoute path="/picture-upload/:id?" component={PictureUpload} />
+        <ProtectedRoute path="/video-upload/:id?" component={VideoUpload} />
+        <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
       </AlertProvider>
     </Router>

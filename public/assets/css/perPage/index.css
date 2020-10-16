@@ -99,3 +99,6 @@ background-size: cover;
   .list_tab_link a {
     color: #d32a6b;
   }
+  .react-datepicker-popper {
+    z-index: 20!important;
+  }

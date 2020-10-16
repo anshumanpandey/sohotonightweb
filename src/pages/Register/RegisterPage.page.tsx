@@ -228,7 +228,7 @@ function LoginPage() {
                                                                                 onBlur={handleBlur}
                                                                                 checked={values.acceptPolicies}
                                                                             />
-                                                                            <span className="text">I accept and consert to the Site's
+                                                                            <span className="text">I accept the Site's Policies and User Agreement
         <a href="#">Policies and User Agreement</a></span>
                                                                         </label>
                                                                     </div>

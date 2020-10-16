@@ -8,6 +8,9 @@ import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../
 import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import UkCounties from "../../utils/UkCounties.json"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Redirect } from 'react-router-dom';
 
 var months: { [k: string]: string } = {
     'January': '01',
@@ -27,6 +30,7 @@ var months: { [k: string]: string } = {
 function ProfileEditPage() {
     const [profile] = useGlobalState('userData')
     const [currentTab, setCurrentTab] = useState(0)
+    const [redirect, setRedirect] = useState(false)
 
     const [{ data, loading, error }, updateProfile] = useAxios({
         url: '/user/update',
@@ -36,6 +40,7 @@ function ProfileEditPage() {
     const formik = useFormik({
         initialValues: {
             ...profile,
+            birthDate: new Date(`${profile.yearOfBirth}/${months[profile.monthOfBirth]}/${profile.dayOfBirth}`),
             bannerImagePreview: profile.bannerImage,
             profileImagePreview: profile.profilePic,
             authenticationProfilePicPreview: profile.authenticationProfilePic,
@@ -53,24 +58,29 @@ function ProfileEditPage() {
 
             const data = new FormData();
 
-            if (profileImageFile) data.append("profilePic",profileImageFile)
-            if (bannerImageFile) data.append("bannerImage",bannerImageFile)
-            if (authenticationProfilePic) data.append("authenticatePic",authenticationProfilePic)
+            if (profileImageFile) data.append("profilePic", profileImageFile)
+            if (bannerImageFile) data.append("bannerImage", bannerImageFile)
+            if (authenticationProfilePic) data.append("authenticatePic", authenticationProfilePic)
             Object.keys(fields).forEach(k => {
                 if (values[k]) {
-                    data.append(k,values[k])
+                    data.append(k, values[k])
                 }
             })
             updateProfile({ data })
-            .then(({ data }) => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token})
-                dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data})
+                .then(({ data }) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data })
 
-                if (currentTab == 0) setCurrentTab(1)
-                if (currentTab == 1) setCurrentTab(2)
-            })
+                    if (currentTab == 0) setCurrentTab(1)
+                    if (currentTab == 1) setCurrentTab(2)
+                    if (currentTab == 2) setRedirect(true)
+                })
         },
     });
+
+    if (redirect) {
+        return <Redirect to={`/profile/${profile.id}`} />
+    }
 
     return (
         <>
@@ -83,19 +93,19 @@ function ProfileEditPage() {
 
                                 <div className="tabs-wrapper profile-tabs">
                                     <ul className="nav nav-tabs">
-                                        <li className={currentTab == 0 ? "active": undefined}>
+                                        <li className={currentTab == 0 ? "active" : undefined}>
                                             <a onClick={() => setCurrentTab(0)} href="#general" data-toggle="tab">General</a>
                                         </li>
-                                        <li className={currentTab == 1 ? "active": undefined}>
+                                        <li className={currentTab == 1 ? "active" : undefined}>
                                             <a onClick={() => setCurrentTab(1)} href="#personal-details" data-toggle="tab">Personal Details</a>
                                         </li>
-                                        <li className={currentTab == 2 ? "active": undefined}>
+                                        <li className={currentTab == 2 ? "active" : undefined}>
                                             <a onClick={() => setCurrentTab(2)} href="#media" data-toggle="tab">Media</a>
                                         </li>
                                     </ul>
 
                                     <div className="tab-content">
-                                        <div className={`tab-pane ${currentTab == 0 ? "fade in active": undefined}`} id="general">
+                                        <div className={`tab-pane ${currentTab == 0 ? "fade in active" : undefined}`} id="general">
                                             <div>
                                                 <h5
                                                     style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: "0 0 7px 0", fontWeight: "bold" }}>
@@ -139,7 +149,7 @@ function ProfileEditPage() {
                                                             readOnly
                                                             className="form-control-plaintext"
                                                             name="nickname"
-                                                            style={{ border: "0px" }}
+                                                            style={{ border: "0px", width: '100%' }}
                                                             value={formik.values.nickname}
                                                         />
                                                     </div>
@@ -148,8 +158,7 @@ function ProfileEditPage() {
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Password:</label>
                                                     <div className="col-sm-10 col-md-6">
-                                                        <input type="password" readOnly className="form-control-plaintext" id="" value="Password:"
-                                                            style={{ border: "0px" }} />
+                                                        <input type="password" readOnly className="form-control-plaintext" style={{ border: "0px", width: '100%' }} value="Password:" />
                                                     </div>
                                                 </div>
 
@@ -157,7 +166,7 @@ function ProfileEditPage() {
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Email Address</label>
                                                     <div className="col-sm-10 col-md-6">
                                                         <input type="text" readOnly className="form-control-plaintext" id=""
-                                                            value={formik.values.emailAddress} style={{ border: "0px" }} />
+                                                            value={formik.values.emailAddress} style={{ border: "0px", width: '100%' }} />
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
@@ -208,7 +217,7 @@ function ProfileEditPage() {
                                                             <option>Select</option>
                                                             {UkCounties.map(c => {
                                                                 return <option value={c.County}>{c.County}</option>;
-                                                            }) }
+                                                            })}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -243,13 +252,53 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
+                                                <h5
+                                                    style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>
+                                                    Other Setting</h5>
+
+                                                <div className="form-group row">
+                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Allow Social marketing:</div>
+                                                    <div className="col-sm-10 col-md-6">
+                                                        <div className="checkbox">
+                                                            <label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    name={"allowSocialMediaMarketing"}
+                                                                    onChange={formik.handleChange}
+                                                                    onBlur={formik.handleBlur}
+                                                                    checked={formik.values.allowSocialMediaMarketing}
+                                                                />
+                                                                <span className="text">Allow My Profile</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="form-group row">
+                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Interested in Phone Chat?: </div>
+                                                    <div className="col-sm-10 col-md-6">
+                                                        <div className="checkbox">
+                                                            <label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    name={"phoneChat"}
+                                                                    onChange={formik.handleChange}
+                                                                    onBlur={formik.handleBlur}
+                                                                    checked={formik.values.phoneChat}
+                                                                />
+                                                                <span className="text">Yes or No</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div style={{ textAlign: "right" }}>
                                                     <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className={`tab-pane ${currentTab == 1 ? "fade in active": undefined}`} id="personal-details">
+                                        <div className={`tab-pane ${currentTab == 1 ? "fade in active" : undefined}`} id="personal-details">
                                             <div>
                                                 <h5
                                                     style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: "0 0 7px 0", fontWeight: "bold" }}>
@@ -258,14 +307,7 @@ function ProfileEditPage() {
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Date of Birth:</label>
                                                     <div className="col-sm-10 col-md-6">
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="dd/mm/yyyy"
-                                                            value={`${formik.values.dayOfBirth}/${months[formik.values.monthOfBirth]}/${formik.values.yearOfBirth}`}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                        />
+                                                            <DatePicker dateFormat="dd/MM/yyyy" selected={formik.values.birthDate} onChange={date => formik.setFieldValue("birthDate",date)} />
                                                     </div>
                                                 </div>
 
@@ -284,6 +326,8 @@ function ProfileEditPage() {
                                                             <option>Select</option>
                                                             <option value="Male">Male</option>
                                                             <option value="Female">Female</option>
+                                                            <option value="Couple">Couple</option>
+                                                            <option value="Trans">Trans</option>
                                                         </select>
                                                     </div>
                                                     <div className="col-sm-10 col-md-3">
@@ -410,7 +454,7 @@ function ProfileEditPage() {
                                             </div>
                                         </div>
 
-                                        <div className={`tab-pane ${currentTab == 2 ? "fade in active": undefined}`} id="media">
+                                        <div className={`tab-pane ${currentTab == 2 ? "fade in active" : undefined}`} id="media">
                                             <div >
                                                 <h5
                                                     style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: "0 0 7px 0", fontWeight: "bold" }}>
@@ -551,20 +595,6 @@ function ProfileEditPage() {
                                                         {formik.values.authenticationProfilePicPreview && (
                                                             <img style={{ height: 100 }} src={formik.values.authenticationProfilePicPreview} />
                                                         )}
-                                                    </div>
-                                                </div>
-
-                                                <h5
-                                                    style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>
-                                                    Upload Your Picture and Movies, and Make Money!</h5>
-                                                <div className="form-group row">
-                                                    <label htmlFor="" className="col-sm-6 col-form-label">Upload picture to your Gallery</label>
-
-                                                    <div className="col-sm-10 col-md-4">
-                                                        <div className="upload-btn-wrapper">
-                                                            <button className="btn">Upload One</button>
-                                                            <input type="file" name="myfile" />
-                                                        </div>
                                                     </div>
                                                 </div>
 

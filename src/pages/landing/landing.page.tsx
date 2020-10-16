@@ -31,10 +31,10 @@ function Landing() {
               services can maintain their requirem offer with ease
 
             </div>
-                                    <div className="widget-header">
+                                    <div style={{ background: 'unset' }} className="widget-header">
                                         <span className="widget-caption" style={{ fontSize: "17px" }}><strong>Warning</strong></span>
                                     </div>
-                                    <div className="widget-body">
+                                    <div style={{ background: 'unset' }} className="widget-body">
                                         <div className="collapse in warning_list">
                                             <p>Soho Tonight contains material of an adult nature relating to entertainment services.</p>
 

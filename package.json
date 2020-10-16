@@ -31,7 +31,7 @@
     "yup": "^0.29.3"
   },
   "scripts": {
-    "start": "node serve.js",
+    "start": "serve",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

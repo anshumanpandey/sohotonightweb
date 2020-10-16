@@ -1,13 +1,23 @@
 const handler = require('serve-handler');
 const http = require('http');
 
+const options = {
+    public: './build/',
+    "rewrites": [
+        {
+            "source": "/**",
+            "destination": "/index.html"
+        }
+    ]
+}
+
 const server = http.createServer((request, response) => {
-  // You pass two more arguments for config and middleware
-  // More details here: https://github.com/vercel/serve-handler#options
-  return handler(request, response, { public: './build/'});
+    // You pass two more arguments for config and middleware
+    // More details here: https://github.com/vercel/serve-handler#options
+    return handler(request, response, options);
 })
 
 const PORT = process.env.PORT || 3737
 server.listen(PORT, () => {
-  console.log(`Running at http://localhost:${PORT}`);
+    console.log(`Running at http://localhost:${PORT}`);
 });

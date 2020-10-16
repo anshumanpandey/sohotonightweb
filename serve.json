@@ -1,5 +1,5 @@
 {
-  "public": "_site",
+  "public": "build",
   "rewrites": [
     {
       "source": "/**",

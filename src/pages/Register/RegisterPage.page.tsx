@@ -27,8 +27,7 @@ function LoginPage() {
         webcamWork: false,
         contentProducer: false,
 
-        //TODO: by default must be false
-        acceptPolicies: true,
+        acceptPolicies: false,
         recievePromotions: false,
     }
     const validationSchema = Yup.object().shape({

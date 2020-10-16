@@ -13,14 +13,14 @@ const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 
 function LoginPage() {
     const formInitialValues = {
-        nickname: 'somenich',
-        password: '654as84ds5d4',
-        confirmPassword: '654as84ds5d4',
-        emailAddress: 'suifh@mail.com',
-        dayOfBirth: '12',
-        monthOfBirth: 'May',
-        yearOfBirth: '1990',
-        country: 'Argentina',
+        nickname: '',
+        password: '',
+        confirmPassword: '',
+        emailAddress: '',
+        dayOfBirth: '',
+        monthOfBirth: '',
+        yearOfBirth: '',
+        country: '',
 
         escortServices: false,
         phoneChat: false,

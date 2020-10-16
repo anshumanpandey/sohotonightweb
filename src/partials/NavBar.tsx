@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AuthenticatedFactory from '../utils/AuthenticatedFactory';
 
 function NavBar() {
     return (
@@ -21,8 +22,23 @@ function NavBar() {
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
-                        <li><Link to="/login">Login</Link></li>
-                        <li><Link to="/register">Register</Link></li>
+                        {AuthenticatedFactory({
+                            authenticated: () => {
+                                return (
+                                    <>
+                                    <li><Link to="/profile-edit">Edit Profile</Link></li>
+                                    </>
+                                );
+                            },
+                            nonAuthenticated: () => {
+                                return (
+                                    <>
+                                    <li><Link to="/login">Login</Link></li>
+                                    <li><Link to="/register">Register</Link></li>
+                                    </>
+                                );
+                            }
+                        })}
                     </ul>
                 </div>
             </div>

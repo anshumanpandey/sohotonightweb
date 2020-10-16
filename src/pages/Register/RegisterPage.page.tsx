@@ -122,7 +122,7 @@ function LoginPage() {
                                                             <div className="form-group">
                                                                 <label htmlFor="sminput">Password</label>
                                                                 <input
-                                                                    type="text"
+                                                                    type="password"
                                                                     className="form-control input-sm"
                                                                     placeholder="Password"
                                                                     name="password"
@@ -135,7 +135,7 @@ function LoginPage() {
                                                             <div className="form-group">
                                                                 <label htmlFor="definpu">Confirm Password</label>
                                                                 <input
-                                                                    type="text"
+                                                                    type="password"
                                                                     className="form-control"
                                                                     placeholder="Confirm Password"
                                                                     name="confirmPassword"

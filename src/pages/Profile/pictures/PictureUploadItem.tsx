@@ -8,7 +8,7 @@ export const PictureUploadItem = ({ src, onDeleteClick, onClick }: { src: string
                     e.preventDefault()
                     onDeleteClick()
                 }} className="show-image">
-                    <span style={{ color: "white", fontSize: "18px", right: 0 }} className="item-img_text">
+                    <span style={{ color: "white", fontSize: "18px", right: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
                         <i className="fa fa-times" aria-hidden="true"></i>
                                                             Delete
                                                         </span>

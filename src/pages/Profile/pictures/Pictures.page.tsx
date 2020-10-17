@@ -99,6 +99,7 @@ function PicturesPage() {
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
+                                {!getUserReq.loading && getUserReq?.data?.Pictures.length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b"}}>No Images</p>}
                                 {getUserReq.loading ? <p>Loading...</p> : getUserReq?.data?.Pictures?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
                                         <>
@@ -160,7 +161,7 @@ function PicturesPage() {
                 }} type="button" className="btn btn-default">Close</button>}
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <img style={{ height: "450px" }} src={showPreviewModal.imageName} />
+                    <img style={{ maxHeight: "350px" }} src={showPreviewModal.imageName} />
                 </div>
             </SohoModal>
 

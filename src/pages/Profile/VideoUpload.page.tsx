@@ -99,8 +99,8 @@ function VideoUpload() {
                                 {!getUserReq.loading && getUserReq?.data?.Videos.length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>No Videos</p>}
                                 {getUserReq.loading ? <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>Loading...</p> : getUserReq.data?.Videos?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
-                                        <div className="mix col-sm-4 page1 page4 margin30">
-                                            <div className="item-img-wrap ">
+                                        <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                            <div style={{ backgroundColor: 'black'}} className="item-img-wrap ">
                                                 <a href="#" onClick={(e) => {
                                                     e.preventDefault()
                                                     deletePicture()
@@ -127,7 +127,7 @@ function VideoUpload() {
                                     </a>
                                 </li>
                                 {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_, idx) => {
-                                    return <li className={currentIndex == (idx + 1) ? "active" : undefined}>
+                                    return <li key={idx.toString() + "-item"} className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}
@@ -148,7 +148,7 @@ function VideoUpload() {
                     >
                         <div role="form">
                             <div style={{ justifyContent: 'space-between', display: 'flex' }} className="upload-btn-wrapper">
-                                <SohoButton block={true} onClick={() => setShowUploadModel(true)} value="Select" />
+                                <SohoButton onClick={() => setShowUploadModel(true)} value="Select" />
                                 <input accept="video/*" type="file" name="myfile" onChange={(event) => {
                                     if (event.currentTarget.files) {
                                         formik.setFieldValue("file", event.currentTarget.files[0]);

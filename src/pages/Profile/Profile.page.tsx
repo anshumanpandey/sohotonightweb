@@ -4,16 +4,11 @@ import NavBar from '../../partials/NavBar';
 import ProfileHeader from './ProfileHeader';
 import { Link, useParams } from 'react-router-dom';
 import '../../css/cover.css';
-import photo1 from '../../img/Photos/1.jpg';
-import photo2 from '../../img/Photos/2.jpg';
-import photo3 from '../../img/Photos/3.jpg';
-import photo4 from '../../img/Photos/4.jpg';
-import photo5 from '../../img/Photos/5.jpg';
-import photo6 from '../../img/Photos/6.jpg';
-import photo7 from '../../img/Photos/7.jpg';
-import photo8 from '../../img/Photos/8.jpg';
+import { parseISO } from 'date-fns'
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 import useAxios from 'axios-hooks'
+import PostWidgetForm from '../../partials/PostWidgetForm';
+import PostItem from '../../partials/PostItem';
 
 function ProfilePage() {
     let { id } = useParams<{ id: string }>();
@@ -23,9 +18,13 @@ function ProfilePage() {
         url: `/user/public/getUser/${id}`,
     }, { manual: true });
 
-    useEffect(() => {
+    const refetchUser = () => {
         getUser()
             .then(({ data }) => setUser(data))
+    }
+
+    useEffect(() => {
+        refetchUser()
     }, [id])
 
     return (
@@ -65,7 +64,7 @@ function ProfilePage() {
                                                 {user?.Pictures?.length == 0 && <p>No images</p>}
                                                 {user?.Pictures?.length != 0 && user?.Pictures?.map((p: any) => {
                                                     return (
-                                                        <li>
+                                                        <li key={p.imageName}>
                                                             <a href="#">
                                                                 <img src={p.imageName} alt="image" />
                                                             </a>
@@ -107,7 +106,7 @@ function ProfilePage() {
                                                 {user?.Videos?.length == 0 && <p>No Videos</p>}
                                                 {user?.Videos?.length != 0 && user?.Videos?.map((p: any) => {
                                                     return (
-                                                        <li>
+                                                        <li key={p.videoUrl}>
                                                             <a href="#">
                                                                 <video controls style={{ height: 80}} src={p.videoUrl} />
                                                             </a>
@@ -175,42 +174,17 @@ function ProfilePage() {
                                                 authenticated: () => {
                                                     return (
                                                         <div style={{ margin: 0 }} className="box profile-info n-border-top">
-                                                            <form>
-                                                                <textarea className="form-control input-lg p-text-area" rows={2} placeholder="Whats in your mind today?"></textarea>
-                                                            </form>
-                                                            <div className="box-footer box-form">
-                                                                <button type="button" className="btn btn-azure pull-right">Post</button>
-                                                                <ul className="nav nav-pills">
-                                                                    <li><a href="#"><i className="fa fa-map-marker"></i></a></li>
-                                                                    <li><a href="#"><i className="fa fa-camera"></i></a></li>
-                                                                    <li><a href="#"><i className=" fa fa-film"></i></a></li>
-                                                                    <li><a href="#"><i className="fa fa-microphone"></i></a></li>
-                                                                </ul>
-                                                            </div>
+                                                            <PostWidgetForm onPostCrated={() => refetchUser()} />
                                                         </div>
                                                     )
                                                 },
                                             })}
-
-                                            <div className="box box-widget">
-                                                <div className="box-header with-border">
-                                                    <div className="user-block">
-                                                        <img className="img-circle" src="img/Photos/2.jpg" alt="User Image" />
-                                                        <span className="username"><a href="#">{user?.firstName} {user?.lastName}</a></span>
-                                                        <span className="description">Shared publicly - 7:30 PM Today</span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="box-body" style={{ display: "block" }}>
-                                                    <img className="img-responsive show-in-modal" src="img/Photos/profile-image.jpg" alt="Photo" />
-                                                    <p style={{ margin: "7px 0 0 0" }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
-
-                                                </div>
-
-
-                                            </div>
-
-
+                                            {!loading && user?.Posts?.length == 0 && (
+                                                <p style={{ fontSize: 16, textAlign: 'center', color: "#d32a6b" }}>No Post</p>
+                                            )}
+                                            {!loading && user?.Posts?.length != 0 && user?.Posts?.sort((a: any,b: any) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())?.map((p: any) => {
+                                                return <PostItem post={p} user={user} />
+                                            })}
                                         </div>
                                     </div>
                                 </div>

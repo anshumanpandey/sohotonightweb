@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import '../../css/ProfileEdit.css';
@@ -32,6 +32,7 @@ var months: { [k: string]: string } = {
 }
 
 function ProfileEditPage() {
+    const bannerRef = useRef<HTMLImageElement | null>(null)
     const [profile] = useGlobalState('userData')
     const [currentTab, setCurrentTab] = useState(0)
     const [redirect, setRedirect] = useState(false)
@@ -55,6 +56,12 @@ function ProfileEditPage() {
             if (values.aboutYouDetail && values.aboutYouDetail.split(' ').length < 20) {
                 errors.aboutYouDetail = 'Must be at least 20 words';
             }
+            if (values.bannerImageFile && bannerRef?.current?.naturalHeight && bannerRef?.current?.naturalHeight > 480) {
+                errors.bannerImageFile = 'Image height must be less than 480px';
+            } else if (values.bannerImageFile && bannerRef?.current?.naturalWidth && bannerRef?.current?.naturalWidth < 1280) {
+                errors.bannerImageFile = 'Image height must be at least 1280px';
+            }
+
             return errors;
         },
         onSubmit: values => {
@@ -228,7 +235,7 @@ function ProfileEditPage() {
                                                         >
                                                             <option>Select</option>
                                                             {UkCounties.sort((a, b) => a.County.localeCompare(b.County)).map(c => {
-                                                                return <option value={c.County}>{c.County}</option>;
+                                                                return <option key={c.County.toString() + "-item"} value={c.County}>{c.County}</option>;
                                                             })}
                                                         </select>
                                                     </div>
@@ -447,10 +454,10 @@ function ProfileEditPage() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div className="form-group row">
-                                                    <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Feet:</label>
-                                                    <div className="col-sm-10 col-md-3">
+                                                    <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Height:</label>
+                                                    <div className="col-sm-10 col-md-2">
                                                         <select
                                                             style={{ width: "100%" }}
                                                             className="form-control"
@@ -459,7 +466,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                             value={formik.values.inches}
                                                         >
-                                                            <option>Select</option>
+                                                            <option>Inches</option>
                                                             <option value={1}>1</option>
                                                             <option value={2}>2</option>
                                                             <option value={3}>3</option>
@@ -469,11 +476,7 @@ function ProfileEditPage() {
                                                             <option value={7}>7</option>
                                                         </select>
                                                     </div>
-                                                </div>
-
-                                                <div className="form-group row">
-                                                    <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Inch:</label>
-                                                    <div className="col-sm-10 col-md-3">
+                                                    <div className="col-sm-10 col-md-2">
                                                         <select
                                                             style={{ width: "100%" }}
                                                             className="form-control"
@@ -482,7 +485,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                             value={formik.values.feet}
                                                         >
-                                                            <option>Select</option>
+                                                            <option>Feet</option>
                                                             <option value={1}>1</option>
                                                             <option value={2}>2</option>
                                                             <option value={3}>3</option>
@@ -563,13 +566,20 @@ function ProfileEditPage() {
                                                         </div>
                                                         <div className="col-sm-10 col-md-3">
                                                             {formik.values.bannerImagePreview && (
-                                                                <img style={{ height: 100 }} src={formik.values.bannerImagePreview} />
+                                                                <img
+                                                                    onLoad={() => console.log(bannerRef?.current?.naturalHeight)} // print 150
+                                                                    ref={bannerRef}
+                                                                    style={{ height: 100 }}
+                                                                    src={formik.values.bannerImagePreview}
+                                                                />
                                                             )}
+                                                            {formik.errors.bannerImageFile && <ErrorLabel message={formik.errors.bannerImageFile.toString()} />}
                                                         </div>
                                                         <div className="col-sm-10 col-md-4">
                                                             <div className="upload-btn-wrapper">
                                                                 <button className="btn">Upload a file</button>
                                                                 <input
+                                                                    accept="image/*"
                                                                     type="file"
                                                                     name="myfile"
                                                                     onChange={(event) => {

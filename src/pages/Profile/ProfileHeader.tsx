@@ -14,7 +14,7 @@ function ProfileHeader({ user, extraContent }: any) {
                 <div className="cover profile">
                     <div className="wrapper" style={{ padding: 0 }}>
                         <div className="image">
-                            <img src={user?.profilePic || cover} className="show-in-modal" alt="people" />
+                            <img src={user?.bannerImage || cover} className="show-in-modal" alt="people" />
                         </div>
 
                     </div>
@@ -79,16 +79,14 @@ function ProfileHeader({ user, extraContent }: any) {
                         </ul>
                         {extraContent && extraContent}
                     </div>
-                    {user?.phoneNumber && (
-                        <div style={{ position: "absolute", top: 0, backgroundColor: "#fff9", width: "40%", right: 0 }} className="box profile-info n-border-top phone_cont">
-                            <div className="phone_no_area">
-                                <ul>
-                                    <li>Talk to me at</li>
-                                    <li style={{ textAlign: "center" }}>{user?.phoneNumber}</li>
-                                </ul>
-                            </div>
+                    <div style={{ boxShadow: 'unset', position: "absolute", top: '25%', backgroundColor: "#fff9", right: 0 }} className="box profile-info n-border-top phone_cont">
+                        <div className="phone_no_area">
+                            <ul>
+                                <li>Talk to me at</li>
+                                <li style={{ textAlign: "center" }}>{user?.phoneNumber}</li>
+                            </ul>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </div>

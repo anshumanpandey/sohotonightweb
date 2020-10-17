@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  useLocation,
 } from "react-router-dom";
 import { transitions, positions, Provider as AlertProvider, useAlert } from 'react-alert'
 
@@ -25,9 +26,11 @@ import LogoutPage from './pages/logout/logout.page';
 import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from './state/GlobalState';
+import currentPageIs from './utils/currentPageIs';
 
 function App() {
   const alert = useAlert()
+  const location = useLocation()
   const [error] = useGlobalState('error')
   const [globalLoading] = useGlobalState('globalLoading')
 
@@ -40,9 +43,13 @@ function App() {
     })
   }, [error])
 
+  const pageToShowBackgroundImg = () => {
+    return currentPageIs(location.pathname, "preview") ||
+    currentPageIs(location.pathname, "")
+  }
+
   return (
-    <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', backgroundImage: `url(${enter})`, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
-      <Router>
+    <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
         <Switch>
           <Route exact path="/">
             <ComingSoon />
@@ -81,7 +88,6 @@ function App() {
           <ProtectedRoute path="/video-upload/:id?" component={VideoUpload} />
           <ProtectedRoute path="/logout" component={LogoutPage} />
         </Switch>
-      </Router>
     </body>
   );
 }

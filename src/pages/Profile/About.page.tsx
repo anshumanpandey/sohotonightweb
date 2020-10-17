@@ -70,7 +70,7 @@ function AboutPage() {
                                                     First Name:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.firstName}
+                                                    {user?.firstName || "N/A"}
                                                 </div>
                                             </div>
                                             <div className="row content-info">
@@ -78,7 +78,7 @@ function AboutPage() {
                                                     Last Name:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.lastName}
+                                                    {user?.lastName || "N/A"}
                                                 </div>
                                             </div>
                                             <div className="row content-info">
@@ -86,7 +86,7 @@ function AboutPage() {
                                                     Gender:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.gender}
+                                                    {user?.gender || "N/A"}
                                                 </div>
                                             </div>
                                             <div className="row content-info">
@@ -110,17 +110,19 @@ function AboutPage() {
                                                     Address:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.town}
-                  </div>
+                                                    {user?.town || "N/A"}
+                                                </div>
                                             </div>
 
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
                                                     Height:
                   </div>
-                                                <div className="col-xs-7">
-                                                    {user?.inches}, {user?.feet}
-                  </div>
+                                                {user?.inches && user?.feet ? (
+                                                    <div className="col-xs-7">
+                                                        {user?.inches}, {user?.feet}
+                                                    </div>
+                                                ): <p>N/A</p>}
                                             </div>
 
                                             <div className="row content-info">
@@ -128,7 +130,7 @@ function AboutPage() {
                                                     Mobile No.:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.phoneNumber}
+                                                    {user?.phoneNumber || "N/A"}
                                                 </div>
                                             </div>
                                             <div className="row content-info">
@@ -136,7 +138,7 @@ function AboutPage() {
                                                     Orientation:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.orientation}
+                                                    {user?.orientation || "N/A"}
                                                 </div>
                                             </div>
 

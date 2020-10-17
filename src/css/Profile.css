@@ -27,9 +27,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 	padding: 0 0 16px 0;
 }
 .phone_no_area {
-	padding: 15px 0 28px 0;
 	font-weight: bold;
-	margin: 0 0 39px 0;
 }
 .phone_no_area ul {
 	padding:0px;
@@ -40,22 +38,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 	text-align: center;
 	font-size: 35px;
 	color: #d32a6b;
-	text-align: left;
-	width: 70%;
-	display: inline-block;
-	position: absolute;
-	right: 0;
+	display: block;
 }
-.phone_no_area ul li:first-child {
-	font-size: 16px;
-	color: #d32a6b;
-	text-align: right;
-	width: 29%;
-	/* margin: -6px 0 0 0; */
-	position: absolute;
-	padding: 11px 15px 16px 0;
-	left: 0;
-}
+
 .skype_msg{
 	text-align:center;
 	padding:0 0 10px 0;

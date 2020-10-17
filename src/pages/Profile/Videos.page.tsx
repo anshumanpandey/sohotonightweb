@@ -35,7 +35,7 @@ function VideosPage() {
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
                                 {getUserReq.loading ? <p>Loading...</p> : user?.Videos?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
-                                        <div className="mix col-sm-4 page1 page4 margin30">
+                                        <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                             <div className="item-img-wrap ">
                                                 <video style={{ height: 300 }} controls autoPlay src={p.videoUrl} />
                                             </div>
@@ -55,7 +55,7 @@ function VideosPage() {
                                     </a>
                                 </li>
                                 {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_, idx) => {
-                                    return <li className={currentIndex == (idx + 1) ? "active" : undefined}>
+                                    return <li key={idx.toString() + "-item"} className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}

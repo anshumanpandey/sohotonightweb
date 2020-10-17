@@ -108,6 +108,7 @@ function PicturesPage() {
                                             {AuthenticatedFactory({
                                                 authenticated: () => {
                                                     return <PictureUploadItem
+                                                        key={p.id.toString() + "-item"}
                                                         onClick={() => setShowPreviewModal(p)}
                                                         src={p.imageName}
                                                         onDeleteClick={() => {
@@ -120,7 +121,7 @@ function PicturesPage() {
                                                     />
                                                 },
                                                 nonAuthenticated: () => {
-                                                    return <PictureItem onClick={() => setShowPreviewModal(p)} src={p.imageName} />
+                                                    return <PictureItem key={p.id.toString() + "-item"} onClick={() => setShowPreviewModal(p)} src={p.imageName} />
                                                 }
                                             })}
                                         </>
@@ -176,7 +177,7 @@ function PicturesPage() {
             >
                 <div role="form">
                     <div style={{ justifyContent: 'space-between', display: 'flex' }} className="upload-btn-wrapper">
-                        <SohoButton block={true} onClick={() => setShowUploadModel(true)} value="Select" />
+                        <SohoButton onClick={() => setShowUploadModel(true)} value="Select" />
                         <input accept="image/*" type="file" name="myfile" onChange={(event) => {
                             if (event.currentTarget.files) {
                                 formik.setFieldValue("file", event.currentTarget.files[0]);

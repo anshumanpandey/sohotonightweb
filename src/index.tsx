@@ -6,6 +6,10 @@ import { transitions, positions, Provider as AlertProvider, useAlert } from 'rea
 //@ts-ignore
 import AlertTemplate from 'react-alert-template-basic'
 import * as serviceWorker from './serviceWorker';
+import { Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 
 const options = {
   // you can also just use 'bottom center'
@@ -19,9 +23,10 @@ const options = {
 ReactDOM.render(
   <React.StrictMode>
     <AlertProvider template={AlertTemplate} {...options}>
-      <App />
+      <Router history={history}>
+        <App />
+      </Router>
     </AlertProvider>
-
   </React.StrictMode>,
   document.getElementById('root')
 );

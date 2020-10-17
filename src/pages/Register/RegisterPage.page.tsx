@@ -71,7 +71,7 @@ function LoginPage() {
                                     </div>
                                     <div className="widget-body">
                                         <div className="collapse in">
-                                            <SohoLoginForm />
+                                            <SohoLoginForm disabled={loading} />
                                         </div>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@ function LoginPage() {
                                                                         >
                                                                             <option>Day</option>
                                                                             {Array(31).fill(0).map((_, idx) => {
-                                                                                return <option value={idx + 1}>{idx + 1}</option>
+                                                                                return <option key={idx.toString() + "-item"} value={idx + 1}>{idx + 1}</option>
                                                                             })}
                                                                         </select>
                                                                         {errors.dayOfBirth && touched.dayOfBirth && <ErrorLabel message={errors.dayOfBirth} />}
@@ -188,7 +188,7 @@ function LoginPage() {
                                                                         >
                                                                             <option>Month</option>
                                                                             {monthArray.map((mont, idx) => {
-                                                                                return <option value={mont}>{mont}</option>
+                                                                                return <option key={idx.toString() + "-item"} value={mont}>{mont}</option>
                                                                             })}
                                                                         </select>
                                                                         {errors.monthOfBirth && touched.monthOfBirth && <ErrorLabel message={errors.monthOfBirth} />}
@@ -204,7 +204,7 @@ function LoginPage() {
                                                                             <option>Year</option>
                                                                             {Array(50).fill(0).map((_, idx) => {
                                                                                 return (
-                                                                                    <option value={new Date().getFullYear() - idx}>
+                                                                                    <option key={idx.toString() + "-item"} value={new Date().getFullYear() - idx}>
                                                                                         {new Date().getFullYear() - idx}
                                                                                     </option>
                                                                                 );
@@ -253,7 +253,12 @@ You can change this seatting at any time</span>
 
 
                                                             </div>
-                                                            <SohoButton onClick={() => handleSubmit()} value={"Register"} />
+                                                            <SohoButton
+                                                                disabled={loading}
+                                                                style={{ marginLeft: 'auto' }}
+                                                                onClick={() => handleSubmit()}
+                                                                value={"Register"}
+                                                            />
                                                         </div>
 
                                                     )}

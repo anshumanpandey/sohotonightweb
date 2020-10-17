@@ -25,7 +25,6 @@ import LogoutPage from './pages/logout/logout.page';
 import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from './state/GlobalState';
-import 'react-block-ui/style.css';
 
 function App() {
   const alert = useAlert()

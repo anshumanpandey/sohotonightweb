@@ -17,6 +17,7 @@ import { useAlert } from 'react-alert';
 import SohoModal from '../../../partials/SohoModal';
 import { useFormik } from 'formik';
 import ErrorLabel from '../../../partials/ErrorLabel';
+import SohoButton from '../../../partials/SohoButton';
 
 function PicturesPage() {
     let { id } = useParams<{ id: string }>();
@@ -61,6 +62,9 @@ function PicturesPage() {
             return sendFile({ data })
                 .then(() => {
                     alert.show('Image Uploaded!')
+                    setShowUploadModel(false)
+                    getUser();
+                    formik.resetForm()
                 })
         },
         validate: values => {
@@ -86,10 +90,8 @@ function PicturesPage() {
                             <>
                                 {AuthenticatedFactory({
                                     authenticated: () => {
-                                        return <div style={{ position: 'absolute', right: 0, height: '100%' }}>
-                                            <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-                                                <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setShowUploadModel(true)} className="btn">Upload A New Picture</button>
-                                            </div>
+                                        return <div style={{ display: 'flex',position: 'absolute', right: 0, height: '100%' }}>
+                                            <SohoButton style={{ display: 'flex', justifySelf: 'center'}} onClick={() => setShowUploadModel(true)} value="+ Add Picture" />
                                         </div>
                                     }
                                 })}
@@ -166,33 +168,25 @@ function PicturesPage() {
             </SohoModal>
 
             <SohoModal
+                size={"lg"}
                 onClose={() => setShowUploadModel(false)}
                 show={showUploadModel}
                 title="Upload picture"
-                footer={() => <button onClick={() => {
-                    formik.submitForm()
-                        .then(() => {
-                            setShowUploadModel(false)
-                            getUser();
-                            formik.resetForm()
-                        })
-                }} type="button" className="btn btn-default">Save</button>}
+                footer={() => <button onClick={() => formik.submitForm()} type="button" className="btn btn-default">Save</button>}
             >
                 <div role="form">
                     <div style={{ justifyContent: 'space-between', display: 'flex' }} className="upload-btn-wrapper">
-                        <button style={{ alignSelf: "center", width: '30%' }} onClick={() => setShowUploadModel(true)} className="btn">
-                            Select
-                                </button>
-                        <input type="file" name="myfile" onChange={(event) => {
+                        <SohoButton block={true} onClick={() => setShowUploadModel(true)} value="Select" />
+                        <input accept="image/*" type="file" name="myfile" onChange={(event) => {
                             if (event.currentTarget.files) {
                                 formik.setFieldValue("file", event.currentTarget.files[0]);
                                 const src = URL.createObjectURL(event.currentTarget.files[0]);
                                 formik.setFieldValue("filePreview", src);
                             }
                         }} />
-                        {formik.values.filePreview && <img style={{ height: 100 }} src={formik.values.filePreview} />}
                         {formik.errors.file && formik.touched.file && <ErrorLabel message={formik.errors.file} />}
                     </div>
+                    {formik.values.filePreview && <img style={{ maxHeight: "350px", marginLeft: "auto", marginRight: "auto", display: "table" }} src={formik.values.filePreview} />}
                     <div className="form-group">
                         <label htmlFor="sminput">Price</label>
                         <input

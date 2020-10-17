@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../state/GlobalState';
 import { Redirect } from 'react-router-dom';
+import SohoButton from './SohoButton';
 
 function SohoLoginForm() {
     const [redirect, setRedirect] = useState(false)
@@ -60,7 +61,7 @@ function SohoLoginForm() {
                         <div className="form-group">
                             <label htmlFor="sminput">Password</label>
                             <input
-                                type="text"
+                                type="password"
                                 className="form-control input-sm"
                                 placeholder="Password"
                                 name="password"
@@ -69,10 +70,7 @@ function SohoLoginForm() {
                                 value={values.password}
                             />
                         </div>
-
-                        <div className="form-group">
-                            <input onClick={() => handleSubmit()} type="button" value="Submit" />
-                        </div>
+                        <SohoButton onClick={() => handleSubmit()} value={"Login"} />
                     </div>
                 )}
         </Formik>

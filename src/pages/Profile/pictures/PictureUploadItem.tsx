@@ -13,7 +13,7 @@ export const PictureUploadItem = ({ src, onDeleteClick, onClick }: { src: string
                                                             Delete
                                                         </span>
                 </a>
-                <img onClick={onClick} src={src} className="img-responsive" alt="workimg" />
+                <img style={{ height: 200 }} onClick={onClick} src={src} className="img-responsive" alt="workimg" />
 
             </div>
         </div>

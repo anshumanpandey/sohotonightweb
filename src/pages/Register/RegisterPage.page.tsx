@@ -9,6 +9,7 @@ import ErrorLabel from '../../partials/ErrorLabel';
 import { Redirect } from 'react-router-dom';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../../state/GlobalState';
 import "../../css/login_register.css"
+import SohoButton from '../../partials/SohoButton';
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -47,8 +48,8 @@ function LoginPage() {
         acceptPolicies: Yup.boolean().oneOf([true], "Must Accept Concent"),
     });
 
-    const [{ data, loading, error }, doRegister] = useAxios({ url: '/user/register', method: 'POST'}, { manual: true });
-    const [loginReq, doLogin] = useAxios({ url: '/user/login', method: 'POST'}, { manual: true });
+    const [{ data, loading, error }, doRegister] = useAxios({ url: '/user/register', method: 'POST' }, { manual: true });
+    const [loginReq, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
 
     if (registered) {
@@ -87,12 +88,12 @@ function LoginPage() {
                                                 validationSchema={validationSchema}
                                                 onSubmit={(data, { setStatus }) => {
                                                     doRegister({ data })
-                                                    .then(() => doLogin({ data: { nickname: data.nickname, password: data.password }}))
-                                                    .then(({ data }) => {
-                                                        dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token})
-                                                        dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data})
-                                                    })
-                                                    .then(() => setRegistered(true))
+                                                        .then(() => doLogin({ data: { nickname: data.nickname, password: data.password } }))
+                                                        .then(({ data }) => {
+                                                            dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
+                                                            dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data })
+                                                        })
+                                                        .then(() => setRegistered(true))
                                                 }}
                                             >
                                                 {({
@@ -105,7 +106,7 @@ function LoginPage() {
                                                     handleSubmit,
                                                     /* and other goodies */
                                                 }) => (
-                                                        <div> 
+                                                        <div>
                                                             <div className="form-group">
                                                                 <label htmlFor="xsinput">Nickname</label>
                                                                 <input
@@ -252,12 +253,7 @@ You can change this seatting at any time</span>
 
 
                                                             </div>
-
-
-                                                            <div className="form-group">
-                                                                <input onClick={() => handleSubmit()} type="button" value="Submit" />
-                                                            </div>
-
+                                                            <SohoButton onClick={() => handleSubmit()} value={"Register"} />
                                                         </div>
 
                                                     )}

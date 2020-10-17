@@ -447,6 +447,57 @@ function ProfileEditPage() {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
+                                                <div className="form-group row">
+                                                    <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Feet:</label>
+                                                    <div className="col-sm-10 col-md-3">
+                                                        <select
+                                                            style={{ width: "100%" }}
+                                                            className="form-control"
+                                                            name={"inches"}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                            value={formik.values.inches}
+                                                        >
+                                                            <option>Select</option>
+                                                            <option value={1}>1</option>
+                                                            <option value={2}>2</option>
+                                                            <option value={3}>3</option>
+                                                            <option value={4}>4</option>
+                                                            <option value={5}>5</option>
+                                                            <option value={6}>6</option>
+                                                            <option value={7}>7</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div className="form-group row">
+                                                    <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Inch:</label>
+                                                    <div className="col-sm-10 col-md-3">
+                                                        <select
+                                                            style={{ width: "100%" }}
+                                                            className="form-control"
+                                                            name={"feet"}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                            value={formik.values.feet}
+                                                        >
+                                                            <option>Select</option>
+                                                            <option value={1}>1</option>
+                                                            <option value={2}>2</option>
+                                                            <option value={3}>3</option>
+                                                            <option value={4}>4</option>
+                                                            <option value={5}>5</option>
+                                                            <option value={6}>6</option>
+                                                            <option value={7}>7</option>
+                                                            <option value={8}>8</option>
+                                                            <option value={9}>9</option>
+                                                            <option value={10}>10</option>
+                                                            <option value={11}>11</option>
+                                                            <option value={12}>12</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <h5
                                                     style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: "0 0 7px 0", fontWeight: "bold" }}>
                                                     About You</h5>

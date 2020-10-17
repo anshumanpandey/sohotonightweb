@@ -7,11 +7,11 @@ import '../../css/timeline.css';
 import '../../css/Profile.css';
 import ProfileHeader from './ProfileHeader';
 import useAxios from 'axios-hooks'
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 
 function AboutPage() {
     let { id } = useParams<{ id: string }>();
-    const [editing, setEditing] = useState(false);
+    const [redirect, setRedirect] = useState(false);
     const [user, setUser] = useState<any>({});
 
     const [{ data, loading, error }, getUser] = useAxios({
@@ -23,12 +23,25 @@ function AboutPage() {
             .then(({ data }) => setUser(data))
     }, [id])
 
+    if (redirect) {
+        return <Redirect to="/profile-edit" />
+    }
+
     return (
         <>
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <ProfileHeader user={user} />
+                    <ProfileHeader
+                        user={user}
+                        extraContent={
+                            <div style={{ position: 'absolute', right: 0, height: '100%' }}>
+                                <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                                    <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
+                                </div>
+                            </div>
+                        }
+                    />
                 </div>
 
                 <div className="col-md-10 col-md-offset-1">
@@ -58,7 +71,7 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.firstName}
-                  </div>
+                                                </div>
                                             </div>
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
@@ -66,7 +79,7 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.lastName}
-                  </div>
+                                                </div>
                                             </div>
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
@@ -74,7 +87,7 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.gender}
-                  </div>
+                                                </div>
                                             </div>
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
@@ -82,7 +95,7 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.emailAddress}
-                  </div>
+                                                </div>
                                             </div>
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
@@ -90,14 +103,14 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.dayOfBirth}/{user?.monthOfBirth}/{user?.yearOfBirth}
-                  </div>
+                                                </div>
                                             </div>
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
                                                     Address:
                   </div>
                                                 <div className="col-xs-7">
-                                                    Sacramento, CA
+                                                    {user?.town}
                   </div>
                                             </div>
 
@@ -107,61 +120,23 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.phoneNumber}
-                  </div>
+                                                </div>
                                             </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Mamber Types:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    Lorem ipsum
-                  </div>
-                                            </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Select Service:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    {user?.escortServices && "Escort Services"}
-                                                    {user?.phoneChat && "Phone chat"}
-                                                    {user?.webcamWork && "Webcame Work"}
-                                                    {user?.contentProducer && "Content Producer"}
-                  </div>
-                                            </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Social Media Advertising:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    Allow My Profile
-                  </div>
-                                            </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Skype:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    Subscribe Now
-                  </div>
-                                            </div>
-
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
                                                     Orientation:
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.orientation}
-                  </div>
+                                                </div>
                                             </div>
 
                                         </div>
                                         <div className="col-lg-7 col-md-7 col-xs-12">
-                                            {editing == true && <textarea style={{ width: '100%', height: '100%' }} value=""></textarea>}
-                                            {editing == false && (
-                                                <p className="contact-description">
-                                                    {user?.aboutYouDetail}
-                                                </p>
-                                            )}
+                                            <h3>{user?.aboutYouSummary}</h3>
+                                            <p className="contact-description">
+                                                {user?.aboutYouDetail}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

@@ -116,6 +116,15 @@ function AboutPage() {
 
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
+                                                    Height:
+                  </div>
+                                                <div className="col-xs-7">
+                                                    {user?.inches} {user?.feet}
+                  </div>
+                                            </div>
+
+                                            <div className="row content-info">
+                                                <div className="col-xs-5">
                                                     Mobile No.:
                   </div>
                                                 <div className="col-xs-7">

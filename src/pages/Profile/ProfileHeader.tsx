@@ -24,7 +24,7 @@ function ProfileHeader({ user, extraContent }: any) {
                         </div>
                         <div className="name"><a href="#">{user?.firstName} {user?.lastName}</a></div>
                         <ul className="cover-nav">
-                            <li className={`${location.pathname.includes("/profile") && "active"}`}>
+                            <li className={`${location.pathname.includes("/profile/") && "active"}`}>
                                 <Link to={`/profile/${id}`}>
                                     <i className="fa fa-fw fa-bars"></i> Timeline
                                 </Link>
@@ -38,7 +38,7 @@ function ProfileHeader({ user, extraContent }: any) {
                                 authenticated: () => {
                                     return (
                                         <li className={`${location.pathname.includes("/profile-pictures") && "active"}`}>
-                                            <Link to={`/picture-upload/${id}`}>
+                                            <Link to={`/profile-pictures/${id}`}>
                                                 <i className="fa fa-picture-o"></i> Picture
                                             </Link>
                                         </li>

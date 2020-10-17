@@ -7,12 +7,14 @@ export enum GLOBAL_STATE_ACIONS {
   TOGGLE_ABOVE_18,
   LOGOUT,
   ERROR,
+  GLOBAL_LOADING,
 }
 
 const token = localStorage.getItem("jwtToken")
 const userData = localStorage.getItem("userData")
 
 const initialState = {
+  globalLoading: false,
   error: null,
   jwtToken: !token ? null : JSON.parse(token),
   userData: !userData ? null : JSON.parse(userData),
@@ -21,6 +23,7 @@ const initialState = {
 
 const reducer = (state: any, action: any) => {
   switch (action.type) {
+    case GLOBAL_STATE_ACIONS.GLOBAL_LOADING: return { ...state, globalLoading: action.payload }
     case GLOBAL_STATE_ACIONS.ERROR: return { ...state, error: action.payload }
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
@@ -50,3 +53,11 @@ const reducer = (state: any, action: any) => {
 };
 
 export const { dispatch: dispatchGlobalState, useGlobalState, getState: getGlobalState } = createStore(reducer, initialState);
+
+export const startGlobalLoading = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.GLOBAL_LOADING, payload: true })
+}
+
+export const stopGlobalLoading = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.GLOBAL_LOADING, payload: false })
+}

@@ -99,3 +99,7 @@ background-size: cover;
   .list_tab_link a {
     color: #d32a6b;
   }
+
+  .block-ui {
+    z-index: 1000000000;
+  }

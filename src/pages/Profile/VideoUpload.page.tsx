@@ -6,17 +6,19 @@ import '../../css/profile2.css';
 import '../../css/friends.css';
 import '../../css/PictureUpload.css';
 import { useAlert } from 'react-alert'
-import ReactPlayer from 'react-player'
 import SohoModal from '../../partials/SohoModal';
 import { Formik, useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
 import { useParams } from 'react-router-dom';
+import { startGlobalLoading, stopGlobalLoading } from '../../state/GlobalState';
+import { Line } from 'rc-progress';
 
 function VideoUpload() {
     let { id } = useParams<{ id: string }>();
     const alert = useAlert()
     const [user, setUser] = useState<any>({});
+    const [percentageCompleted, setPercentageCompleted] = useState(0);
     const [showUploadModel, setShowUploadModel] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(1);
     const itemsPerPage = 10
@@ -24,6 +26,10 @@ function VideoUpload() {
     const [{ data, loading, error }, sendFile] = useAxios({
         url: '/user/addVideo',
         method: 'POST',
+        onUploadProgress: function (progressEvent) {
+            var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            setPercentageCompleted(percentCompleted)
+        }
     }, { manual: true });
 
     const [getUserReq, getUser] = useAxios({
@@ -52,9 +58,13 @@ function VideoUpload() {
             data.append("price", values.price)
             //@ts-ignore
             data.append("video", values.file)
+            startGlobalLoading()
             return sendFile({ data })
                 .then(() => {
-                    alert.show('Image Uploaded!')
+                    alert.show('Video Uploaded!')
+                })
+                .finally(() => {
+                    stopGlobalLoading()
                 })
         },
         validate: values => {
@@ -95,11 +105,11 @@ function VideoUpload() {
                                                 <div className="item-img-overlay">
                                                     <a href="#" onClick={(e) => {
                                                         e.preventDefault()
-                                                        deletePicture({ data: { videoId: p.id }})
-                                                        .then(() => {
-                                                            alert.show('Image deleted!')
-                                                            getUser();
-                                                        })
+                                                        deletePicture({ data: { videoId: p.id } })
+                                                            .then(() => {
+                                                                alert.show('Image deleted!')
+                                                                getUser();
+                                                            })
                                                     }} className="show-image">
                                                         <span className="item-img_text">
                                                             <i className="fa fa-times" aria-hidden="true"></i>
@@ -122,8 +132,8 @@ function VideoUpload() {
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
-                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_ , idx) => {
-                                    return <li className={currentIndex == (idx + 1) ? "active": undefined}>
+                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_, idx) => {
+                                    return <li className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}
@@ -144,7 +154,7 @@ function VideoUpload() {
                             formik.submitForm()
                                 .then(() => {
                                     setShowUploadModel(false)
-                                    getUser();  
+                                    getUser();
                                 })
                         }} type="button" className="btn btn-default">Save</button>}
                     >
@@ -176,6 +186,12 @@ function VideoUpload() {
                                 />
                                 {formik.errors.price && formik.touched.price && <ErrorLabel message={formik.errors.price} />}
                             </div>
+                            {loading && (
+                                <div>
+                                <p style={{ textAlign: 'center'}}>Percentage {percentageCompleted}%</p>
+                                    <Line percent={percentageCompleted} strokeWidth={4} strokeColor="#d32a6b" />
+                                </div>
+                            )}
                         </div>
                     </SohoModal>
                 </div>

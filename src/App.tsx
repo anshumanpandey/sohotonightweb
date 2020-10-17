@@ -18,18 +18,19 @@ import ProtectedRoute from './partials/ProtectedRoute';
 import ProfileEditPage from './pages/Profile/ProfileEdit.page';
 import ProfilePage from './pages/Profile/Profile.page';
 import VideosPage from './pages/Profile/Videos.page';
-import PicturesPage from './pages/Profile/Pictures.page';
+import PicturesPage from './pages/Profile/pictures/Pictures.page';
 import AboutPage from './pages/Profile/About.page';
-import PictureUpload from './pages/Profile/PictureUpload.page';
 import VideoUpload from './pages/Profile/VideoUpload.page';
 import LogoutPage from './pages/logout/logout.page';
 import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from './state/GlobalState';
+import 'react-block-ui/style.css';
 
 function App() {
   const alert = useAlert()
   const [error] = useGlobalState('error')
+  const [globalLoading] = useGlobalState('globalLoading')
 
   useEffect(() => {
     if (!error) return
@@ -39,6 +40,7 @@ function App() {
       }
     })
   }, [error])
+
   return (
     <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', backgroundImage: `url(${enter})`, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
       <Router>
@@ -77,7 +79,6 @@ function App() {
             <PicturesPage />
           </Route>
           <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
-          <ProtectedRoute path="/picture-upload/:id?" component={PictureUpload} />
           <ProtectedRoute path="/video-upload/:id?" component={VideoUpload} />
           <ProtectedRoute path="/logout" component={LogoutPage} />
         </Switch>

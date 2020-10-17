@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-type Props = { title: string, show: boolean, onClose: () => void, footer: (close: () => void) => any }
-const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, children, footer }) => {
+type Props = { title: string, show: boolean, onClose: () => void, footer: (close: () => void) => any, size?: "lg" }
+const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, children, footer, size }) => {
 
     useEffect(() => {
         if (show == true) {
@@ -19,7 +19,7 @@ const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, chi
 
     return (
         <div className="modal fade" id="modalShow" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
-            <div className="modal-dialog" role="document">
+            <div className={`modal-dialog ${size ? 'modal-lg': undefined}`} role="document">
                 <div className="modal-content">
                     <div className="modal-header">
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

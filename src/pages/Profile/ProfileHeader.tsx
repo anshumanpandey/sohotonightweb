@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import cover from '../../img/Cover/profile-cover.jpg';
 import '../../css/cover.css';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 
-function ProfileHeader({ user }: any) {
+function ProfileHeader({ user, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
+    const location = useLocation()
 
     return (
         <div className="row">
@@ -23,12 +24,12 @@ function ProfileHeader({ user }: any) {
                         </div>
                         <div className="name"><a href="#">{user?.firstName} {user?.lastName}</a></div>
                         <ul className="cover-nav">
-                            <li>
+                            <li className={`${location.pathname.includes("/profile") && "active"}`}>
                                 <Link to={`/profile/${id}`}>
                                     <i className="fa fa-fw fa-bars"></i> Timeline
                                 </Link>
                             </li>
-                            <li className="active">
+                            <li className={`${location.pathname.includes("/profile-about") && "active"}`}>
                                 <Link to={`/profile-about/${id}`}>
                                     <i className="fa fa-fw fa-user"></i> About
                                 </Link>
@@ -36,7 +37,7 @@ function ProfileHeader({ user }: any) {
                             {AuthenticatedFactory({
                                 authenticated: () => {
                                     return (
-                                        <li className="active">
+                                        <li className={`${location.pathname.includes("/profile-pictures") && "active"}`}>
                                             <Link to={`/picture-upload/${id}`}>
                                                 <i className="fa fa-picture-o"></i> Picture
                                             </Link>
@@ -45,7 +46,7 @@ function ProfileHeader({ user }: any) {
                                 },
                                 nonAuthenticated: () => {
                                     return (
-                                        <li className="active">
+                                        <li className={`${location.pathname.includes("/profile-pictures") && "active"}`}>
                                             <Link to={`/profile-pictures/${id}`}>
                                                 <i className="fa fa-picture-o"></i> Picture
                                             </Link>
@@ -57,7 +58,7 @@ function ProfileHeader({ user }: any) {
                             {AuthenticatedFactory({
                                 authenticated: () => {
                                     return (
-                                        <li className="active">
+                                        <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
                                             <Link to={`/video-upload/${id}`}>
                                                 <i className="fa fa-video-camera"></i> Video
                                             </Link>
@@ -66,7 +67,7 @@ function ProfileHeader({ user }: any) {
                                 },
                                 nonAuthenticated: () => {
                                     return (
-                                        <li>
+                                        <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
                                             <Link to={`/profile-video/${id}`}>
                                                 <i className="fa fa-video-camera"></i> Video
                                             </Link>
@@ -76,16 +77,16 @@ function ProfileHeader({ user }: any) {
                             })}
 
                         </ul>
+                        {extraContent && extraContent}
                     </div>
                     {user?.phoneNumber && (
                         <div style={{ position: "absolute", top: 0, backgroundColor: "#fff9", width: "40%", right: 0 }} className="box profile-info n-border-top phone_cont">
                             <div className="phone_no_area">
                                 <ul>
-                                    <li>Message Me At</li>
-                                    <li><i className="fa fa-phone-square" aria-hidden="true"></i>&nbsp; 012 3456 7891</li>
+                                    <li>Talk to me at</li>
+                                    <li style={{ textAlign: "center" }}>{user?.phoneNumber}</li>
                                 </ul>
                             </div>
-                            <div className="skype_msg"><a href="#"><i className="fa fa-video-camera"></i>&nbsp;  See Me</a></div>
                         </div>
                     )}
                 </div>

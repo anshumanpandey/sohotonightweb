@@ -8,9 +8,13 @@ import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../
 import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import UkCounties from "../../utils/UkCounties.json"
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { Redirect } from 'react-router-dom';
+import DatePicker, { DateInput } from '@trendmicro/react-datepicker';
+import '@trendmicro/react-datepicker/dist/react-datepicker.css';
+import Dropdown from '@trendmicro/react-dropdown';
+import '@trendmicro/react-dropdown/dist/react-dropdown.css';
+import moment from 'moment';
+import ErrorLabel from '../../partials/ErrorLabel';
 
 var months: { [k: string]: string } = {
     'January': '01',
@@ -31,6 +35,7 @@ function ProfileEditPage() {
     const [profile] = useGlobalState('userData')
     const [currentTab, setCurrentTab] = useState(0)
     const [redirect, setRedirect] = useState(false)
+    const [open, setOpen] = useState(false)
 
     const [{ data, loading, error }, updateProfile] = useAxios({
         url: '/user/update',
@@ -44,6 +49,13 @@ function ProfileEditPage() {
             bannerImagePreview: profile.bannerImage,
             profileImagePreview: profile.profilePic,
             authenticationProfilePicPreview: profile.authenticationProfilePic,
+        },
+        validate: values => {
+            const errors: any = {};
+            if (values.aboutYouDetail && values.aboutYouDetail.split(' ').length < 20) {
+                errors.aboutYouDetail = 'Must be at least 20 words';
+            }
+            return errors;
         },
         onSubmit: values => {
             const {
@@ -215,7 +227,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                         >
                                                             <option>Select</option>
-                                                            {UkCounties.map(c => {
+                                                            {UkCounties.sort((a, b) => a.County.localeCompare(b.County)).map(c => {
                                                                 return <option value={c.County}>{c.County}</option>;
                                                             })}
                                                         </select>
@@ -275,20 +287,35 @@ function ProfileEditPage() {
                                                 </div>
 
                                                 <div className="form-group row">
-                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Interested in Phone Chat?: </div>
+                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Interested in Phone Chat? </div>
                                                     <div className="col-sm-10 col-md-6">
-                                                        <div className="checkbox">
+                                                        <div className="radio">
                                                             <label>
                                                                 <input
-                                                                    type="checkbox"
+                                                                    type="radio"
                                                                     name={"phoneChat"}
+                                                                    value={1}
                                                                     onChange={formik.handleChange}
                                                                     onBlur={formik.handleBlur}
-                                                                    checked={formik.values.phoneChat}
+                                                                    checked={formik.values.phoneChat == true}
                                                                 />
-                                                                <span className="text">Yes or No</span>
+                                                                <span className="text">Yes</span>
                                                             </label>
                                                         </div>
+                                                        <div className="radio">
+                                                            <label>
+                                                                <input
+                                                                    type="radio"
+                                                                    name={"phoneChat"}
+                                                                    value={0}
+                                                                    onChange={formik.handleChange}
+                                                                    onBlur={formik.handleBlur}
+                                                                    checked={formik.values.phoneChat == false}
+                                                                />
+                                                                <span className="text">No</span>
+                                                            </label>
+                                                        </div>
+
                                                     </div>
                                                 </div>
 
@@ -307,7 +334,30 @@ function ProfileEditPage() {
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Date of Birth:</label>
                                                     <div className="col-sm-10 col-md-6">
-                                                            <DatePicker dateFormat="dd/MM/yyyy" selected={formik.values.birthDate} onChange={date => formik.setFieldValue("birthDate",date)} />
+                                                        <Dropdown open={open}>
+                                                            <Dropdown.Toggle
+                                                                btnStyle="link"
+                                                                noCaret
+                                                                style={{ padding: 0, border: 1, backgroundColor: 'white' }}
+                                                            >
+                                                                <div onClick={() => setOpen(true)}>
+                                                                    <DateInput
+                                                                        value={moment(formik.values.birthDate).format('D/M/YYYY')}
+                                                                        defaultValue={moment(formik.values.birthDate).format('D/M/YYYY')}
+                                                                    />
+                                                                </div>
+                                                            </Dropdown.Toggle>
+                                                            <Dropdown.Menu style={{ padding: 8 }}>
+                                                                <DatePicker
+                                                                    date={formik.values.birthDate}
+                                                                    onSelect={(date: string) => {
+                                                                        setOpen(false)
+                                                                        formik.setFieldValue("birthDate", moment(date, "YYYY-MM-DD").toDate())
+                                                                    }}
+                                                                />
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+
                                                     </div>
                                                 </div>
 
@@ -329,20 +379,6 @@ function ProfileEditPage() {
                                                             <option value="Couple">Couple</option>
                                                             <option value="Trans">Trans</option>
                                                         </select>
-                                                    </div>
-                                                    <div className="col-sm-10 col-md-3">
-                                                        <div className="checkbox">
-                                                            <label>
-                                                                <input
-                                                                    type="checkbox"
-                                                                    name={"isTrans"}
-                                                                    onChange={formik.handleChange}
-                                                                    onBlur={formik.handleBlur}
-                                                                    checked={formik.values.isTrans}
-                                                                />
-                                                                <span className="text">Trans</span>
-                                                            </label>
-                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -443,6 +479,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                             value={formik.values.aboutYouDetail}
                                                         ></textarea>
+                                                        {formik.errors.aboutYouDetail && formik.touched.aboutYouDetail && <ErrorLabel message={formik.errors.aboutYouDetail.toString()} />}
                                                     </div>
                                                 </div>
 

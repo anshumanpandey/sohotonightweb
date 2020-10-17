@@ -10,13 +10,6 @@
     overflow: hidden;
 }
 
-.item-img-wrap img {
-    -moz-transition: all 200ms linear;
-    -o-transition: all 200ms linear;
-    -webkit-transition: all 200ms linear;
-    transition: all 200ms linear;
-    width: 100%;
-}
 
 /************************image hover effect*******************/
 .item-img-wrap {
@@ -26,10 +19,6 @@
 }
 
 .item-img-wrap img {
-  -moz-transition: all 200ms linear;
-  -o-transition: all 200ms linear;
-  -webkit-transition: all 200ms linear;
-  transition: all 200ms linear;
   width: 100%;
 }
 
@@ -60,14 +49,6 @@
 
 .item-img-wrap:hover .item-img-overlay span {
   opacity: 1;
-}
-
-.item-img-wrap:hover img {
-  -moz-transform: scale(1.1);
-  -o-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
 }
 
 

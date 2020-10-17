@@ -103,7 +103,7 @@ function AboutPage() {
 
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
-                                                    Mobile/Cell Number:
+                                                    Mobile No.:
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.phoneNumber}

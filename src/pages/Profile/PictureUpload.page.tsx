@@ -35,6 +35,12 @@ function PictureUpload() {
             .then(({ data }) => setUser(data))
     }, [id])
 
+    useEffect(() => {
+        if (!getUserReq.loading && getUserReq.data) {
+            setUser(getUserReq.data)
+        }
+    }, [getUserReq.loading])
+
     const [deletePicturesReq, deletePicture] = useAxios({
         url: '/user/deleteImage',
         method: 'DELETE'
@@ -74,40 +80,42 @@ function PictureUpload() {
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <ProfileHeader user={user} />
+                    <ProfileHeader
+                        user={user}
+                        extraContent={
+                            <div style={{ position: 'absolute', right: 0, height: '100%' }}>
+                                <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                                    <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setShowUploadModel(true)} className="btn">Upload A New Picture</button>
+                                </div>
+                            </div>
+                        }
+                    />
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
                                 {getUserReq.loading ? <p>Loading...</p> : getUserReq?.data?.Pictures?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
                                         <div className="mix col-sm-4 page1 page4 margin30">
-                                            <div className="item-img-wrap ">
-                                                <img src={p.imageName} className="img-responsive" alt="workimg" />
-                                                <div className="item-img-overlay">
-                                                    <a href="#" onClick={(e) => {
-                                                        e.preventDefault()
-                                                        deletePicture({ data: { imageId: p.id }})
+                                            <div className="item-img-wrap">
+                                                <a href="#" onClick={(e) => {
+                                                    e.preventDefault()
+                                                    deletePicture({ data: { imageId: p.id } })
                                                         .then(() => {
                                                             alert.show('Image deleted!')
-                                                            getUser();
+                                                            getUser()
                                                         })
-                                                    }} className="show-image">
-                                                        <span className="item-img_text">
-                                                            <i className="fa fa-times" aria-hidden="true"></i>
+                                                }} className="show-image">
+                                                    <span style={{ color: "white", fontSize: "18px", right: 0 }} className="item-img_text">
+                                                        <i className="fa fa-times" aria-hidden="true"></i>
                                                             Delete
                                                         </span>
-                                                    </a>
-                                                </div>
+                                                </a>
+                                                <img src={p.imageName} className="img-responsive" alt="workimg" />
+
                                             </div>
                                         </div>
                                     );
                                 })}
-
-                                <div className="mix col-sm-4 page4  margin30">
-                                    <div className="upload-btn-wrapper">
-                                        <button onClick={() => setShowUploadModel(true)} className="btn">Upload A New Picture</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -119,8 +127,8 @@ function PictureUpload() {
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
-                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_ , idx) => {
-                                    return <li className={currentIndex == (idx + 1) ? "active": undefined}>
+                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_, idx) => {
+                                    return <li className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}

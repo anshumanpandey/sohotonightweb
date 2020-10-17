@@ -74,7 +74,16 @@ function VideoUpload() {
             <NavBar />
             <div className="row page-content">
                 <div className="col-md-10 col-md-offset-1">
-                    <ProfileHeader user={user} />
+                    <ProfileHeader
+                        user={user}
+                        extraContent={
+                            <div style={{ position: 'absolute', right: 0, height: '100%' }}>
+                                <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                                    <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setShowUploadModel(true)} className="btn">Upload A New Video</button>
+                                </div>
+                            </div>
+                        }
+                    />
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
@@ -102,12 +111,6 @@ function VideoUpload() {
                                         </div>
                                     );
                                 })}
-
-                                <div className="mix col-sm-4 page4  margin30">
-                                    <div className="upload-btn-wrapper">
-                                        <button onClick={() => setShowUploadModel(true)} className="btn">Upload A New Video</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -136,7 +139,7 @@ function VideoUpload() {
                     <SohoModal
                         onClose={() => setShowUploadModel(false)}
                         show={showUploadModel}
-                        title="Upload picture"
+                        title="Upload Video"
                         footer={() => <button onClick={() => {
                             formik.submitForm()
                                 .then(() => {

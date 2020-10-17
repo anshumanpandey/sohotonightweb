@@ -2,23 +2,24 @@ import React, { FunctionComponent, useEffect } from 'react';
 
 type Props = { title: string, show: boolean, onClose: () => void, footer: (close: () => void) => any, size?: "lg" }
 const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, children, footer, size }) => {
+    let htmlId = Math.random().toString(36).substring(7);
 
     useEffect(() => {
         if (show == true) {
             //@ts-ignore
-            $("#modalShow").modal()
+            $(`#${htmlId}`).modal()
         } else {
             //@ts-ignore
-            $('#modalShow').modal('hide')
+            $(`#${htmlId}`).modal('hide')
         }
         //@ts-ignore
-        $('#modalShow').on('hidden.bs.modal', function (e) {
+        $(`#${htmlId}`).on('hidden.bs.modal', function (e) {
             onClose()
         })
     }, [show])
 
     return (
-        <div className="modal fade" id="modalShow" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
+        <div className="modal fade" id={htmlId} tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
             <div className={`modal-dialog ${size ? 'modal-lg': undefined}`} role="document">
                 <div className="modal-content">
                     <div className="modal-header">

@@ -26,11 +26,14 @@ import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from './state/GlobalState';
 import currentPageIs from './utils/currentPageIs';
+import PaymentPage from './pages/payment/Payment.Page';
 
 function App() {
   const alert = useAlert()
   const location = useLocation()
   const [error] = useGlobalState('error')
+  const [info] = useGlobalState('info')
+  const [success] = useGlobalState('success')
   const [globalLoading] = useGlobalState('globalLoading')
 
   useEffect(() => {
@@ -41,6 +44,24 @@ function App() {
       }
     })
   }, [error])
+
+  useEffect(() => {
+    if (!info) return
+    alert.info(info, {
+      onClose: () => {
+        dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.INFO, payload: null })
+      }
+    })
+  }, [info])
+
+  useEffect(() => {
+    if (!success) return
+    alert.success(success, {
+      onClose: () => {
+        dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SUCCESS, payload: null })
+      }
+    })
+  }, [success])
 
   const pageToShowBackgroundImg = () => {
     return currentPageIs(location.pathname, "preview") ||
@@ -82,6 +103,9 @@ function App() {
           </Route>
           <Route path="/profile-pictures/:id?">
             <PicturesPage />
+          </Route>
+          <Route path="/payment/:type?/:id?">
+            <PaymentPage />
           </Route>
           <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
           <ProtectedRoute path="/logout" component={LogoutPage} />

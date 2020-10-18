@@ -5,33 +5,31 @@ import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
-import { Formik } from 'formik';
-
-enum SORT_KEY {
-    AGE = "AGE"
-}
+import UkCounties from '../../utils/UkCounties.json'
 
 enum FILTER_KEY {
     GENDER = "GENDER",
-    ORIENTATION = "ORIENTATION"
+    ORIENTATION = "ORIENTATION",
+    COUNTY = "COUNTY",
+    LOCATION = "LOCATION",
 }
 
 function ListPostPage() {
-    const [sortFilters, setSortFilters] = useState<any>({ [SORT_KEY.AGE]: true })
-
-    const [searchFilter, setSearchFilter] = useState<any>({ [FILTER_KEY.GENDER]: [], [FILTER_KEY.ORIENTATION]: [] })
+    const [searchFilter, setSearchFilter] = useState<any>({ [FILTER_KEY.LOCATION]: "", [FILTER_KEY.GENDER]: [], [FILTER_KEY.ORIENTATION]: [], [FILTER_KEY.COUNTY]: [] })
     const toggleFilterFor = useCallback((k: FILTER_KEY, val: string) => {
         setSearchFilter((p: any) => {
             const filterOf = p[k]
-            const found = filterOf.find((r: string ) => r == val)
-            return { ...p, [k]: found ? p[k].filter((i: string) => i != found): p[k].concat([val]) }
+            const found = filterOf.find((r: string) => r == val)
+            return { ...p, [k]: found ? p[k].filter((i: string) => i != found) : p[k].concat([val]) }
+        })
+    }, [])
+    const setLocationFilter = useCallback((val: string) => {
+        setSearchFilter((p: any) => {
+            return { ...p, [FILTER_KEY.LOCATION]: val }
         })
     }, [])
 
     const [filteredUsers, setFilteredUsers] = useState<any>([])
-    const toggleFilter = (k: SORT_KEY) => {
-        setSortFilters((p: any) => ({ ...p, [SORT_KEY.AGE]: !sortFilters[SORT_KEY.AGE] }))
-    }
 
     const [{ data, loading, error }, getUser] = useAxios({
         url: '/user/public/getUsers',
@@ -46,22 +44,19 @@ function ListPostPage() {
         if (!data) return
         const r = data
             .filter((a: any) => {
-                return searchFilter[FILTER_KEY.GENDER].length != 0 ? searchFilter[FILTER_KEY.GENDER].includes(a.gender): true
+                return searchFilter[FILTER_KEY.GENDER].length != 0 ? searchFilter[FILTER_KEY.GENDER].includes(a.gender) : true
             })
             .filter((a: any) => {
-                return searchFilter[FILTER_KEY.ORIENTATION].length != 0 ? searchFilter[FILTER_KEY.ORIENTATION].includes(a.orientation): true
+                return searchFilter[FILTER_KEY.ORIENTATION].length != 0 ? searchFilter[FILTER_KEY.ORIENTATION].includes(a.orientation) : true
+            })
+            .filter((a: any) => {
+                return searchFilter[FILTER_KEY.COUNTY].length != 0 ? searchFilter[FILTER_KEY.COUNTY].includes(a.county) : true
+            })
+            .filter((a: any) => {
+                return searchFilter[FILTER_KEY.LOCATION] ? searchFilter[FILTER_KEY.LOCATION].includes(a.town) : true
             })
         setFilteredUsers([...r])
-    }, [searchFilter[FILTER_KEY.GENDER], searchFilter[FILTER_KEY.ORIENTATION]])
-
-
-    useEffect(() => {
-        const r = filteredUsers
-            .sort((a: any, b: any) => {
-                return sortFilters[SORT_KEY.AGE] ? GetUserAge(a) - GetUserAge(b) : true
-            })
-        setFilteredUsers([...r])
-    }, [sortFilters])
+    }, [searchFilter[FILTER_KEY.GENDER], searchFilter[FILTER_KEY.ORIENTATION], searchFilter[FILTER_KEY.COUNTY], searchFilter[FILTER_KEY.LOCATION]])
 
     return (
         <>
@@ -77,156 +72,79 @@ function ListPostPage() {
                                     <div className="widget-body bordered-top bordered-sky">
                                         <div className="form-group">
 
+                                            <label htmlFor="lginput">Location</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Location"
+                                                style={{ borderRadius: "4px !important", margin: "0 0 5px 0 " }}
+                                                onChange={(e) => setLocationFilter(e.currentTarget.value)}
+                                            />
+
                                             <h5 style={{ fontWeight: "normal" }}>Gender</h5>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onChange={() => { toggleFilterFor(FILTER_KEY.GENDER, "Male")}} type="checkbox" />
+                                                    <input onChange={() => { toggleFilterFor(FILTER_KEY.GENDER, "Male") }} type="checkbox" />
                                                     <span className="text">Male</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.GENDER, "Female")}} type="checkbox" />
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.GENDER, "Female") }} type="checkbox" />
                                                     <span className="text">Female</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.GENDER, "Couple")}} type="checkbox" />
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.GENDER, "Couple") }} type="checkbox" />
                                                     <span className="text">Couple</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.GENDER, "Trans")}} type="checkbox" />                                                
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.GENDER, "Trans") }} type="checkbox" />
                                                     <span className="text">Trans</span>
                                                 </label>
                                             </div>
 
                                             <h5 style={{ fontWeight: "normal" }}>Region</h5>
 
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">Channel Islands</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">London</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">Northen Ireland</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">South West</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">Yorkshire & the Humber</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">East Midlands</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">North East</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">Scotland</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">Wales</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">East of England (Anglia)</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">North West</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">South East</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">West Midlands</span>
-                                                </label>
-                                            </div>
-
-
-                                            <label htmlFor="lginput">Location</label>
-                                            <input type="text" className="form-control" id="lginput" placeholder="Location" style={{ borderRadius: "4px !important", margin: "0 0 5px 0 " }} />
+                                            {UkCounties.sort((a, b) => a.County.localeCompare(b.County)).map(c => {
+                                                return <div className="checkbox">
+                                                    <label>
+                                                        <input onClick={() => { toggleFilterFor(FILTER_KEY.COUNTY, c.County) }} type="checkbox" />
+                                                        <span className="text">{c.County}</span>
+                                                    </label>
+                                                </div>
+                                            })}
 
                                             <h5 style={{ fontWeight: "normal" }}>Orientation</h5>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-curious")}} type="checkbox" />
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-curious") }} type="checkbox" />
                                                     <span className="text">Bi-curious</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-sexual")}} type="checkbox" />
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-sexual") }} type="checkbox" />
                                                     <span className="text">Bi-sexual</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Gay")}} type="checkbox" />
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Gay") }} type="checkbox" />
                                                     <span className="text">Gay</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Straight")}} type="checkbox" />
+                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Straight") }} type="checkbox" />
                                                     <span className="text">Straight</span>
                                                 </label>
                                             </div>
@@ -240,19 +158,11 @@ function ListPostPage() {
                     </div>
 
                     <div className="col-md-7 ">
-
-                        <div className="list_tab">
-
-                            <ul>
-                                <li><strong>Order BY :</strong></li>
-                                <li><a href="#">Popularity / Views</a></li>
-                                <li><a onClick={(e) => { e.preventDefault(); toggleFilter(SORT_KEY.AGE) }} href="#">Age</a></li>
-                                <li><a href="#">Proximity</a></li>
-                            </ul>
-
-                        </div>
                         <div className="col-inside-lg decor-default activities animated fadeInUp" id="activities">
                             <h3>Model List</h3>
+                            {loading && <p style={{ fontSize: 20, textAlign: 'center', color: "#d32a6b" }}>Loading...</p>}
+                            {!loading && filteredUsers.length == 0 && <p style={{ fontSize: 20, textAlign: 'center', color: "#d32a6b" }}>No user found</p>}
+
                             {filteredUsers.map((g: any) => {
                                 return (
                                     <div key={g.nickname} className="unit">

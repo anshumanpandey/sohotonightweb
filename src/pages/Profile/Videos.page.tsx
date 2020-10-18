@@ -10,7 +10,7 @@ import SohoModal from '../../partials/SohoModal';
 import { Formik, useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { startGlobalLoading, stopGlobalLoading } from '../../state/GlobalState';
 import { Line } from 'rc-progress';
 import SohoButton from '../../partials/SohoButton';
@@ -21,6 +21,8 @@ function VideoUpload() {
     let { id } = useParams<{ id: string }>();
     const alert = useAlert()
     const [user, setUser] = useState<any>({});
+    const [goToPayment, setGoToPayment] = useState<boolean>(false);
+    const [buyingVideo, setBuyingVideo] = useState<false | any>(false);
     const [percentageCompleted, setPercentageCompleted] = useState(0);
     const [showUploadModel, setShowUploadModel] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(1);
@@ -82,6 +84,8 @@ function VideoUpload() {
         }
     });
 
+    if (goToPayment && buyingVideo.id) return <Redirect to={`/payment/video/${buyingVideo.id}`} />
+
     return (
         <>
             <NavBar />
@@ -130,7 +134,15 @@ function VideoUpload() {
                                                     return (
                                                         <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                             <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                <a href="#" className="show-image">
+                                                                <a
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        setBuyingVideo(p)
+                                                                        setGoToPayment(true)
+                                                                    }}
+                                                                    href="#"
+                                                                    className="show-image"
+                                                                >
                                                                     <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
                                                                         <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                                                                     Buy Now <br /> £{p.price}

@@ -7,6 +7,8 @@ export enum GLOBAL_STATE_ACIONS {
   TOGGLE_ABOVE_18,
   LOGOUT,
   ERROR,
+  INFO,
+  SUCCESS,
   GLOBAL_LOADING,
 }
 
@@ -16,6 +18,8 @@ const userData = localStorage.getItem("userData")
 const initialState = {
   globalLoading: false,
   error: null,
+  info: null,
+  success: null,
   jwtToken: !token ? null : JSON.parse(token),
   userData: !userData ? null : JSON.parse(userData),
   above18: localStorage.getItem("above18") && localStorage.getItem("above18") == "1" ? true : false,
@@ -24,6 +28,8 @@ const initialState = {
 const reducer = (state: any, action: any) => {
   switch (action.type) {
     case GLOBAL_STATE_ACIONS.GLOBAL_LOADING: return { ...state, globalLoading: action.payload }
+    case GLOBAL_STATE_ACIONS.SUCCESS: return { ...state, success: action.payload }
+    case GLOBAL_STATE_ACIONS.INFO: return { ...state, info: action.payload }
     case GLOBAL_STATE_ACIONS.ERROR: return { ...state, error: action.payload }
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
@@ -60,4 +66,12 @@ export const startGlobalLoading = () => {
 
 export const stopGlobalLoading = () => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.GLOBAL_LOADING, payload: false })
+}
+
+export const setInfoAlert = (msg: string) => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.INFO, payload: msg })
+}
+
+export const setSuccessAlert = (msg: string) => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SUCCESS, payload: msg })
 }

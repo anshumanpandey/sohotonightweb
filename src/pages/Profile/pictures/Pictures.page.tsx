@@ -8,7 +8,7 @@ import '../../../css/Profile.css';
 import '../../../css/photos1.css';
 import '../../../css/photos2.css';
 import ProfileHeader from '../ProfileHeader';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import useAxios from 'axios-hooks'
 import AuthenticatedFactory from '../../../utils/AuthenticatedFactory';
 import { PictureUploadItem } from './PictureUploadItem';
@@ -25,6 +25,7 @@ function PicturesPage() {
     const alert = useAlert()
     const [currentIndex, setCurrentIndex] = useState(1);
     const itemsPerPage = 10
+    const [goToPayment, setGoToPayment] = useState<boolean>(false);
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
     const [showUploadModel, setShowUploadModel] = useState<false | any>(false);
     const [user, setUser] = useState<any>({});
@@ -79,6 +80,8 @@ function PicturesPage() {
             return errors;
         }
     });
+
+    if (goToPayment && showPreviewModal.id) return <Redirect to={`/payment/picture/${showPreviewModal.id}`} />
 
     return (
         <>
@@ -171,7 +174,14 @@ function PicturesPage() {
                                 },
                                 nonAuthenticated: () => {
                                     return (
-                                        <a href="#" style={{ color: "#cf2c6b" }}>
+                                        <a
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                setGoToPayment(true)
+                                            }}
+                                            href="#"
+                                            style={{ color: "#cf2c6b" }}
+                                        >
                                             <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now <br />£{showPreviewModal.price}
                                         </a>
                                     )

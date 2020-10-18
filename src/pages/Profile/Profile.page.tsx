@@ -10,6 +10,7 @@ import useAxios from 'axios-hooks'
 import PostWidgetForm from '../../partials/PostWidgetForm';
 import PostItem from '../../partials/PostItem';
 import SohoModal from '../../partials/SohoModal';
+import IsOwnProfile from '../../utils/IsOwnProfile';
 
 function ProfilePage() {
     let { id } = useParams<{ id: string }>();
@@ -43,18 +44,9 @@ function ProfilePage() {
                                         <ul>
                                             <li>Picture</li>
                                             <li>
-                                                {AuthenticatedFactory({
-                                                    authenticated: () => {
-                                                        return (<Link to={`/profile-pictures/${id}`}>
-                                                            <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                        </Link>);
-                                                    },
-                                                    nonAuthenticated: () => {
-                                                        return (<Link to={`/profile-pictures/${id}`}>
-                                                            View All
-                                                        </Link>);
-                                                    }
-                                                })}
+                                                <Link to={`/profile-pictures/${id}`}>
+                                                    {IsOwnProfile({ user }) ? (<><i className="fa fa-pencil-square-o" aria-hidden="true" /> Edit</>) : "View All"}
+                                                </Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -85,18 +77,9 @@ function ProfilePage() {
                                         <ul>
                                             <li>Video</li>
                                             <li>
-                                                {AuthenticatedFactory({
-                                                    authenticated: () => {
-                                                        return (<Link to={`/profile-video/${id}`}>
-                                                            <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                        </Link>);
-                                                    },
-                                                    nonAuthenticated: () => {
-                                                        return (<Link to={`/profile-video/${id}`}>
-                                                            View All
-                                                        </Link>);
-                                                    }
-                                                })}
+                                                <Link to={`/profile-video/${id}`}>
+                                                    {IsOwnProfile({ user }) ? (<><i className="fa fa-pencil-square-o" aria-hidden="true" /> Edit</>) : "View All"}
+                                                </Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -110,7 +93,7 @@ function ProfilePage() {
                                                     return (
                                                         <li key={p.videoUrl}>
                                                             <a href="#">
-                                                                <video controls style={{ height: 80}} src={p.videoUrl} />
+                                                                <video controls style={{ height: 80 }} src={p.videoUrl} />
                                                             </a>
                                                         </li>
                                                     );
@@ -172,19 +155,15 @@ function ProfilePage() {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            {AuthenticatedFactory({
-                                                authenticated: () => {
-                                                    return (
-                                                        <div style={{ margin: 0 }} className="box profile-info n-border-top">
-                                                            <PostWidgetForm onPostCrated={() => refetchUser()} />
-                                                        </div>
-                                                    )
-                                                },
-                                            })}
+                                            {IsOwnProfile({ user }) && (
+                                                <div style={{ margin: 0 }} className="box profile-info n-border-top">
+                                                    <PostWidgetForm onPostCrated={() => refetchUser()} />
+                                                </div>
+                                            )}
                                             {!loading && user?.Posts?.length == 0 && (
                                                 <p style={{ fontSize: 16, textAlign: 'center', color: "#d32a6b" }}>No Post</p>
                                             )}
-                                            {!loading && user?.Posts?.length != 0 && user?.Posts?.sort((a: any,b: any) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())?.map((p: any) => {
+                                            {!loading && user?.Posts?.length != 0 && user?.Posts?.sort((a: any, b: any) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())?.map((p: any) => {
                                                 return <PostItem post={p} user={user} />
                                             })}
                                         </div>

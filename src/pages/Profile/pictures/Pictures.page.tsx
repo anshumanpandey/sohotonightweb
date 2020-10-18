@@ -18,6 +18,7 @@ import SohoModal from '../../../partials/SohoModal';
 import { useFormik } from 'formik';
 import ErrorLabel from '../../../partials/ErrorLabel';
 import SohoButton from '../../../partials/SohoButton';
+import IsOwnProfile from '../../../utils/IsOwnProfile';
 
 function PicturesPage() {
     let { id } = useParams<{ id: string }>();
@@ -88,13 +89,9 @@ function PicturesPage() {
                         user={user}
                         extraContent={
                             <>
-                                {AuthenticatedFactory({
-                                    authenticated: () => {
-                                        return <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
-                                            <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Picture" />
-                                        </div>
-                                    }
-                                })}
+                                {IsOwnProfile({ user }) && <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
+                                    <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Picture" />
+                                </div>}
                             </>
                         }
                     />
@@ -106,6 +103,7 @@ function PicturesPage() {
                                     return (
                                         <>
                                             {AuthenticatedFactory({
+                                                user: user,
                                                 authenticated: () => {
                                                     return <PictureUploadItem
                                                         key={p.id.toString() + "-item"}
@@ -163,6 +161,7 @@ function PicturesPage() {
                     return (
                         <>
                             {AuthenticatedFactory({
+                                user: user,
                                 authenticated: () => {
                                     return (
                                         <button onClick={() => {
@@ -172,8 +171,8 @@ function PicturesPage() {
                                 },
                                 nonAuthenticated: () => {
                                     return (
-                                        <a href="#" style={{ color:"#cf2c6b" }}>
-                                            <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now <br/>£{showPreviewModal.price}
+                                        <a href="#" style={{ color: "#cf2c6b" }}>
+                                            <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now <br />£{showPreviewModal.price}
                                         </a>
                                     )
                                 }

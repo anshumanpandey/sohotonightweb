@@ -15,6 +15,7 @@ import { startGlobalLoading, stopGlobalLoading } from '../../state/GlobalState';
 import { Line } from 'rc-progress';
 import SohoButton from '../../partials/SohoButton';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
+import IsOwnProfile from '../../utils/IsOwnProfile';
 
 function VideoUpload() {
     let { id } = useParams<{ id: string }>();
@@ -90,15 +91,11 @@ function VideoUpload() {
                         user={user}
                         extraContent={
                             <>
-                                {AuthenticatedFactory({
-                                    authenticated: () => {
-                                        return (
-                                            <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
-                                                <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Video" />
-                                            </div>
-                                        );
-                                    }
-                                })}
+                                {IsOwnProfile({ user }) && (
+                                    <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
+                                        <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Video" />
+                                    </div>
+                                )}
                             </>
                         }
                     />
@@ -110,6 +107,7 @@ function VideoUpload() {
                                     return (
                                         <>
                                             {AuthenticatedFactory({
+                                                user,
                                                 authenticated: () => {
                                                     return (
                                                         <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
@@ -133,10 +131,10 @@ function VideoUpload() {
                                                         <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                             <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
                                                                 <a href="#" className="show-image">
-                                                                    <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0,backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
+                                                                    <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
                                                                         <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                                                                     Buy Now <br /> £{p.price}
-                                                                </span>
+                                                                    </span>
                                                                 </a>
                                                                 <video style={{ height: 300 }} controls src={p.videoUrl} />
                                                             </div>

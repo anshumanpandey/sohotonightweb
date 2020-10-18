@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthenticatedFactory from '../utils/AuthenticatedFactory';
 import logo from '../img/Photos/logo.png'
+import UserIsLogged from '../utils/UserIsLogged';
 
 function NavBar() {
     return (
@@ -24,15 +25,7 @@ function NavBar() {
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
-                        {AuthenticatedFactory({
-                            authenticated: () => {
-                                return (
-                                    <>
-                                    <li><Link to="/logout">Logout</Link></li>
-                                    </>
-                                );
-                            },
-                        })}
+                        {UserIsLogged() && <li><Link to="/logout">Logout</Link></li>}
                     </ul>
                 </div>
             </div>

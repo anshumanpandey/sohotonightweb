@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import cover from '../../img/Cover/profile-cover.jpg';
 import '../../css/cover.css';
-import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 
 function ProfileHeader({ user, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
@@ -34,52 +33,22 @@ function ProfileHeader({ user, extraContent }: any) {
                                     <i className="fa fa-fw fa-user"></i> About
                                 </Link>
                             </li>
-                            {AuthenticatedFactory({
-                                authenticated: () => {
-                                    return (
-                                        <li className={`${location.pathname.includes("/profile-pictures") && "active"}`}>
-                                            <Link to={`/profile-pictures/${id}`}>
-                                                <i className="fa fa-picture-o"></i> Picture
+                            <li className={`${location.pathname.includes("/profile-pictures") && "active"}`}>
+                                <Link to={`/profile-pictures/${id}`}>
+                                    <i className="fa fa-picture-o"></i> Picture
                                             </Link>
-                                        </li>
-                                    )
-                                },
-                                nonAuthenticated: () => {
-                                    return (
-                                        <li className={`${location.pathname.includes("/profile-pictures") && "active"}`}>
-                                            <Link to={`/profile-pictures/${id}`}>
-                                                <i className="fa fa-picture-o"></i> Picture
-                                            </Link>
-                                        </li>
-                                    )
-                                }
-                            })}
+                            </li>
 
-                            {AuthenticatedFactory({
-                                authenticated: () => {
-                                    return (
-                                        <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
-                                            <Link to={`/profile-video/${id}`}>
-                                                <i className="fa fa-video-camera"></i> Video
+                            <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
+                                <Link to={`/profile-video/${id}`}>
+                                    <i className="fa fa-video-camera"></i> Video
                                             </Link>
-                                        </li>
-                                    )
-                                },
-                                nonAuthenticated: () => {
-                                    return (
-                                        <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
-                                            <Link to={`/profile-video/${id}`}>
-                                                <i className="fa fa-video-camera"></i> Video
-                                            </Link>
-                                        </li>
-                                    )
-                                }
-                            })}
+                            </li>
 
                         </ul>
                         {extraContent && extraContent}
                     </div>
-                    <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset',right: 0 }} className="box profile-info n-border-top phone_cont">
+                    <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
                         <div className="phone_no_area">
                             <ul>
                                 <li>Talk to me at</li>

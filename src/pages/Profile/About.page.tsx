@@ -10,6 +10,7 @@ import useAxios from 'axios-hooks'
 import { Redirect, useParams } from 'react-router-dom';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 import GetUserAge from '../../utils/GetUserAge';
+import IsOwnProfile from '../../utils/IsOwnProfile';
 
 function AboutPage() {
     let { id } = useParams<{ id: string }>();
@@ -38,17 +39,13 @@ function AboutPage() {
                         user={user}
                         extraContent={
                             <>
-                            {AuthenticatedFactory({
-                                authenticated: () => {
-                                    return (
-                                        <div style={{ position: 'absolute', right: 0, height: '100%' }}>
-                                            <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-                                                <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
-                                            </div>
-                                        </div>
-                                    );
-                                }
-                            })}
+                            {IsOwnProfile({ user }) && (
+                                <div style={{ position: 'absolute', right: 0, height: '100%' }}>
+                                    <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                                        <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
+                                    </div>
+                                </div>
+                            )}
                             </>
                         }
                     />
@@ -76,6 +73,7 @@ function AboutPage() {
                                     <div className="row">
                                         <div className="col-md-5 col-md-5 col-xs-12">
                                             {AuthenticatedFactory({
+                                                user: user,
                                                 authenticated: () => {
                                                     return (
                                                         <>
@@ -120,6 +118,7 @@ function AboutPage() {
                                                 </div>
                                             </div>
                                             {AuthenticatedFactory({
+                                                user: user,
                                                 authenticated: () => {
                                                     return (
                                                         <>

@@ -6,11 +6,12 @@ import { PayPalButton } from "react-paypal-button-v2";
 import { SavePayment } from '../../request/paypal.requests';
 import ErrorLabel from '../../partials/ErrorLabel';
 import { GetPriceForAsset } from '../../request/file.request';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { setInfoAlert, setSuccessAlert } from '../../state/GlobalState';
 
 function PaymentPage() {
     const { type, id } = useParams<any>()
+    const history = useHistory()
 
     const [paymentReq, doSave] = SavePayment()
     const [assetReq] = GetPriceForAsset({ type, id })
@@ -112,7 +113,10 @@ function PaymentPage() {
                                                         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                                                         onSuccess={(details: any, data: any) => {
                                                             doSave({ data: { ...formik.values, transactionId: data.orderID } })
-                                                            .then(() => setSuccessAlert("Payment Saved!"))
+                                                            .then(() => {
+                                                                setSuccessAlert("Payment Saved!")
+                                                                history.goBack()
+                                                            })
                                                         }}
                                                         options={{
                                                             clientId: "AbMaRWKT092Mc_TYD353knc3s-5QZgUX3mHzIaSHzZTvwylHoUX7SyaMFmW24MXcf-0fCBkT4poAlUWf",

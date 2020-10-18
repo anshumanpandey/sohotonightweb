@@ -14,6 +14,10 @@ enum FILTER_KEY {
     LOCATION = "LOCATION",
 }
 
+const getCountiesFromUsers = (users: any = []) => {
+    return users.map((u: any) => u.county).filter((c: any) => c)
+}
+
 function ListPostPage() {
     const [searchFilter, setSearchFilter] = useState<any>({ [FILTER_KEY.LOCATION]: "", [FILTER_KEY.GENDER]: [], [FILTER_KEY.ORIENTATION]: [], [FILTER_KEY.COUNTY]: [] })
     const toggleFilterFor = useCallback((k: FILTER_KEY, val: string) => {
@@ -110,11 +114,11 @@ function ListPostPage() {
 
                                             <h5 style={{ fontWeight: "normal" }}>Region</h5>
 
-                                            {UkCounties.sort((a, b) => a.County.localeCompare(b.County)).map(c => {
+                                            {getCountiesFromUsers(data).sort((a: any, b: any) => a.localeCompare(b)).map((c: any) => {
                                                 return <div className="checkbox">
                                                     <label>
-                                                        <input onClick={() => { toggleFilterFor(FILTER_KEY.COUNTY, c.County) }} type="checkbox" />
-                                                        <span className="text">{c.County}</span>
+                                                        <input onClick={() => { toggleFilterFor(FILTER_KEY.COUNTY, c) }} type="checkbox" />
+                                                        <span className="text">{c}</span>
                                                     </label>
                                                 </div>
                                             })}
@@ -182,9 +186,6 @@ function ListPostPage() {
                                             </Link>
                                             <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-video/${g.id}`}>
                                                 View Video
-                                            </Link>
-                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-pictures/${g.id}`}>
-                                                View Picture
                                             </Link>
                                         </div>
                                     </div>

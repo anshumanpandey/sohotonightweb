@@ -25,7 +25,7 @@ function PicturesPage() {
     const alert = useAlert()
     const [currentIndex, setCurrentIndex] = useState(1);
     const itemsPerPage = 10
-    const [goToPayment, setGoToPayment] = useState<boolean>(false);
+    const [goToPayment, setGoToPayment] = useState<any>(false);
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
     const [showUploadModel, setShowUploadModel] = useState<false | any>(false);
     const [user, setUser] = useState<any>({});
@@ -81,7 +81,7 @@ function PicturesPage() {
         }
     });
 
-    if (goToPayment && showPreviewModal.id) return <Redirect to={`/payment/picture/${showPreviewModal.id}`} />
+    if (goToPayment && goToPayment.id) return <Redirect to={`/payment/picture/${goToPayment.id}`} />
 
     return (
         <>
@@ -174,17 +174,22 @@ function PicturesPage() {
                                 },
                                 nonAuthenticated: () => {
                                     return (
-                                        <a
-                                            onClick={(e) => {
-                                                e.preventDefault()
-                                                setShowPreviewModal(false)
-                                                setGoToPayment(true)
-                                            }}
-                                            href="#"
-                                            style={{ color: "#cf2c6b" }}
-                                        >
-                                            <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now
+                                        <div style={{ display: "flex", justifyContent: "center" }}>
+                                            <a
+                                                onClick={(e) => {
+                                                    e.preventDefault()
+                                                    const cloned = { ...showPreviewModal }
+                                                    setShowPreviewModal(false)
+                                                    setTimeout(() => {
+                                                        setGoToPayment(cloned)
+                                                    }, 0)
+                                                }}
+                                                href="#"
+                                                style={{ color: "#cf2c6b" }}
+                                            >
+                                                <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now
                                         </a>
+                                        </div>
                                     )
                                 }
                             })}

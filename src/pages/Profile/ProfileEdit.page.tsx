@@ -325,9 +325,14 @@ function ProfileEditPage() {
 
                                                     </div>
                                                 </div>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: "25%", marginLeft: 'auto', justifyContent: "space-between" }}>
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
+                                                    </div>
 
-                                                <div style={{ textAlign: "right" }}>
-                                                    <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -537,11 +542,15 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
-                                                <div style={{ textAlign: "right" }}>
-                                                    <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: "25%", marginLeft: 'auto', justifyContent: "space-between" }}>
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
+                                                    </div>
 
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
+                                                    </div>
                                                 </div>
-
                                             </div>
                                         </div>
 
@@ -563,6 +572,7 @@ function ProfileEditPage() {
                                                         <label htmlFor="" className="col-sm-1 col-md-offset-1 col-form-label">1.</label>
                                                         <div className="col-sm-10 col-md-2">
                                                             <label htmlFor="" className="col-sm-12 col-form-label">Banner Image</label>
+                                                            <label htmlFor="" className="col-sm-12 col-form-label">Max size 1280*480</label>
                                                         </div>
                                                         <div className="col-sm-10 col-md-3">
                                                             {formik.values.bannerImagePreview && (
@@ -598,6 +608,7 @@ function ProfileEditPage() {
                                                         <label htmlFor="" className="col-sm-1 col-md-offset-1 col-form-label">2.</label>
                                                         <div className="col-sm-10 col-md-2">
                                                             <label htmlFor="" className="col-sm-12 col-form-label">Profile Image</label>
+                                                            <label htmlFor="" className="col-sm-12 col-form-label">Recomended size 110*110</label>
                                                         </div>
                                                         <div className="col-sm-10 col-md-3">
                                                             {formik.values.profileImagePreview && (
@@ -696,10 +707,15 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
-                                                <div style={{ textAlign: "right" }}>
-                                                    <input onClick={() => formik.handleSubmit()} type="submit" value="Save" className="form_btn" />
-                                                </div>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: "25%", marginLeft: 'auto', justifyContent: "space-between" }}>
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
+                                                    </div>
 
+                                                    <div style={{ textAlign: "right" }}>
+                                                        <input onClick={() => formik.handleSubmit()} type="submit" value="Save" className="form_btn" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

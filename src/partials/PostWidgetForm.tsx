@@ -20,6 +20,7 @@ function PostWidgetForm({ onPostCrated }: { onPostCrated: () => void }) {
                 .then(() => {
                     alert.show('Post Created!')
                     onPostCrated()
+                    formik.resetForm()
                 })
         },
         validate: values => {
@@ -43,7 +44,7 @@ function PostWidgetForm({ onPostCrated }: { onPostCrated: () => void }) {
                     placeholder="Whats in your mind today?"></textarea>
             </form>
             <div className="box-footer box-form">
-                <button disabled={doPostReq.loading} style={{ backgroundColor: doPostReq.loading ? 'gray' : undefined }} onClick={() => formik.submitForm()} type="button" className="btn btn-azure pull-right">
+                <button disabled={doPostReq.loading} style={{ color: 'white',backgroundColor: doPostReq.loading ? 'gray' : undefined }} onClick={() => formik.submitForm()} type="button" className="btn btn-azure pull-right">
                     {doPostReq.loading ? "Posting..." : "Post"}
                 </button>
                 <ul className="nav nav-pills">

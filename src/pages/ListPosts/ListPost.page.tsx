@@ -5,6 +5,7 @@ import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import { differenceInYears, parse } from 'date-fns'
+import GetUserAge from '../../utils/GetUserAge';
 
 function ListPostPage() {
     const [{ data, loading, error }, getUser] = useAxios({
@@ -228,11 +229,11 @@ function ListPostPage() {
                                         </Link>
                                         <div className="field2 title">
                                             <Link to={`/profile/${g.id}`}>
-                                                {g?.firstName && g?.lastName ? `${g?.firstName} ${g?.lastName}` : g.nickname}
+                                                {g.nickname}
                                             </Link>
                                         </div>
                                         <div className="field date">
-                                            <p>{g.orientation} {differenceInYears(parse(`${g.dayOfBirth}-${g.monthOfBirth}-${g.yearOfBirth}`, "d-MMMM-yyyy", new Date()), new Date())} year old {g.gender}</p>
+                                            <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
                                             {g.aboutYouSummary && <p>{g.aboutYouSummary}</p>}
                                             <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile/${g.id}`}>
                                                 View Post

@@ -8,6 +8,8 @@ import '../../css/Profile.css';
 import ProfileHeader from './ProfileHeader';
 import useAxios from 'axios-hooks'
 import { Redirect, useParams } from 'react-router-dom';
+import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
+import GetUserAge from '../../utils/GetUserAge';
 
 function AboutPage() {
     let { id } = useParams<{ id: string }>();
@@ -35,11 +37,19 @@ function AboutPage() {
                     <ProfileHeader
                         user={user}
                         extraContent={
-                            <div style={{ position: 'absolute', right: 0, height: '100%' }}>
-                                <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-                                    <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
-                                </div>
-                            </div>
+                            <>
+                            {AuthenticatedFactory({
+                                authenticated: () => {
+                                    return (
+                                        <div style={{ position: 'absolute', right: 0, height: '100%' }}>
+                                            <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                                                <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            })}
+                            </>
                         }
                     />
                 </div>
@@ -65,22 +75,42 @@ function AboutPage() {
                                     </div>
                                     <div className="row">
                                         <div className="col-md-5 col-md-5 col-xs-12">
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    First Name:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    {user?.firstName || "N/A"}
-                                                </div>
-                                            </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Last Name:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    {user?.lastName || "N/A"}
-                                                </div>
-                                            </div>
+                                            {AuthenticatedFactory({
+                                                authenticated: () => {
+                                                    return (
+                                                        <>
+                                                            <div className="row content-info">
+                                                                <div className="col-xs-5">
+                                                                    First Name:
+                                                                </div>
+                                                                <div className="col-xs-7">
+                                                                    {user?.firstName || "N/A"}
+                                                                </div>
+                                                            </div>
+                                                            <div className="row content-info">
+                                                                <div className="col-xs-5">
+                                                                    Last Name:
+                                                            </div>
+                                                                <div className="col-xs-7">
+                                                                    {user?.lastName || "N/A"}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    );
+                                                },
+                                                nonAuthenticated: () => {
+                                                    return <>
+                                                        <div className="row content-info">
+                                                            <div className="col-xs-5">
+                                                                Nickname:
+                                                            </div>
+                                                            <div className="col-xs-7">
+                                                                {user?.nickname || "N/A"}
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                }
+                                            })}
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
                                                     Gender:
@@ -89,22 +119,44 @@ function AboutPage() {
                                                     {user?.gender || "N/A"}
                                                 </div>
                                             </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Email Address:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    {user?.emailAddress}
-                                                </div>
-                                            </div>
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Date Of Birth:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    {user?.dayOfBirth}/{user?.monthOfBirth}/{user?.yearOfBirth}
-                                                </div>
-                                            </div>
+                                            {AuthenticatedFactory({
+                                                authenticated: () => {
+                                                    return (
+                                                        <>
+                                                            <div className="row content-info">
+                                                                <div className="col-xs-5">
+                                                                    Email Address:
+                                                                </div>
+                                                                <div className="col-xs-7">
+                                                                    {user?.emailAddress}
+                                                                </div>
+                                                            </div>
+                                                            <div className="row content-info">
+                                                                <div className="col-xs-5">
+                                                                    Date Of Birth:
+                                                                </div>
+                                                                <div className="col-xs-7">
+                                                                    {user?.dayOfBirth}/{user?.monthOfBirth}/{user?.yearOfBirth}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    );
+                                                },
+                                                nonAuthenticated: () => {
+                                                    return (
+                                                        <>
+                                                            <div className="row content-info">
+                                                                <div className="col-xs-5">
+                                                                    Age:
+                                                                </div>
+                                                                <div className="col-xs-7">
+                                                                    {GetUserAge(user)}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    );
+                                                }
+                                            })}
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
                                                     Address:
@@ -120,7 +172,7 @@ function AboutPage() {
                   </div>
                                                 {user?.inches && user?.feet ? (
                                                     <div className="col-xs-7">
-                                                        {user?.inches}, {user?.feet}
+                                                        {user?.inches}' {user?.feet}''
                                                     </div>
                                                 ): <p>N/A</p>}
                                             </div>

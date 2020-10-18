@@ -90,8 +90,8 @@ function PicturesPage() {
                             <>
                                 {AuthenticatedFactory({
                                     authenticated: () => {
-                                        return <div style={{ display: 'flex',position: 'absolute', right: 0, height: '100%' }}>
-                                            <SohoButton style={{ display: 'flex', justifySelf: 'center'}} onClick={() => setShowUploadModel(true)} value="+ Add Picture" />
+                                        return <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
+                                            <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Picture" />
                                         </div>
                                     }
                                 })}
@@ -101,7 +101,7 @@ function PicturesPage() {
                     <div className="row">
                         <div className="col-md-12">
                             <div id="grid" className="row" style={{ paddingTop: "20px" }}>
-                                {!getUserReq.loading && getUserReq?.data?.Pictures.length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b"}}>No Images</p>}
+                                {!getUserReq.loading && getUserReq?.data?.Pictures.length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>No Images</p>}
                                 {getUserReq.loading ? <p>Loading...</p> : getUserReq?.data?.Pictures?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                     return (
                                         <>
@@ -121,7 +121,7 @@ function PicturesPage() {
                                                     />
                                                 },
                                                 nonAuthenticated: () => {
-                                                    return <PictureItem key={p.id.toString() + "-item"} onClick={() => setShowPreviewModal(p)} src={p.imageName} />
+                                                    return <PictureItem key={p.id.toString() + "-item"} onClick={() => setShowPreviewModal(p)} image={p} />
                                                 }
                                             })}
                                         </>
@@ -159,9 +159,28 @@ function PicturesPage() {
                 onClose={() => setShowPreviewModal(false)}
                 show={showPreviewModal != false}
                 title="View Image"
-                footer={() => <button onClick={() => {
-                    setShowPreviewModal(false)
-                }} type="button" className="btn btn-default">Close</button>}
+                footer={() => {
+                    return (
+                        <>
+                            {AuthenticatedFactory({
+                                authenticated: () => {
+                                    return (
+                                        <button onClick={() => {
+                                            setShowPreviewModal(false)
+                                        }} type="button" className="btn btn-default">Close</button>
+                                    );
+                                },
+                                nonAuthenticated: () => {
+                                    return (
+                                        <a href="#" style={{ color:"#cf2c6b" }}>
+                                            <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now <br/>£{showPreviewModal.price}
+                                        </a>
+                                    )
+                                }
+                            })}
+                        </>
+                    );
+                }}
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <img style={{ maxHeight: "350px" }} src={showPreviewModal.imageName} />
@@ -177,7 +196,7 @@ function PicturesPage() {
             >
                 <div role="form">
                     <div style={{ justifyContent: 'space-between', display: 'flex' }} className="upload-btn-wrapper">
-                        <SohoButton onClick={() => setShowUploadModel(true)} value="Select" />
+                        <SohoButton style={{ width: '35%', marginLeft: 'auto', marginRight: 'auto' }} onClick={() => setShowUploadModel(true)} value="Select" />
                         <input accept="image/*" type="file" name="myfile" onChange={(event) => {
                             if (event.currentTarget.files) {
                                 formik.setFieldValue("file", event.currentTarget.files[0]);
@@ -189,12 +208,13 @@ function PicturesPage() {
                     </div>
                     {formik.values.filePreview && <img style={{ maxHeight: "350px", marginLeft: "auto", marginRight: "auto", display: "table" }} src={formik.values.filePreview} />}
                     <div className="form-group">
-                        <label htmlFor="sminput">Price</label>
+                        <label style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} htmlFor="sminput">Price</label>
                         <input
                             type="text"
                             className="form-control input-sm"
                             placeholder="Price in £ "
                             name="price"
+                            style={{ width: '35%', marginLeft: 'auto', marginRight: 'auto' }}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.price}

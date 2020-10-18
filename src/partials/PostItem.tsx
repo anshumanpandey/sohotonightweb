@@ -11,7 +11,7 @@ function PostItem({ post, user }: { post: any, user: any }) {
                     <img className="img-circle" src={user?.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} alt="User Image" />
                     <span className="username">
                         <a href="#">
-                            {user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user.nickname}
+                            {user.nickname}
                         </a>
                     </span>
                     <span className="description">Shared publicly - {formatRelative(parseISO(post.createdAt), new Date())}</span>

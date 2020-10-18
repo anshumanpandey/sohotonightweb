@@ -6,9 +6,9 @@ import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../
 
 function Landing() {
     const [above18, setAbove18] = useState(false);
-    const [isAbove18] = useGlobalState("above18")
+    const [continueBtn, setContinueBtn] = useState(false);
 
-    if (isAbove18) {
+    if (above18 && continueBtn) {
         return <Redirect to="list-post" />
     }
     return (
@@ -76,7 +76,10 @@ function Landing() {
 
                                     <ul>
                                         <li style={{ pointerEvents: above18 ? undefined: "none", cursor: above18 ? 'pointer' : "not-allowed"}}>
-                                            <Link onClick={() => dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.ABOVE_18, payload: above18 })} to="list-post">
+                                            <Link onClick={() => {
+                                                dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.ABOVE_18, payload: above18 })
+                                                setContinueBtn(true)
+                                            }} to="list-post">
                                                 Continue
                                             </Link>
                                         </li>

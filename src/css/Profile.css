@@ -36,7 +36,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 .phone_no_area ul li {
 	text-align: center;
-	font-size: 35px;
+	font-size: 65px;
 	color: #d32a6b;
 	display: block;
 }

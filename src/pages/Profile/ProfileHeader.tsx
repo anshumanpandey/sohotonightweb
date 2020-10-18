@@ -22,7 +22,7 @@ function ProfileHeader({ user, extraContent }: any) {
                         <div className="avatar">
                             <img src={user?.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} alt="people" />
                         </div>
-                        <div className="name"><a href="#">{user?.firstName} {user?.lastName}</a></div>
+                        <div className="name"><a href="#">{user?.nickname}</a></div>
                         <ul className="cover-nav">
                             <li className={`${location.pathname.includes("/profile/") && "active"}`}>
                                 <Link to={`/profile/${id}`}>
@@ -59,7 +59,7 @@ function ProfileHeader({ user, extraContent }: any) {
                                 authenticated: () => {
                                     return (
                                         <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
-                                            <Link to={`/video-upload/${id}`}>
+                                            <Link to={`/profile-video/${id}`}>
                                                 <i className="fa fa-video-camera"></i> Video
                                             </Link>
                                         </li>
@@ -79,11 +79,11 @@ function ProfileHeader({ user, extraContent }: any) {
                         </ul>
                         {extraContent && extraContent}
                     </div>
-                    <div style={{ boxShadow: 'unset', position: "absolute", top: '25%', backgroundColor: "#fff9", right: 0 }} className="box profile-info n-border-top phone_cont">
+                    <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset',right: 0 }} className="box profile-info n-border-top phone_cont">
                         <div className="phone_no_area">
                             <ul>
                                 <li>Talk to me at</li>
-                                <li style={{ textAlign: "center" }}>{user?.phoneNumber}</li>
+                                <li style={{ textAlign: "center" }}>1223334444</li>
                             </ul>
                         </div>
                     </div>

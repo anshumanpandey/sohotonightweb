@@ -9,10 +9,12 @@ import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 import useAxios from 'axios-hooks'
 import PostWidgetForm from '../../partials/PostWidgetForm';
 import PostItem from '../../partials/PostItem';
+import SohoModal from '../../partials/SohoModal';
 
 function ProfilePage() {
     let { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>({});
+    const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
 
     const [{ data, loading, error }, getUser] = useAxios({
         url: `/user/public/getUser/${id}`,
@@ -64,7 +66,7 @@ function ProfilePage() {
                                                 {user?.Pictures?.length == 0 && <p>No images</p>}
                                                 {user?.Pictures?.length != 0 && user?.Pictures?.map((p: any) => {
                                                     return (
-                                                        <li key={p.imageName}>
+                                                        <li onClick={() => setShowPreviewModal(p)} key={p.imageName}>
                                                             <a href="#">
                                                                 <img src={p.imageName} alt="image" />
                                                             </a>
@@ -85,7 +87,7 @@ function ProfilePage() {
                                             <li>
                                                 {AuthenticatedFactory({
                                                     authenticated: () => {
-                                                        return (<Link to={`/video-upload/${id}`}>
+                                                        return (<Link to={`/profile-video/${id}`}>
                                                             <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
                                                         </Link>);
                                                     },
@@ -193,6 +195,19 @@ function ProfilePage() {
                     </div>
                 </div>
             </div>
+            <SohoModal
+                size="lg"
+                onClose={() => setShowPreviewModal(false)}
+                show={showPreviewModal != false}
+                title="View Image"
+                footer={() => <button onClick={() => {
+                    setShowPreviewModal(false)
+                }} type="button" className="btn btn-default">Close</button>}
+            >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <img style={{ maxHeight: "350px" }} src={showPreviewModal.imageName} />
+                </div>
+            </SohoModal>
             <Footer />
         </>
     );

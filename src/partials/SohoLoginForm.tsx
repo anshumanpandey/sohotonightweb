@@ -11,7 +11,7 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
     if (redirect) {
-        return <Redirect to="list-post" />
+        return <Redirect to="/profile-edit" />
     }
 
     return (

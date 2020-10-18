@@ -18,10 +18,9 @@ import ListPostPage from './pages/ListPosts/ListPost.page';
 import ProtectedRoute from './partials/ProtectedRoute';
 import ProfileEditPage from './pages/Profile/ProfileEdit.page';
 import ProfilePage from './pages/Profile/Profile.page';
-import VideosPage from './pages/Profile/Videos.page';
 import PicturesPage from './pages/Profile/pictures/Pictures.page';
 import AboutPage from './pages/Profile/About.page';
-import VideoUpload from './pages/Profile/VideoUpload.page';
+import VideosPage from './pages/Profile/Videos.page';
 import LogoutPage from './pages/logout/logout.page';
 import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
@@ -85,7 +84,6 @@ function App() {
             <PicturesPage />
           </Route>
           <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
-          <ProtectedRoute path="/video-upload/:id?" component={VideoUpload} />
           <ProtectedRoute path="/logout" component={LogoutPage} />
         </Switch>
     </body>

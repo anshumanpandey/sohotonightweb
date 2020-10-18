@@ -177,12 +177,13 @@ function PicturesPage() {
                                         <a
                                             onClick={(e) => {
                                                 e.preventDefault()
+                                                setShowPreviewModal(false)
                                                 setGoToPayment(true)
                                             }}
                                             href="#"
                                             style={{ color: "#cf2c6b" }}
                                         >
-                                            <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now <br />£{showPreviewModal.price}
+                                            <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now
                                         </a>
                                     )
                                 }

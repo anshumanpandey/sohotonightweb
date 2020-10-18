@@ -1,20 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
-import { differenceInYears, parse } from 'date-fns'
 import GetUserAge from '../../utils/GetUserAge';
 
+enum SORT_KEY {
+    AGE = "AGE"
+}
+
 function ListPostPage() {
+    const [sortFilters, setSortFilters] = useState<any>({ [SORT_KEY.AGE]: true })
+    const [filteredUsers, setFilteredUsers] = useState<any>([])
+
+    const toggleFilter = (k: SORT_KEY) => {
+        setSortFilters((p: any) => ({ ...p, [SORT_KEY.AGE]: !sortFilters[SORT_KEY.AGE] }))
+    }
+
     const [{ data, loading, error }, getUser] = useAxios({
         url: '/user/public/getUsers',
     }, { manual: true });
 
     useEffect(() => {
         getUser()
+            .then(({ data }) => setFilteredUsers(data))
     }, [])
+
+    useEffect(() => {
+        const r = filteredUsers
+            .sort((a: any, b: any) => {
+                return sortFilters[SORT_KEY.AGE] ? GetUserAge(a) - GetUserAge(b) : true
+            })
+        setFilteredUsers([...r])
+    }, [sortFilters])
 
     return (
         <>
@@ -211,17 +230,14 @@ function ListPostPage() {
                             <ul>
                                 <li><strong>Order BY :</strong></li>
                                 <li><a href="#">Popularity / Views</a></li>
-                                <li><a href="#">Age</a></li>
+                                <li><a onClick={(e) => { e.preventDefault(); toggleFilter(SORT_KEY.AGE) }} href="#">Age</a></li>
                                 <li><a href="#">Proximity</a></li>
                             </ul>
 
                         </div>
-
-
-
                         <div className="col-inside-lg decor-default activities animated fadeInUp" id="activities">
                             <h3>Model List</h3>
-                            {data && data.map((g: any) => {
+                            {filteredUsers.map((g: any) => {
                                 return (
                                     <div key={g.nickname} className="unit">
                                         <Link className="avatar" to={`/profile/${g.id}`}>

@@ -1,19 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
+import { Formik } from 'formik';
 
 enum SORT_KEY {
     AGE = "AGE"
 }
 
+enum FILTER_KEY {
+    GENDER = "GENDER",
+    ORIENTATION = "ORIENTATION"
+}
+
 function ListPostPage() {
     const [sortFilters, setSortFilters] = useState<any>({ [SORT_KEY.AGE]: true })
-    const [filteredUsers, setFilteredUsers] = useState<any>([])
 
+    const [searchFilter, setSearchFilter] = useState<any>({ [FILTER_KEY.GENDER]: [], [FILTER_KEY.ORIENTATION]: [] })
+    const toggleFilterFor = useCallback((k: FILTER_KEY, val: string) => {
+        setSearchFilter((p: any) => {
+            const filterOf = p[k]
+            const found = filterOf.find((r: string ) => r == val)
+            return { ...p, [k]: found ? p[k].filter((i: string) => i != found): p[k].concat([val]) }
+        })
+    }, [])
+
+    const [filteredUsers, setFilteredUsers] = useState<any>([])
     const toggleFilter = (k: SORT_KEY) => {
         setSortFilters((p: any) => ({ ...p, [SORT_KEY.AGE]: !sortFilters[SORT_KEY.AGE] }))
     }
@@ -26,6 +41,19 @@ function ListPostPage() {
         getUser()
             .then(({ data }) => setFilteredUsers(data))
     }, [])
+
+    useEffect(() => {
+        if (!data) return
+        const r = data
+            .filter((a: any) => {
+                return searchFilter[FILTER_KEY.GENDER].length != 0 ? searchFilter[FILTER_KEY.GENDER].includes(a.gender): true
+            })
+            .filter((a: any) => {
+                return searchFilter[FILTER_KEY.ORIENTATION].length != 0 ? searchFilter[FILTER_KEY.ORIENTATION].includes(a.orientation): true
+            })
+        setFilteredUsers([...r])
+    }, [searchFilter[FILTER_KEY.GENDER], searchFilter[FILTER_KEY.ORIENTATION]])
+
 
     useEffect(() => {
         const r = filteredUsers
@@ -53,30 +81,28 @@ function ListPostPage() {
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onChange={() => { toggleFilterFor(FILTER_KEY.GENDER, "Male")}} type="checkbox" />
                                                     <span className="text">Male</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.GENDER, "Female")}} type="checkbox" />
                                                     <span className="text">Female</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.GENDER, "Couple")}} type="checkbox" />
                                                     <span className="text">Couple</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.GENDER, "Trans")}} type="checkbox" />                                                
                                                     <span className="text">Trans</span>
                                                 </label>
                                             </div>
-
-
 
                                             <h5 style={{ fontWeight: "normal" }}>Region</h5>
 
@@ -179,41 +205,31 @@ function ListPostPage() {
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-curious")}} type="checkbox" />
                                                     <span className="text">Bi-curious</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-sexual")}} type="checkbox" />
                                                     <span className="text">Bi-sexual</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Gay")}} type="checkbox" />
                                                     <span className="text">Gay</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input type="checkbox" />
+                                                    <input onClick={() => {toggleFilterFor(FILTER_KEY.ORIENTATION, "Straight")}} type="checkbox" />
                                                     <span className="text">Straight</span>
                                                 </label>
                                             </div>
-
-                                            <div className="checkbox">
-                                                <label>
-                                                    <input type="checkbox" />
-                                                    <span className="text">Orientation </span>
-                                                </label>
-                                            </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>

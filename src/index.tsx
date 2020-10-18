@@ -21,13 +21,11 @@ const options = {
 }
 
 ReactDOM.render(
-  <React.StrictMode>
     <AlertProvider template={AlertTemplate} {...options}>
       <Router history={history}>
         <App />
       </Router>
-    </AlertProvider>
-  </React.StrictMode>,
+    </AlertProvider>,
   document.getElementById('root')
 );
 

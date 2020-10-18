@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import ProfileHeader from './ProfileHeader';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Redirect, useParams } from 'react-router-dom';
 import '../../css/cover.css';
 import { parseISO } from 'date-fns'
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
@@ -16,6 +16,8 @@ function ProfilePage() {
     let { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>({});
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
+    const [showVideoModal, setShowVideoModal] = useState<false | any>(false);
+    const [goToPayment, setGoToPayment] = useState<any>(false);
 
     const [{ data, loading, error }, getUser] = useAxios({
         url: `/user/public/getUser/${id}`,
@@ -29,6 +31,8 @@ function ProfilePage() {
     useEffect(() => {
         refetchUser()
     }, [id])
+
+    if (goToPayment && goToPayment.id) return <Redirect to={`/payment/video/${goToPayment.id}`} />
 
     return (
         <>
@@ -91,10 +95,9 @@ function ProfilePage() {
                                                 {user?.Videos?.length == 0 && <p>No Videos</p>}
                                                 {user?.Videos?.length != 0 && user?.Videos?.map((p: any) => {
                                                     return (
-                                                        <li key={p.videoUrl}>
-                                                            <a href="#">
-                                                                <video controls style={{ height: 80 }} src={p.videoUrl} />
-                                                            </a>
+                                                        <li style={{ position: 'relative'}} key={p.videoUrl}>
+                                                            <video controls style={{ height: 80 }} src={p.videoUrl} />
+                                                            <div onClick={() => {setShowVideoModal(p)}} style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0 }}></div>
                                                         </li>
                                                     );
                                                 })}
@@ -185,6 +188,53 @@ function ProfilePage() {
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <img style={{ maxHeight: "350px" }} src={showPreviewModal.imageName} />
+                </div>
+            </SohoModal>
+
+            <SohoModal
+                size="lg"
+                onClose={() => setShowVideoModal(false)}
+                show={showVideoModal != false}
+                title="View Video"
+                footer={() => {
+                    return (
+                        <>
+                            {AuthenticatedFactory({
+                                user: user,
+                                authenticated: () => {
+                                    return (
+                                        <button onClick={() => {
+                                            setShowVideoModal(false)
+                                        }} type="button" className="btn btn-default">Close</button>
+                                    );
+                                },
+                                nonAuthenticated: () => {
+                                    return (
+                                        <div style={{ display: "flex", justifyContent: "center" }}>
+                                            <a
+                                                onClick={(e) => {
+                                                    e.preventDefault()
+                                                    const cloned = { ...showVideoModal }
+                                                    setShowVideoModal(false)
+                                                    setTimeout(() => {
+                                                        setGoToPayment(cloned)
+                                                    }, 0)
+                                                }}
+                                                href="#"
+                                                style={{ color: "#cf2c6b" }}
+                                            >
+                                                <i className="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp; Buy Now
+                                        </a>
+                                        </div>
+                                    )
+                                }
+                            })}
+                        </>
+                    );
+                }}
+            >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <video style={{ maxHeight: "350px" }} controls autoPlay src={showVideoModal.videoUrl} />
                 </div>
             </SohoModal>
             <Footer />

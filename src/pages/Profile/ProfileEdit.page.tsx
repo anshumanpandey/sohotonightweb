@@ -461,12 +461,12 @@ function ProfileEditPage() {
                                                         <select
                                                             style={{ width: "100%" }}
                                                             className="form-control"
-                                                            name={"feet"}
+                                                            name={"inches"}
                                                             onChange={formik.handleChange}
                                                             onBlur={formik.handleBlur}
-                                                            value={formik.values.feet}
+                                                            value={formik.values.inches}
                                                         >
-                                                            <option>Feet</option>
+                                                            <option>Inches</option>
                                                             <option value={1}>1</option>
                                                             <option value={2}>2</option>
                                                             <option value={3}>3</option>
@@ -485,12 +485,12 @@ function ProfileEditPage() {
                                                         <select
                                                             style={{ width: "100%" }}
                                                             className="form-control"
-                                                            name={"inches"}
+                                                            name={"feet"}
                                                             onChange={formik.handleChange}
                                                             onBlur={formik.handleBlur}
-                                                            value={formik.values.inches}
+                                                            value={formik.values.feet}
                                                         >
-                                                            <option>Inches</option>
+                                                            <option>Feet</option>
                                                             <option value={1}>1</option>
                                                             <option value={2}>2</option>
                                                             <option value={3}>3</option>

@@ -15,7 +15,8 @@ enum FILTER_KEY {
 }
 
 const getCountiesFromUsers = (users: any = []) => {
-    return users.map((u: any) => u.county).filter((c: any) => c)
+    const counties = users.map((u: any) => u.county).filter((c: any) => c)
+    return Array.from(new Set(counties).values())
 }
 
 function ListPostPage() {

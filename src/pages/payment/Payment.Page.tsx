@@ -10,6 +10,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { setInfoAlert, setSuccessAlert } from '../../state/GlobalState';
 import StepWizard from 'react-step-wizard';
 import SohoButton from '../../partials/SohoButton';
+import countries from "../../utils/countries.json"
 
 const stepDict = [
     "Personal Data",
@@ -39,23 +40,109 @@ const Nav = (props: any) => {
 };
 
 const StepOne = ({ formik, history, ...props }: any) => {
-    const nextDisabled = !formik.values.name || !formik.values.email || !formik.values.address
+    const nextDisabled = Object.keys(formik.values).some(k => !formik.values[k])
     return (
         <>
             <div className="form-group row">
-                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Name :</label>
+                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">First Name :</label>
                 <div className="col-sm-10 col-md-6">
                     <input
                         type="text"
                         className="form-control"
                         style={{ borderRadius: "4px" }}
-                        placeholder="name"
-                        name="name"
+                        placeholder="First Name"
+                        name="firstName"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.name}
+                        value={formik.values.firstName}
                     />
-                    {formik.errors.name && formik.touched.name && <ErrorLabel message={formik.errors.name} />}
+                    {formik.errors.firstName && formik.touched.firstName && <ErrorLabel message={formik.errors.firstName} />}
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Last Name :</label>
+                <div className="col-sm-10 col-md-6">
+                    <input
+                        type="text"
+                        className="form-control"
+                        style={{ borderRadius: "4px" }}
+                        placeholder="Last Name"
+                        name="lastName"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.lastName}
+                    />
+                    {formik.errors.lastName && formik.touched.lastName && <ErrorLabel message={formik.errors.lastName} />}
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Address 1 :</label>
+                <div className="col-sm-10 col-md-6">
+                    <input
+                        type="text"
+                        className="form-control"
+                        style={{ borderRadius: "4px" }}
+                        placeholder="Address 1"
+                        name="addressOne"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.addressOne}
+                    />
+                    {formik.errors.addressOne && formik.touched.addressOne && <ErrorLabel message={formik.errors.addressOne} />}
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Address 2 :</label>
+                <div className="col-sm-10 col-md-6">
+                    <input
+                        type="text"
+                        className="form-control"
+                        style={{ borderRadius: "4px" }}
+                        placeholder="Address 2"
+                        name="addressTwo"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.addressTwo}
+                    />
+                    {formik.errors.addressTwo && formik.touched.addressTwo && <ErrorLabel message={formik.errors.addressTwo} />}
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">City :</label>
+                <div className="col-sm-10 col-md-6">
+                    <input
+                        type="text"
+                        className="form-control"
+                        style={{ borderRadius: "4px" }}
+                        placeholder="City"
+                        name="city"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.city}
+                    />
+                    {formik.errors.city && formik.touched.city && <ErrorLabel message={formik.errors.city} />}
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Country :</label>
+                <div className="col-sm-10 col-md-6">
+                    <select
+                        style={{ width: "100%" }}
+                        className="form-control"
+                        name={"country"}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.country}
+                    >
+                        <option>Select</option>
+                        {countries.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+                    </select>
+                    {formik.errors.country && formik.touched.country && <ErrorLabel message={formik.errors.country} />}
                 </div>
             </div>
 
@@ -76,22 +163,6 @@ const StepOne = ({ formik, history, ...props }: any) => {
                 </div>
             </div>
 
-            <div className="form-group row">
-                <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Address :</label>
-                <div className="col-sm-10 col-md-6">
-                    <input
-                        type="text"
-                        className="form-control"
-                        style={{ borderRadius: "4px" }}
-                        placeholder="address"
-                        name="address"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.address}
-                    />
-                    {formik.errors.address && formik.touched.address && <ErrorLabel message={formik.errors.address} />}
-                </div>
-            </div>
             <div style={{ display: 'flex', justifyContent: "space-between", width: "15%", marginLeft: "auto" }} className="form-group">
                 <SohoButton value="Back to Profile" onClick={(e) => { e.preventDefault(); history.goBack() }} />
                 <SohoButton disabled={nextDisabled} value="Next" onClick={() => props.goToStep(2)} />
@@ -109,9 +180,13 @@ function PaymentPage() {
 
     const formik = useFormik({
         initialValues: {
-            name: '',
+            firstName: '',
+            lastName: '',
+            addressOne: '',
+            addressTwo: '',
+            city: '',
+            country: '',
             email: '',
-            address: '',
         },
         onSubmit: values => {
 
@@ -119,16 +194,21 @@ function PaymentPage() {
         validate: values => {
             const errors: any = {}
 
-            if (!values.name) errors.name = "Required"
+            if (!values.firstName) errors.firstName = "Required"
+            if (!values.lastName) errors.lastName = "Required"
+            if (!values.addressOne) errors.addressOne = "Required"
+            if (!values.addressTwo) errors.addressTwo = "Required"
+            if (!values.city) errors.city = "Required"
+            if (!values.country) errors.country = "Required"
             if (!values.email) errors.email = "Required"
-            if (!values.address) errors.address = "Required"
 
             return errors
         }
     });
 
     const disablePaymentButton = () => {
-        return Object.keys(formik.errors).length != 0 || Object.keys(formik.touched).length != 3 || formik.dirty == false
+        //@ts-expect-error
+        return Object.keys(formik.values).some(k => !formik.values[k])
     }
 
 

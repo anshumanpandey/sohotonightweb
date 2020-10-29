@@ -6,6 +6,7 @@ import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
 import UkLocations from '../../utils/Location.json'
+import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
 
 enum FILTER_KEY {
     GENDER = "GENDER",
@@ -120,14 +121,10 @@ function ListPostPage() {
                                         <div className="form-group">
 
                                             <label htmlFor="lginput">Location</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Location"
-                                                style={{ borderRadius: "4px !important", margin: "0 0 5px 0 " }}
+                                            <UkLocationsDropdown
                                                 onChange={(e) => {
-                                                    if (e.currentTarget.value) {
-                                                        setValueFor(FILTER_KEY.LOCATION,e.currentTarget.value)
+                                                    if (e.currentTarget.value !== "0") {
+                                                        setValueFor(FILTER_KEY.LOCATION, e.currentTarget.value)
                                                     } else {
                                                         clearFilterFor(FILTER_KEY.LOCATION)
                                                     }
@@ -164,7 +161,7 @@ function ListPostPage() {
                                             <h5 style={{ fontWeight: "normal" }}>Region</h5>
 
                                             {getCountiesFromUsers(data).sort((a: any, b: any) => a.localeCompare(b)).map((c: any) => {
-                                                return <div className="checkbox">
+                                                return <div key={c} className="checkbox">
                                                     <label>
                                                         <input onClick={() => { addValueFor(FILTER_KEY.COUNTY, c) }} type="checkbox" />
                                                         <span className="text">{c}</span>
@@ -222,16 +219,17 @@ function ListPostPage() {
                                         <Link className="avatar" to={`/profile/${g.id}`}>
                                             <img src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                         </Link>
-                                        <div className="field2 title">
+                                        <div style={{ display: 'flex', justifyContent: 'space-between'}} className="field2 title">
                                             <Link to={`/profile/${g.id}`}>
                                                 {g.nickname}
                                             </Link>
+                                            Contact Me: {g.callNumber}
                                         </div>
                                         <div className="field date">
                                             <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
                                             {g.aboutYouSummary && <p>{g.aboutYouSummary}</p>}
-                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile/${g.id}`}>
-                                                View Post
+                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-pictures/${g.id}`}>
+                                                View Images
                                             </Link>
                                             <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-video/${g.id}`}>
                                                 View Video

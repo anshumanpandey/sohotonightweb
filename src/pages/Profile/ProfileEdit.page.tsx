@@ -15,6 +15,7 @@ import Dropdown from '@trendmicro/react-dropdown';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
 import moment from 'moment';
 import ErrorLabel from '../../partials/ErrorLabel';
+import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
 
 var months: { [k: string]: string } = {
     'January': '01',
@@ -210,8 +211,7 @@ function ProfileEditPage() {
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Town:</label>
                                                     <div className="col-sm-10 col-md-6">
-                                                        <input
-                                                            type="text"
+                                                        <UkLocationsDropdown
                                                             className="form-control"
                                                             name="town"
                                                             placeholder="Town"

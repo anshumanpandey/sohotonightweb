@@ -161,7 +161,7 @@ function AboutPage() {
                                                     Address:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.town || "N/A"}
+                                                    {user?.town ? `${user?.town}, `: ""} {user?.county}
                                                 </div>
                                             </div>
 
@@ -176,14 +176,6 @@ function AboutPage() {
                                                 ): <p>N/A</p>}
                                             </div>
 
-                                            <div className="row content-info">
-                                                <div className="col-xs-5">
-                                                    Mobile No.:
-                  </div>
-                                                <div className="col-xs-7">
-                                                    {user?.phoneNumber || "N/A"}
-                                                </div>
-                                            </div>
                                             <div className="row content-info">
                                                 <div className="col-xs-5">
                                                     Orientation:

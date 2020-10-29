@@ -16,7 +16,7 @@ function NavBar() {
                         <span className="icon-bar"></span>
                         <span className="icon-bar"></span>
                     </button>
-                    <Link className="navbar-brand" to="">
+                    <Link className="navbar-brand" to="/">
                         <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" />
                     </Link>
                 </div>

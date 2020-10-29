@@ -55,12 +55,14 @@ function VideoUpload() {
         initialValues: {
             price: '',
             file: null,
-            filePreview: ''
+            filePreview: '',
+            isFree: 0,
         },
         onSubmit: values => {
             const data = new FormData()
             //@ts-ignore
             data.append("price", values.price)
+            data.append("isFree", values.isFree.toString())
             //@ts-ignore
             data.append("video", values.file)
             return sendFile({ data })
@@ -71,10 +73,13 @@ function VideoUpload() {
                     formik.resetForm()
                     setPercentageCompleted(0)
                 })
+                .catch(() => {
+                    setPercentageCompleted(0)
+                })
         },
         validate: values => {
             const errors: any = {};
-            if (!values.price) {
+            if (values.isFree == 0 && !values.price) {
                 errors.price = 'Required';
             }
             if (!values.file) {
@@ -201,19 +206,41 @@ function VideoUpload() {
                                 {formik.errors.file && formik.touched.file && <ErrorLabel message={formik.errors.file} />}
                             </div>
                             {formik.values.filePreview && <video controls style={{ marginLeft: "auto", marginRight: "auto", display: "table", height: 200 }} src={formik.values.filePreview} />}
-                            <div className="form-group">
-                                <label style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} htmlFor="sminput">Price</label>
-                                <input
-                                    type="text"
-                                    className="form-control input-sm"
-                                    placeholder="Price in £ "
-                                    name="price"
-                                    style={{ width: '35%', marginLeft: 'auto', marginRight: 'auto' }}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.price}
-                                />
-                                {formik.errors.price && formik.touched.price && <ErrorLabel message={formik.errors.price} />}
+                            <div style={{ display: 'flex', flexDirection: 'row', minHeight: '80px' }}>
+                                <div style={{ width: '15%', alignItems: "flex-end", display: "flex" }} className="form-group">
+                                    <div className="checkbox">
+                                        <label style={{ paddingLeft: 0 }}>
+                                            <input
+                                                checked={formik.values.isFree == 1}
+                                                value={formik.values.isFree}
+                                                onChange={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    formik.setFieldValue("isFree", e.currentTarget.value == "1" ? 0 : 1)
+                                                }}
+                                                onBlur={formik.handleBlur}
+                                                type="checkbox"
+                                            />
+                                            <span className="text">Is Free</span>
+                                        </label>
+                                    </div>
+                                    {formik.errors.price && formik.touched.price && <ErrorLabel message={formik.errors.price} />}
+                                </div>
+                                {formik.values.isFree == 0 && (
+                                    <div style={{ width: '85%' }} className="form-group">
+                                        <label style={{ display: 'table', marginRight: 'auto' }} htmlFor="sminput">Price</label>
+                                        <input
+                                            type="text"
+                                            className="form-control input-sm"
+                                            placeholder="Price in £ "
+                                            name="price"
+                                            style={{ width: '35%', marginRight: 'auto' }}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.price}
+                                        />
+                                        {formik.errors.price && formik.touched.price && <ErrorLabel message={formik.errors.price} />}
+                                    </div>
+                                )}
                             </div>
                             {loading && (
                                 <div>

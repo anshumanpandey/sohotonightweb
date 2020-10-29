@@ -39,13 +39,13 @@ function AboutPage() {
                         user={user}
                         extraContent={
                             <>
-                            {IsOwnProfile({ user }) && (
-                                <div style={{ position: 'absolute', right: 0, height: '100%' }}>
-                                    <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-                                        <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
+                                {IsOwnProfile({ user }) && (
+                                    <div style={{ position: 'absolute', right: 0, height: '100%' }}>
+                                        <div className="upload-btn-wrapper" style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                                            <button style={{ padding: 5, fontSize: 18, alignSelf: "center" }} onClick={() => setRedirect(true)} className="btn">Edit</button>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
                             </>
                         }
                     />
@@ -161,7 +161,7 @@ function AboutPage() {
                                                     Address:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.town ? `${user?.town}, `: ""} {user?.county}
+                                                    {user?.town || "N/A"}
                                                 </div>
                                             </div>
 
@@ -169,11 +169,10 @@ function AboutPage() {
                                                 <div className="col-xs-5">
                                                     Height:
                   </div>
-                                                {user?.inches && user?.feet ? (
-                                                    <div className="col-xs-7">
-                                                        {user?.inches}' {user?.feet}''
-                                                    </div>
-                                                ): <p>N/A</p>}
+                                                <div className="col-xs-7">
+                                                    {user?.inches && user?.feet ? (`${user?.inches}' ${user?.feet}''`) : <p>N/A</p>}
+                                                </div>
+
                                             </div>
 
                                             <div className="row content-info">

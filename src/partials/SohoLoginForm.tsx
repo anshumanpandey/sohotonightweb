@@ -7,11 +7,11 @@ import SohoButton from './SohoButton';
 import ErrorLabel from './ErrorLabel';
 
 function SohoLoginForm({ disabled }: { disabled?: boolean }) {
-    const [redirect, setRedirect] = useState(false)
+    const [redirect, setRedirect] = useState<false | any>(false)
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
     if (redirect) {
-        return <Redirect to="/profile-edit" />
+        return <Redirect to={`/profile/${redirect.id}`} />
     }
 
     return (
@@ -32,7 +32,7 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
                     .then(({ data }) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
                         dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data })
-                        setRedirect(true)
+                        setRedirect(data)
                     })
             }}
         >

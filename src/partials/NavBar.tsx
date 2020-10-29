@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import AuthenticatedFactory from '../utils/AuthenticatedFactory';
 import logo from '../img/Photos/logo.png'
 import UserIsLogged from '../utils/UserIsLogged';
+import { useGlobalState } from '../state/GlobalState';
 
 function NavBar() {
+    const [userData] = useGlobalState("userData")
+    const goTo = userData ? `/profile/${userData.id}`:"/" 
     return (
         <nav className="navbar navbar-white navbar-fixed-top">
             <div className="container">
@@ -16,7 +19,7 @@ function NavBar() {
                         <span className="icon-bar"></span>
                         <span className="icon-bar"></span>
                     </button>
-                    <Link className="navbar-brand" to="/">
+                    <Link className="navbar-brand" to={goTo}>
                         <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" />
                     </Link>
                 </div>

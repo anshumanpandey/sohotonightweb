@@ -171,6 +171,16 @@ const StepOne = ({ formik, history, ...props }: any) => {
     );
 }
 
+const initialValues = {
+    firstName: '',
+    lastName: '',
+    addressOne: '',
+    addressTwo: '',
+    city: '',
+    country: '',
+    email: '',
+}
+
 function PaymentPage() {
     const { type, id } = useParams<any>()
     const history = useHistory()
@@ -179,15 +189,7 @@ function PaymentPage() {
     const [assetReq] = GetPriceForAsset({ type, id })
 
     const formik = useFormik({
-        initialValues: {
-            firstName: '',
-            lastName: '',
-            addressOne: '',
-            addressTwo: '',
-            city: '',
-            country: '',
-            email: '',
-        },
+        initialValues,
         onSubmit: values => {
 
         },
@@ -207,8 +209,7 @@ function PaymentPage() {
     });
 
     const disablePaymentButton = () => {
-        //@ts-expect-error
-        return Object.keys(formik.values).some(k => !formik.values[k])
+        return Object.keys(formik.values).some((k) => !formik.values[k as keyof typeof initialValues])
     }
 
 

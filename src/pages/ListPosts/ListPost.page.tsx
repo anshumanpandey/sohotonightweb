@@ -5,7 +5,7 @@ import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
-import UkCounties from '../../utils/UkCounties.json'
+import UkLocations from '../../utils/Location.json'
 
 enum FILTER_KEY {
     GENDER = "GENDER",
@@ -19,20 +19,58 @@ const getCountiesFromUsers = (users: any = []) => {
     return Array.from(new Set(counties).values())
 }
 
+type FilterObject = { forSearchKey: FILTER_KEY, val: any }
+
+const useFilters = () => {
+    const [filters, setFilters] = useState<FilterObject[]>([]);
+
+    const addValueFor = (forKey: FILTER_KEY, val: any) => {
+        const filtersOfThisKey = filters.filter(f => f.forSearchKey == forKey)
+        const found = filtersOfThisKey.find(f => f.val == val)
+
+
+        setFilters(prev => {
+            let newState = prev
+            if (found) {
+                newState = prev.filter(f => f.forSearchKey != found.forSearchKey && f.val != found.val)
+            } else {
+                newState.push({ forSearchKey: forKey, val })
+            }
+
+            return [...newState]
+        })
+    }
+
+    const setValueFor = (forKey: FILTER_KEY, val: any) => {
+        setFilters(prev => {
+            return prev
+                .filter(f => f.forSearchKey != forKey)
+                .concat([{ forSearchKey: forKey, val }])
+        })
+    }
+
+    const clearFilterFor = (forKey: FILTER_KEY) => {
+        setFilters(prev => {
+            return prev
+                .filter(f => f.forSearchKey != forKey)
+        })
+    }
+
+    const getValuesFiltersFor = (forKey: FILTER_KEY) => {
+        return filters.filter(f => f.forSearchKey == forKey).map(f => f.val)
+    }
+
+    return {
+        filters,
+        clearFilterFor,
+        setValueFor,
+        addValueFor,
+        getValuesFiltersFor
+    }
+}
+
 function ListPostPage() {
-    const [searchFilter, setSearchFilter] = useState<any>({ [FILTER_KEY.LOCATION]: "", [FILTER_KEY.GENDER]: [], [FILTER_KEY.ORIENTATION]: [], [FILTER_KEY.COUNTY]: [] })
-    const toggleFilterFor = useCallback((k: FILTER_KEY, val: string) => {
-        setSearchFilter((p: any) => {
-            const filterOf = p[k]
-            const found = filterOf.find((r: string) => r == val)
-            return { ...p, [k]: found ? p[k].filter((i: string) => i != found) : p[k].concat([val]) }
-        })
-    }, [])
-    const setLocationFilter = useCallback((val: string) => {
-        setSearchFilter((p: any) => {
-            return { ...p, [FILTER_KEY.LOCATION]: val }
-        })
-    }, [])
+    const { filters, addValueFor, setValueFor, clearFilterFor, getValuesFiltersFor } = useFilters()
 
     const [filteredUsers, setFilteredUsers] = useState<any>([])
 
@@ -49,19 +87,23 @@ function ListPostPage() {
         if (!data) return
         const r = data
             .filter((a: any) => {
-                return searchFilter[FILTER_KEY.GENDER].length != 0 ? searchFilter[FILTER_KEY.GENDER].includes(a.gender) : true
+                const filters = getValuesFiltersFor(FILTER_KEY.GENDER)
+                return filters.length != 0 ? filters.includes(a.gender) : true
             })
             .filter((a: any) => {
-                return searchFilter[FILTER_KEY.ORIENTATION].length != 0 ? searchFilter[FILTER_KEY.ORIENTATION].includes(a.orientation) : true
+                const filters = getValuesFiltersFor(FILTER_KEY.ORIENTATION)
+                return filters.length != 0 ? filters.includes(a.orientation) : true
             })
             .filter((a: any) => {
-                return searchFilter[FILTER_KEY.COUNTY].length != 0 ? searchFilter[FILTER_KEY.COUNTY].includes(a.county) : true
+                const filters = getValuesFiltersFor(FILTER_KEY.COUNTY)
+                return filters.length != 0 ? filters.includes(a.county) : true
             })
             .filter((a: any) => {
-                return searchFilter[FILTER_KEY.LOCATION] ? searchFilter[FILTER_KEY.LOCATION].includes(a.town) : true
+                const filters = getValuesFiltersFor(FILTER_KEY.LOCATION)
+                return filters.length != 0 ? filters.some(f => a.town?.startsWith(f)) : true
             })
         setFilteredUsers([...r])
-    }, [searchFilter[FILTER_KEY.GENDER], searchFilter[FILTER_KEY.ORIENTATION], searchFilter[FILTER_KEY.COUNTY], searchFilter[FILTER_KEY.LOCATION]])
+    }, [filters])
 
     return (
         <>
@@ -83,32 +125,38 @@ function ListPostPage() {
                                                 className="form-control"
                                                 placeholder="Location"
                                                 style={{ borderRadius: "4px !important", margin: "0 0 5px 0 " }}
-                                                onChange={(e) => setLocationFilter(e.currentTarget.value)}
+                                                onChange={(e) => {
+                                                    if (e.currentTarget.value) {
+                                                        setValueFor(FILTER_KEY.LOCATION,e.currentTarget.value)
+                                                    } else {
+                                                        clearFilterFor(FILTER_KEY.LOCATION)
+                                                    }
+                                                }}
                                             />
 
                                             <h5 style={{ fontWeight: "normal" }}>Gender</h5>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onChange={() => { toggleFilterFor(FILTER_KEY.GENDER, "Male") }} type="checkbox" />
+                                                    <input onChange={() => { addValueFor(FILTER_KEY.GENDER, "Male") }} type="checkbox" />
                                                     <span className="text">Male</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.GENDER, "Female") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.GENDER, "Female") }} type="checkbox" />
                                                     <span className="text">Female</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.GENDER, "Couple") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.GENDER, "Couple") }} type="checkbox" />
                                                     <span className="text">Couple</span>
                                                 </label>
                                             </div>
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.GENDER, "Trans") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.GENDER, "Trans") }} type="checkbox" />
                                                     <span className="text">Trans</span>
                                                 </label>
                                             </div>
@@ -118,7 +166,7 @@ function ListPostPage() {
                                             {getCountiesFromUsers(data).sort((a: any, b: any) => a.localeCompare(b)).map((c: any) => {
                                                 return <div className="checkbox">
                                                     <label>
-                                                        <input onClick={() => { toggleFilterFor(FILTER_KEY.COUNTY, c) }} type="checkbox" />
+                                                        <input onClick={() => { addValueFor(FILTER_KEY.COUNTY, c) }} type="checkbox" />
                                                         <span className="text">{c}</span>
                                                     </label>
                                                 </div>
@@ -128,28 +176,28 @@ function ListPostPage() {
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-curious") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.ORIENTATION, "Bi-curious") }} type="checkbox" />
                                                     <span className="text">Bi-curious</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Bi-sexual") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.ORIENTATION, "Bi-sexual") }} type="checkbox" />
                                                     <span className="text">Bi-sexual</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Gay") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.ORIENTATION, "Gay") }} type="checkbox" />
                                                     <span className="text">Gay</span>
                                                 </label>
                                             </div>
 
                                             <div className="checkbox">
                                                 <label>
-                                                    <input onClick={() => { toggleFilterFor(FILTER_KEY.ORIENTATION, "Straight") }} type="checkbox" />
+                                                    <input onClick={() => { addValueFor(FILTER_KEY.ORIENTATION, "Straight") }} type="checkbox" />
                                                     <span className="text">Straight</span>
                                                 </label>
                                             </div>

@@ -29,6 +29,7 @@ function PicturesPage() {
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
     const [showUploadModel, setShowUploadModel] = useState<false | any>(false);
     const [user, setUser] = useState<any>({});
+    const [currentTab, setCurrentTab] = useState(0)
 
     const [{ data, loading, error }, sendFile] = useAxios({
         url: '/user/addPicture',
@@ -48,6 +49,15 @@ function PicturesPage() {
         getUser()
             .then(({ data }) => setUser(data))
     }, [id])
+
+    const getPictures = () => {
+        return getUserReq?.data?.Pictures?.filter((c: any) => {
+            if (currentTab == 0) {
+                return c.isFree
+            }
+            return !c.isFree
+        }) || []
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -102,34 +112,53 @@ function PicturesPage() {
                     />
                     <div className="row">
                         <div className="col-md-12">
-                            <div id="grid" className="row" style={{ paddingTop: "20px" }}>
-                                {!getUserReq.loading && getUserReq?.data?.Pictures.length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>No Images</p>}
-                                {getUserReq.loading ? <p>Loading...</p> : getUserReq?.data?.Pictures?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
-                                    return (
-                                        <>
-                                            {AuthenticatedFactory({
-                                                user: user,
-                                                authenticated: () => {
-                                                    return <PictureUploadItem
-                                                        key={p.id.toString() + "-item"}
-                                                        onClick={() => setShowPreviewModal(p)}
-                                                        src={p.imageName}
-                                                        onDeleteClick={() => {
-                                                            deletePicture({ data: { imageId: p.id } })
-                                                                .then(() => {
-                                                                    alert.show('Image deleted!')
-                                                                    getUser()
-                                                                })
-                                                        }}
-                                                    />
-                                                },
-                                                nonAuthenticated: () => {
-                                                    return <PictureItem key={p.id.toString() + "-item"} onClick={() => setShowPreviewModal(p)} image={p} />
-                                                }
-                                            })}
-                                        </>
-                                    );
-                                })}
+                            <div className="tabs-wrapper profile-tabs">
+                                <ul className="nav nav-tabs">
+                                    <li className={currentTab == 0 ? "active" : undefined}>
+                                        <a onClick={() => setCurrentTab(0)} href="#general" data-toggle="tab">Free</a>
+                                    </li>
+                                    <li className={currentTab == 1 ? "active" : undefined}>
+                                        <a onClick={() => setCurrentTab(1)} href="#personal-details" data-toggle="tab">Paid</a>
+                                    </li>
+                                </ul>
+                                <div id="grid" className="row" style={{ paddingTop: "20px" }}>
+                                    {!getUserReq.loading && getPictures().length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>No Images</p>}
+                                    {getUserReq.loading ? <p>Loading...</p> : getPictures()?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
+                                        return (
+                                            <>
+                                                {AuthenticatedFactory({
+                                                    user: user,
+                                                    authenticated: () => {
+                                                        return <PictureUploadItem
+                                                            key={p.id.toString() + "-item"}
+                                                            onClick={() => setShowPreviewModal(p)}
+                                                            src={p.imageName}
+                                                            onDeleteClick={() => {
+                                                                deletePicture({ data: { imageId: p.id } })
+                                                                    .then(() => {
+                                                                        alert.show('Image deleted!')
+                                                                        getUser()
+                                                                    })
+                                                            }}
+                                                        />
+                                                    },
+                                                    nonAuthenticated: () => {
+                                                        return (
+                                                            <div className="mix col-sm-4 page1 page4 margin30">
+                                                                {p.isFree ? (
+                                                                    <PictureItem key={p.id.toString() + "-item"} onClick={() => setShowPreviewModal(p)} image={p} />
+                                                                ) : (
+                                                                        <img src={require("../../../img/soho-watchme.png")} />
+                                                                    )}
+                                                            </div>
+                                                        )
+                                                    }
+                                                })}
+                                            </>
+                                        );
+                                    })}
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -141,13 +170,13 @@ function PicturesPage() {
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
-                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_, idx) => {
+                                {Array(Math.floor((getPictures().length || 1) / 10) + 1).fill(1).map((_, idx) => {
                                     return <li className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}
                                 <li>
-                                    <a onClick={() => setCurrentIndex(Math.floor((getUserReq?.data?.length || 1) / 10) + 1)} href="#" aria-label="Next">
+                                    <a onClick={() => setCurrentIndex(Math.floor((getPictures().length || 1) / 10) + 1)} href="#" aria-label="Next">
                                         <span aria-hidden="true">»</span>
                                     </a>
                                 </li>
@@ -224,7 +253,7 @@ function PicturesPage() {
                         {formik.errors.file && formik.touched.file && <ErrorLabel message={formik.errors.file} />}
                     </div>
                     {formik.values.filePreview && <img style={{ maxHeight: "350px", marginLeft: "auto", marginRight: "auto", display: "table" }} src={formik.values.filePreview} />}
-                    <div style={{ display: 'flex', flexDirection: 'row', minHeight: '80px'}}>
+                    <div style={{ display: 'flex', flexDirection: 'row', minHeight: '80px' }}>
                         <div style={{ width: '15%', alignItems: "flex-end", display: "flex" }} className="form-group">
                             <div className="checkbox">
                                 <label>
@@ -232,7 +261,6 @@ function PicturesPage() {
                                         checked={formik.values.isFree == 1}
                                         value={formik.values.isFree}
                                         onChange={(e) => {
-                                            console.log(e.currentTarget.value)
                                             formik.setFieldValue("isFree", e.currentTarget.value == "1" ? 0 : 1)
                                         }}
                                         onBlur={formik.handleBlur}
@@ -244,14 +272,14 @@ function PicturesPage() {
                             {formik.errors.price && formik.touched.price && <ErrorLabel message={formik.errors.price} />}
                         </div>
                         {formik.values.isFree == 0 && (
-                            <div style={{ width: '85%'}} className="form-group">
-                                <label style={{ display: 'table', marginLeft: '10%',marginRight: 'auto' }} htmlFor="sminput">Price</label>
+                            <div style={{ width: '85%' }} className="form-group">
+                                <label style={{ display: 'table', marginLeft: '10%', marginRight: 'auto' }} htmlFor="sminput">Price</label>
                                 <input
                                     type="text"
                                     className="form-control input-sm"
                                     placeholder="Price in £ "
                                     name="price"
-                                    style={{ width: '35%', marginLeft: '10%',marginRight: 'auto' }}
+                                    style={{ width: '35%', marginLeft: '10%', marginRight: 'auto' }}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.price}

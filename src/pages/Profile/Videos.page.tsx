@@ -11,7 +11,6 @@ import { Formik, useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
 import { Redirect, useParams } from 'react-router-dom';
-import { startGlobalLoading, stopGlobalLoading } from '../../state/GlobalState';
 import { Line } from 'rc-progress';
 import SohoButton from '../../partials/SohoButton';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
@@ -21,6 +20,7 @@ function VideoUpload() {
     let { id } = useParams<{ id: string }>();
     const alert = useAlert()
     const [user, setUser] = useState<any>({});
+    const [currentTab, setCurrentTab] = useState(0)
     const [goToPayment, setGoToPayment] = useState<boolean>(false);
     const [buyingVideo, setBuyingVideo] = useState<false | any>(false);
     const [percentageCompleted, setPercentageCompleted] = useState(0);
@@ -50,6 +50,15 @@ function VideoUpload() {
         url: '/user/deleteVideo',
         method: 'DELETE'
     }, { manual: true });
+
+    const getVideos = () => {
+        return getUserReq?.data?.Videos?.filter((c: any) => {
+            if (currentTab == 0){
+                return c.isFree
+            }
+            return !c.isFree
+        }) || []
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -110,58 +119,74 @@ function VideoUpload() {
                     />
                     <div className="row">
                         <div className="col-md-12">
-                            <div id="grid" className="row" style={{ paddingTop: "20px" }}>
-                                {!getUserReq.loading && getUserReq?.data?.Videos.length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>No Videos</p>}
-                                {getUserReq.loading ? <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>Loading...</p> : getUserReq.data?.Videos?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
-                                    return (
-                                        <>
-                                            {AuthenticatedFactory({
-                                                user,
-                                                authenticated: () => {
-                                                    return (
-                                                        <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
-                                                            <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                <a href="#" onClick={(e) => {
-                                                                    e.preventDefault()
-                                                                    deletePicture()
-                                                                }} className="show-image">
-                                                                    <span style={{ color: "white", fontSize: "18px", right: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
-                                                                        <i className="fa fa-times" aria-hidden="true"></i>
+                            <div className="tabs-wrapper profile-tabs">
+                                <ul className="nav nav-tabs">
+                                    <li className={currentTab == 0 ? "active" : undefined}>
+                                        <a onClick={() => setCurrentTab(0)} href="#general" data-toggle="tab">Free</a>
+                                    </li>
+                                    <li className={currentTab == 1 ? "active" : undefined}>
+                                        <a onClick={() => setCurrentTab(1)} href="#personal-details" data-toggle="tab">Paid</a>
+                                    </li>
+                                </ul>
+
+                                <div id="grid" className="row" style={{ paddingTop: "20px" }}>
+                                    {!getUserReq.loading && getVideos().length == 0 && <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>No Videos</p>}
+                                    {getUserReq.loading ? <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>Loading...</p> : getVideos().slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
+                                        return (
+                                            <>
+                                                {AuthenticatedFactory({
+                                                    user,
+                                                    authenticated: () => {
+                                                        return (
+                                                            <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                                <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                    <a href="#" onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        deletePicture()
+                                                                    }} className="show-image">
+                                                                        <span style={{ color: "white", fontSize: "18px", right: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
+                                                                            <i className="fa fa-times" aria-hidden="true"></i>
                                                             Delete
                                                         </span>
-                                                                </a>
-                                                                <video style={{ height: 250 }} controls src={p.videoUrl} />
+                                                                    </a>
+                                                                    <video style={{ height: 250 }} controls src={p.videoUrl} />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    );
-                                                },
-                                                nonAuthenticated: () => {
-                                                    return (
-                                                        <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
-                                                            <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                <a
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault()
-                                                                        setBuyingVideo(p)
-                                                                        setGoToPayment(true)
-                                                                    }}
-                                                                    href="#"
-                                                                    className="show-image"
-                                                                >
-                                                                    <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
-                                                                        <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                        );
+                                                    },
+                                                    nonAuthenticated: () => {
+                                                        return (
+                                                            <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                                {p.isFree ? (
+                                                                    <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                        <a
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault()
+                                                                                setBuyingVideo(p)
+                                                                                setGoToPayment(true)
+                                                                            }}
+                                                                            href="#"
+                                                                            className="show-image"
+                                                                        >
+                                                                            <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
+                                                                                <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                                                                     Buy Now <br /> £{p.price}
-                                                                    </span>
-                                                                </a>
-                                                                <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                                            </span>
+                                                                        </a>
+                                                                        <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                                    </div>
+                                                                ): (
+                                                                    <img src={require("../../img/soho-watchme.png")} />
+                                                                )}
                                                             </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            })}
-                                        </>
-                                    );
-                                })}
+                                                        );
+                                                    }
+                                                })}
+                                            </>
+                                        );
+                                    })}
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -173,13 +198,13 @@ function VideoUpload() {
                                         <span aria-hidden="true">«</span>
                                     </a>
                                 </li>
-                                {Array(Math.floor((getUserReq?.data?.length || 1) / 10) + 1).fill(1).map((_, idx) => {
+                                {Array(Math.floor((getVideos().length || 1) / 10) + 1).fill(1).map((_, idx) => {
                                     return <li key={idx.toString() + "-item"} className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}
                                 <li>
-                                    <a onClick={() => setCurrentIndex(Math.floor((getUserReq?.data?.length || 1) / 10) + 1)} href="#" aria-label="Next">
+                                    <a onClick={() => setCurrentIndex(Math.floor((getVideos().length || 1) / 10) + 1)} href="#" aria-label="Next">
                                         <span aria-hidden="true">»</span>
                                     </a>
                                 </li>

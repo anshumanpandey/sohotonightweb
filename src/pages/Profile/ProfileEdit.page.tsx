@@ -57,11 +57,6 @@ function ProfileEditPage() {
             if (values.aboutYouDetail && values.aboutYouDetail.split(' ').length < 20) {
                 errors.aboutYouDetail = 'Must be at least 20 words';
             }
-            if (values.bannerImageFile && bannerRef?.current?.naturalHeight && bannerRef?.current?.naturalHeight > 480) {
-                errors.bannerImageFile = 'Image height must be less than 480px';
-            } else if (values.bannerImageFile && bannerRef?.current?.naturalWidth && bannerRef?.current?.naturalWidth < 1280) {
-                errors.bannerImageFile = 'Image height must be at least 1280px';
-            }
 
             return errors;
         },

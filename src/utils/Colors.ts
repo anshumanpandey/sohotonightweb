@@ -1,0 +1,1 @@
+export const BrandColor = "#cc2c6a"

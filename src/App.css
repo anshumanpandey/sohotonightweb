@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+
+.stripped-table, .stripped-table th, .stripped-table td {
+  border: 1px solid black;
+}
+
+@font-face {
+  font-family: Selima;
+  src: url(../src/fonts/selima_.otf);
+}

@@ -11,7 +11,7 @@ function NavBar() {
     return (
         <nav className="navbar navbar-white navbar-fixed-top">
             <div className="container">
-                <div className="navbar-header">
+                <div className="navbar-header" style={{ display: 'flex', flexDirection: 'row'}}>
                     <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
                         <span className="sr-only">Toggle navigation</span>
@@ -22,6 +22,9 @@ function NavBar() {
                     <Link className="navbar-brand" to={goTo}>
                         <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" />
                     </Link>
+                    <p style={{ marginTop: "auto", marginBottom: "auto", fontSize: "38px", color: '#cd2b6b', fontFamily: 'Selima' }}>
+                        UK'S No.1 Adult Directory
+                    </p>
                 </div>
                 <div id="navbar" className="navbar-collapse collapse">
                     <ul className="nav navbar-nav navbar-right">

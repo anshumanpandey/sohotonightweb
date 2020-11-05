@@ -5,9 +5,10 @@ import {
   Switch,
   Route,
   useLocation,
+  Link,
 } from "react-router-dom";
 import { transitions, positions, Provider as AlertProvider, useAlert } from 'react-alert'
-
+import CookieConsent from "react-cookie-consent";
 import "./utils/AxiosBootstrap"
 import Landing from './pages/landing/landing.page';
 import ContactUs from './pages/contactus/ContactUs.page';
@@ -27,6 +28,13 @@ import enter from './img/Photos/enter-bg.jpg';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from './state/GlobalState';
 import currentPageIs from './utils/currentPageIs';
 import PaymentPage from './pages/payment/Payment.Page';
+import CookiePolicy from './pages/cookiePolicy/CookiePolicy.page';
+import PrivacyPolicy from './pages/privacyPolicy/PrivacyPolicy.page';
+import StatementAndOpinion from './pages/statementAndOpinion/StatementAndOpinion.page';
+import UserAgreement from './pages/userAgreement/UserAgreement.page';
+import WebUserAgreement from './pages/webUserAgreement/WebUserAgreement.page';
+import AntiSlavery from './pages/antiSlavery/AntiSlavery.page';
+import MarketplaceAgreement from './pages/marketplaceAgreement/MarketplaceAgreement.page';
 
 function App() {
   const alert = useAlert()
@@ -65,51 +73,76 @@ function App() {
 
   const pageToShowBackgroundImg = () => {
     return currentPageIs(location.pathname, "preview") ||
-    currentPageIs(location.pathname, "")
+      currentPageIs(location.pathname, "")
   }
 
   return (
     <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
-        <Switch>
-          <Route exact path="/">
-            <ComingSoon />
-          </Route>
-          <Route exact path="/preview">
-            <Landing />
-          </Route>
-          <Route path="/contact-us">
-            <ContactUs />
-          </Route>
-          <Route path="/about-us">
-            <AboutUs />
-          </Route>
-          <Route path="/register">
-            <RegisterPage />
-          </Route>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <Route path="/list-post">
-            <ListPostPage />
-          </Route>
-          <Route path="/profile/:id?">
-            <ProfilePage />
-          </Route>
-          <Route path="/profile-about/:id?">
-            <AboutPage />
-          </Route>
-          <Route path="/profile-video/:id?">
-            <VideosPage />
-          </Route>
-          <Route path="/profile-pictures/:id?">
-            <PicturesPage />
-          </Route>
-          <Route path="/payment/:type?/:id?">
-            <PaymentPage />
-          </Route>
-          <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
-          <ProtectedRoute path="/logout" component={LogoutPage} />
-        </Switch>
+      <Switch>
+        <Route exact path="/">
+          <ComingSoon />
+        </Route>
+        <Route exact path="/preview">
+          <Landing />
+        </Route>
+        <Route exact path="/cookiePolicy">
+          <CookiePolicy />
+        </Route>
+        <Route exact path="/privacyPolicy">
+          <PrivacyPolicy />
+        </Route>
+        <Route exact path="/statementAndOpinion">
+          <StatementAndOpinion />
+        </Route>  
+        <Route exact path="/userAgreement">
+          <UserAgreement />
+        </Route>
+        <Route exact path="/webUserAgreement">
+          <WebUserAgreement />
+        </Route>
+        <Route exact path="/antiSlavery">
+          <AntiSlavery />
+        </Route>
+        <Route exact path="/marketplaceAgreement">
+          <MarketplaceAgreement />
+        </Route>
+        <Route path="/contact-us">
+          <ContactUs />
+        </Route>
+        <Route path="/about-us">
+          <AboutUs />
+        </Route>
+        <Route path="/register">
+          <RegisterPage />
+        </Route>
+        <Route path="/login">
+          <LoginPage />
+        </Route>
+        <Route path="/list-post">
+          <ListPostPage />
+        </Route>
+        <Route path="/profile/:id?">
+          <ProfilePage />
+        </Route>
+        <Route path="/profile-about/:id?">
+          <AboutPage />
+        </Route>
+        <Route path="/profile-video/:id?">
+          <VideosPage />
+        </Route>
+        <Route path="/profile-pictures/:id?">
+          <PicturesPage />
+        </Route>
+        <Route path="/payment/:type?/:id?">
+          <PaymentPage />
+        </Route>
+        <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
+        <ProtectedRoute path="/logout" component={LogoutPage} />
+      </Switch>
+      <CookieConsent>
+        This website uses cookies to enhance the user experience.{' '}
+        <Link to="/cookiePolicy">See more</Link>
+      </CookieConsent>
     </body>
   );
 }

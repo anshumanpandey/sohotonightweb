@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
+import { BrandColor } from '../../utils/Colors';
 
 function Landing() {
     const [above18, setAbove18] = useState(false);
@@ -61,7 +62,7 @@ function Landing() {
                                 </div>
 
                                 <div className="enter_contener">
-                                    <div className="checkbox">
+                                    <div className="checkbox" style={{ display: "flex", flexDirection: "column" }}>
                                         <label>
                                             <input
                                                 type="checkbox"
@@ -71,11 +72,17 @@ function Landing() {
                                                 }} />
                                             <span className="text">I agree I am 18+ years of age.</span>
                                         </label>
+                                        <Link style={{ color: BrandColor }} to={"/userAgreement"}>
+                                            User agreeement
+                                            </Link>
+                                        <Link style={{ color: BrandColor }} to={"/webUserAgreement"}>
+                                            Web user agreement
+                                            </Link>
                                     </div>
 
 
                                     <ul>
-                                        <li style={{ pointerEvents: above18 ? undefined: "none", cursor: above18 ? 'pointer' : "not-allowed"}}>
+                                        <li style={{ pointerEvents: above18 ? undefined : "none", cursor: above18 ? 'pointer' : "not-allowed" }}>
                                             <Link onClick={() => {
                                                 dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.ABOVE_18, payload: above18 })
                                                 setContinueBtn(true)

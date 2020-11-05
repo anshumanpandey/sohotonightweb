@@ -158,17 +158,6 @@ function ListPostPage() {
                                                 </label>
                                             </div>
 
-                                            <h5 style={{ fontWeight: "normal" }}>Region</h5>
-
-                                            {getCountiesFromUsers(data).sort((a: any, b: any) => a.localeCompare(b)).map((c: any) => {
-                                                return <div key={c} className="checkbox">
-                                                    <label>
-                                                        <input onClick={() => { addValueFor(FILTER_KEY.COUNTY, c) }} type="checkbox" />
-                                                        <span className="text">{c}</span>
-                                                    </label>
-                                                </div>
-                                            })}
-
                                             <h5 style={{ fontWeight: "normal" }}>Orientation</h5>
 
                                             <div className="checkbox">

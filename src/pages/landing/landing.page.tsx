@@ -70,14 +70,17 @@ function Landing() {
                                                 onChange={() => {
                                                     setAbove18(!above18)
                                                 }} />
-                                            <span className="text">I agree I am 18+ years of age.</span>
+                                            <span className="text">
+                                                I agree I am 18+ years of age and I accept the
+                                                <Link style={{ color: BrandColor }} to={"/userAgreement"}>
+                                                    {" "}User agreeement{" "}
+                                                </Link>
+                                                and
+                                                <Link style={{ color: BrandColor }} to={"/webUserAgreement"}>
+                                                    {" "}Web user agreement.
+                                                </Link>
+                                        </span>
                                         </label>
-                                        <Link style={{ color: BrandColor }} to={"/userAgreement"}>
-                                            User agreeement
-                                            </Link>
-                                        <Link style={{ color: BrandColor }} to={"/webUserAgreement"}>
-                                            Web user agreement
-                                            </Link>
                                     </div>
 
 

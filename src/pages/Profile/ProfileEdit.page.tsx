@@ -218,25 +218,6 @@ function ProfileEditPage() {
                                                 </div>
 
                                                 <div className="form-group row">
-                                                    <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">County/Area:</label>
-                                                    <div className="col-sm-10 col-md-6">
-                                                        <select
-                                                            style={{ width: "100%" }}
-                                                            className="form-control"
-                                                            name="county"
-                                                            value={formik.values.county}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                        >
-                                                            <option>Select</option>
-                                                            {UkCounties.sort((a, b) => a.County.localeCompare(b.County)).map(c => {
-                                                                return <option key={c.County.toString() + "-item"} value={c.County}>{c.County}</option>;
-                                                            })}
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Post Code:</label>
                                                     <div className="col-sm-10 col-md-6">
                                                         <input

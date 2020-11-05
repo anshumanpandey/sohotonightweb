@@ -6,10 +6,11 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../../state/GlobalState';
 import "../../css/login_register.css"
 import SohoButton from '../../partials/SohoButton';
+import { BrandColor } from '../../utils/Colors';
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -35,9 +36,13 @@ function LoginPage() {
     }
     const validationSchema = Yup.object().shape({
         nickname: Yup.string().required('Required'),
-        password: Yup.string().required('Required')
-            .min(8, 'Password is too short - should be 8 chars minimum.')
-            .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+        password: Yup
+            .string()
+            .required('Please Enter your password')
+            .matches(
+            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+            ),
         confirmPassword: Yup.string()
             .required('Required')
             .oneOf([Yup.ref('password')], 'Passwords must match'),
@@ -229,8 +234,21 @@ function LoginPage() {
                                                                                 onBlur={handleBlur}
                                                                                 checked={values.acceptPolicies}
                                                                             />
-                                                                            <span className="text">I accept the Site's Policies and User Agreement
-        <a href="#">Policies and User Agreement</a></span>
+                                                                            <span className="text">
+                                                                                I accept the Site's 
+                                                                                <Link style={{ color: BrandColor }} to={"/privacyPolicy"}>
+                                                                                    {" "}Privacy Policy{" "}
+                                                                                </Link>
+                                                                                ,
+                                                                                <Link style={{ color: BrandColor }} to={"/userAgreement"}>
+                                                                                    {" "}User Agreement{" "}
+                                                                                </Link>
+                                                                                 and
+                                                                                <Link style={{ color: BrandColor }} to={"/webUserAgreement"}>
+                                                                                    {" "}Web User Agreement
+                                                                                </Link>
+                                                                                .
+                                                                            </span>
                                                                         </label>
                                                                     </div>
                                                                     {errors.acceptPolicies && touched.acceptPolicies && <ErrorLabel message={errors.acceptPolicies} />}

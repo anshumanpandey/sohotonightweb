@@ -22,15 +22,15 @@ function Footer() {
                     <Link style={{ marginLeft: 'auto' }} className="text-muted" to={"/marketplaceAgreement"}>
                         Marketplace Agreement
                     </Link>
-                    <div style={{ marginLeft: '5%',display: "flex", alignItems: "center", justifyContent: "space-between", width: "10%" }}>
+                    <div style={{ marginLeft: '5%',display: "flex", alignItems: "center", justifyContent: "space-between", width: "12%" }}>
                         <a target="_blank" style={{ color: BrandColor }} href="https://www.youtube.com/channel/UC0op8VoVJKDylALcmbNbF6Q">
-                            <i className="fa fa-youtube-play" aria-hidden="true"></i>
+                            <i style={{ fontSize: '2rem'}} className="fa fa-youtube-play" aria-hidden="true"></i>
                         </a>
                         <a target="_blank" style={{ color: BrandColor }} href="https://twitter.com/sohotonight">
-                            <i className="fa fa-twitter" aria-hidden="true"></i>
+                            <i style={{ fontSize: '2rem'}} className="fa fa-twitter" aria-hidden="true"></i>
                         </a>
                         <a target="_blank" style={{ color: BrandColor }} href="https://www.instagram.com/sohotonight">
-                            <i className="fa fa-instagram" aria-hidden="true"></i>
+                            <i style={{ fontSize: '2rem'}} className="fa fa-instagram" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>

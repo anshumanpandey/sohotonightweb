@@ -46,3 +46,8 @@
   font-family: "AlexBrush-Regular";
   src: url(../src/fonts/AlexBrush-Regular.ttf);
 }
+
+@font-face {
+  font-family: "ArielScript";
+  src: url(../src/fonts/ArielScript.ttf);
+}

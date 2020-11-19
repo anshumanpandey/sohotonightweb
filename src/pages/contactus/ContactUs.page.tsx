@@ -56,7 +56,7 @@ function ContactUs() {
 
                                             <div className="basic-info-item"><span className="icon"><i className="fa fa-envelope" aria-hidden="true"></i></span>
 
-                                                <p className="basic-info-item_no_area"> <span><a href="mailto:support@gvtechsolution.com">support@sohotonight.com</a></span></p>
+                                                <p className="basic-info-item_no_area"> <span><a href="mailto:support@gvtechsolution.com">admin@sohotonight.com</a></span></p>
 
                                             </div>
 

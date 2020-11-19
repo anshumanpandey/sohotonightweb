@@ -170,7 +170,7 @@ function AboutPage() {
                                                     Height:
                   </div>
                                                 <div className="col-xs-7">
-                                                    {user?.inches && user?.feet ? (`${user?.inches}' ${user?.feet}''`) : <p>N/A</p>}
+                                                    {user?.feet ? user?.feet : <p>N/A</p>}
                                                 </div>
 
                                             </div>

@@ -64,7 +64,7 @@ function AntiSlavery() {
                                                 In line with our goal of mitigating and ending modern slavery in this industry sector, we employ staff to monitor the site and investigate any reports of exploitation by our Members. This monitoring and investigation take place year-round to ensure we reach a swift and effective solution. Where necessary, incidents will be raised to senior members of staff and/or Law enforcement agencies. 
                                             </p>
 
-                                            <p style={{ fontWeight: 'bold' }}>LST Enforcement  </p>
+                                            <p style={{ fontWeight: 'bold' }}>Law Enforcement.  </p>
                                             <p>
                                                 We cooperate fully with Law enforcement agencies to assist with enquiries relating to their investigations; this includes working with the Home Office, National Crime Agency, and local UK Law enforcement bodies, i.e., county/city police forces in relation to human trafficking and modern slavery investigations. 
                                             </p>

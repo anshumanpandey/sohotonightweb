@@ -11,6 +11,7 @@ import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../../state/GlobalStat
 import "../../css/login_register.css"
 import SohoButton from '../../partials/SohoButton';
 import { BrandColor } from '../../utils/Colors';
+import moment from 'moment';
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -40,8 +41,8 @@ function LoginPage() {
             .string()
             .required('Please Enter your password')
             .matches(
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#_?&]{8,}$/,
+                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
             ),
         confirmPassword: Yup.string()
             .required('Required')
@@ -49,9 +50,13 @@ function LoginPage() {
         emailAddress: Yup.string().email('Invalid email').required('Required'),
         dayOfBirth: Yup.string().required('Required'),
         monthOfBirth: Yup.string().required('Required'),
-        yearOfBirth: Yup.string().required('Required'),
+        yearOfBirth: Yup.string()
+            .required('Required')
+            .test("above18", "Only legal age people are allowed on this website", function (values) {
+                return moment().diff(moment(`${this.parent.yearOfBirth}-${this.parent.monthOfBirth}-${this.parent.dayOfBirth}`, "YYYY-MM-DD"), 'years') >= 18;
+            }),
         acceptPolicies: Yup.boolean().oneOf([true], "Must Accept Concent"),
-    });
+    })
 
     const [{ data, loading, error }, doRegister] = useAxios({ url: '/user/register', method: 'POST' }, { manual: true });
     const [loginReq, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
@@ -110,7 +115,8 @@ function LoginPage() {
                                                     handleBlur,
                                                     handleSubmit,
                                                     /* and other goodies */
-                                                }) => (
+                                                }) => {
+                                                    return (
                                                         <div>
                                                             <div className="form-group">
                                                                 <label htmlFor="xsinput">Nickname</label>
@@ -235,7 +241,7 @@ function LoginPage() {
                                                                                 checked={values.acceptPolicies}
                                                                             />
                                                                             <span className="text">
-                                                                                I accept the Site's 
+                                                                                I accept the Site's
                                                                                 <Link style={{ color: BrandColor }} to={"/privacyPolicy"}>
                                                                                     {" "}Privacy Policy{" "}
                                                                                 </Link>
@@ -279,7 +285,8 @@ You can change this seatting at any time</span>
                                                             />
                                                         </div>
 
-                                                    )}
+                                                    )
+                                                }}
                                             </Formik>
                                         </div>
                                     </div>

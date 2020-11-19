@@ -145,11 +145,11 @@ function PicturesPage() {
                                                     nonAuthenticated: () => {
                                                         return (
                                                             <div className="mix col-sm-4 page1 page4 margin30">
-                                                                {p.isFree ? (
-                                                                    <PictureItem key={p.id.toString() + "-item"} onClick={() => setShowPreviewModal(p)} image={p} />
-                                                                ) : (
-                                                                        <img src={require("../../../img/soho-watchme.png")} />
-                                                                    )}
+                                                                    <PictureItem
+                                                                        isFree={p.isFree}
+                                                                        image={p.isFree ? p : {imageName: require("../../../img/soho-watchme.png")}} key={p.id.toString() + "-item"}
+                                                                        onClick={() => setShowPreviewModal(p)}
+                                                                    />
                                                             </div>
                                                         )
                                                     }

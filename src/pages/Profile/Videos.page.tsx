@@ -159,6 +159,10 @@ function VideoUpload() {
                                                             <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                                 {p.isFree ? (
                                                                     <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                        <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                                    </div>
+                                                                ): (
+                                                                    <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
                                                                         <a
                                                                             onClick={(e) => {
                                                                                 e.preventDefault()
@@ -173,10 +177,8 @@ function VideoUpload() {
                                                                     Buy Now <br /> £{p.price}
                                                                             </span>
                                                                         </a>
-                                                                        <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                                        <img src={require("../../img/soho-watchme.png")} />
                                                                     </div>
-                                                                ): (
-                                                                    <img src={require("../../img/soho-watchme.png")} />
                                                                 )}
                                                             </div>
                                                         );

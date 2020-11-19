@@ -442,43 +442,15 @@ function ProfileEditPage() {
                                                         <select
                                                             style={{ width: "100%" }}
                                                             className="form-control"
-                                                            name={"inches"}
-                                                            onChange={formik.handleChange}
-                                                            onBlur={formik.handleBlur}
-                                                            value={formik.values.inches}
-                                                        >
-                                                            <option>Inches</option>
-                                                            <option value={1}>1</option>
-                                                            <option value={2}>2</option>
-                                                            <option value={3}>3</option>
-                                                            <option value={4}>4</option>
-                                                            <option value={5}>5</option>
-                                                            <option value={6}>6</option>
-                                                            <option value={7}>7</option>
-                                                            <option value={8}>8</option>
-                                                            <option value={9}>9</option>
-                                                            <option value={10}>10</option>
-                                                            <option value={11}>11</option>
-                                                            <option value={12}>12</option>
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-sm-10 col-md-2">
-                                                        <select
-                                                            style={{ width: "100%" }}
-                                                            className="form-control"
                                                             name={"feet"}
                                                             onChange={formik.handleChange}
                                                             onBlur={formik.handleBlur}
                                                             value={formik.values.feet}
                                                         >
-                                                            <option>Feet</option>
-                                                            <option value={1}>1</option>
-                                                            <option value={2}>2</option>
-                                                            <option value={3}>3</option>
-                                                            <option value={4}>4</option>
-                                                            <option value={5}>5</option>
-                                                            <option value={6}>6</option>
-                                                            <option value={7}>7</option>
+                                                            <option>Centimeters</option>
+                                                            {Array(60).fill(0).map((_, idx) => {
+                                                                return <option key={`${idx}-key`} value={idx + 140}>{idx + 140}</option>
+                                                            })}
                                                         </select>
                                                     </div>
                                                 </div>

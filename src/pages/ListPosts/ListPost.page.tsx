@@ -190,7 +190,6 @@ function ListPostPage() {
 
                     <div className="col-md-7 ">
                         <div className="col-inside-lg decor-default activities animated fadeInUp" id="activities">
-                            <h3>Model List</h3>
                             {loading && <p style={{ fontSize: 20, textAlign: 'center', color: "#d32a6b" }}>Loading...</p>}
                             {!loading && filteredUsers.length == 0 && <p style={{ fontSize: 20, textAlign: 'center', color: "#d32a6b" }}>No user found</p>}
 
@@ -200,11 +199,14 @@ function ListPostPage() {
                                         <Link className="avatar" to={`/profile/${g.id}`}>
                                             <img src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                         </Link>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between'}} className="field2 title">
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }} className="field2 title">
                                             <Link to={`/profile/${g.id}`}>
                                                 {g.nickname}
                                             </Link>
-                                            Contact Me: {g.callNumber}
+                                            <div>
+                                                <p>Call me now for one to one live chat: </p>
+                                                <p style={{ fontWeight: 'bold' }}>{g.callNumber}</p>
+                                            </div>
                                         </div>
                                         <div className="field date">
                                             <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>

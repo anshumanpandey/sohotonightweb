@@ -66,7 +66,7 @@ function ProfileHeader({ user, extraContent }: any) {
                     <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
                         <div className="phone_no_area">
                             <ul>
-                                <li>Talk to me at</li>
+                                <li>Call me now for one to one live chat</li>
                                 <li style={{ textAlign: "center" }}>1223334444</li>
                             </ul>
                         </div>

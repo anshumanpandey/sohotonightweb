@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
+import { setSuccessAlert } from '../../state/GlobalState';
 
 function ContactUs() {
     const [{ data, loading, error }, sendMail] = useAxios({
@@ -25,7 +26,8 @@ function ContactUs() {
                 }
             })
             .then(() => {
-
+                setSuccessAlert("We will contact you shortly")
+                formik.resetForm()
             })
         },
     });

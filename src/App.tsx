@@ -35,6 +35,7 @@ import UserAgreement from './pages/userAgreement/UserAgreement.page';
 import WebUserAgreement from './pages/webUserAgreement/WebUserAgreement.page';
 import AntiSlavery from './pages/antiSlavery/AntiSlavery.page';
 import MarketplaceAgreement from './pages/marketplaceAgreement/MarketplaceAgreement.page';
+import RegionsPage from './pages/regions/Regions.page';
 
 function App() {
   const alert = useAlert()
@@ -99,6 +100,9 @@ function App() {
         </Route>
         <Route exact path="/webUserAgreement">
           <WebUserAgreement />
+        </Route>
+        <Route exact path="/regions">
+          <RegionsPage />
         </Route>
         <Route exact path="/antiSlavery">
           <AntiSlavery />

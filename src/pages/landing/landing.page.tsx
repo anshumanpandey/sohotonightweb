@@ -10,7 +10,7 @@ function Landing() {
     const [continueBtn, setContinueBtn] = useState(false);
 
     if (above18 && continueBtn) {
-        return <Redirect to="list-post" />
+        return <Redirect to="regions" />
     }
     return (
         <>
@@ -86,12 +86,12 @@ function Landing() {
 
                                     <ul>
                                         <li style={{ pointerEvents: above18 ? undefined : "none", cursor: above18 ? 'pointer' : "not-allowed" }}>
-                                            <Link onClick={() => {
+                                            <a href="#" onClick={() => {
                                                 dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.ABOVE_18, payload: above18 })
                                                 setContinueBtn(true)
-                                            }} to="list-post">
+                                            }}>
                                                 Continue
-                                            </Link>
+                                            </a>
                                         </li>
                                     </ul>
 

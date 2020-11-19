@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
 import UkLocations from '../../utils/Location.json'
 import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
+import { useGlobalState } from '../../state/GlobalState';
 
 enum FILTER_KEY {
     GENDER = "GENDER",
@@ -72,6 +73,7 @@ const useFilters = () => {
 
 function ListPostPage() {
     const { filters, addValueFor, setValueFor, clearFilterFor, getValuesFiltersFor } = useFilters()
+    const [selectedTown] = useGlobalState("selectedTown")
 
     const [filteredUsers, setFilteredUsers] = useState<any>([])
 
@@ -80,6 +82,7 @@ function ListPostPage() {
     }, { manual: true });
 
     useEffect(() => {
+        setValueFor(FILTER_KEY.LOCATION, selectedTown)
         getUser()
             .then(({ data }) => setFilteredUsers(data))
     }, [])
@@ -104,7 +107,7 @@ function ListPostPage() {
                 return filters.length != 0 ? filters.some(f => a.town?.startsWith(f)) : true
             })
         setFilteredUsers([...r])
-    }, [filters])
+    }, [filters, data])
 
     return (
         <>
@@ -119,17 +122,6 @@ function ListPostPage() {
                                 <div className="profile-details">
                                     <div className="widget-body bordered-top bordered-sky">
                                         <div className="form-group">
-
-                                            <label htmlFor="lginput">Location</label>
-                                            <UkLocationsDropdown
-                                                onChange={(e) => {
-                                                    if (e.currentTarget.value !== "0") {
-                                                        setValueFor(FILTER_KEY.LOCATION, e.currentTarget.value)
-                                                    } else {
-                                                        clearFilterFor(FILTER_KEY.LOCATION)
-                                                    }
-                                                }}
-                                            />
 
                                             <h5 style={{ fontWeight: "normal" }}>Gender</h5>
 

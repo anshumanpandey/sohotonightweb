@@ -221,9 +221,10 @@ function LoginPage() {
                                                                                 );
                                                                             })}
                                                                         </select>
-                                                                        {errors.yearOfBirth && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
+                                                                        {errors.yearOfBirth && errors.yearOfBirth.length < 49  && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
                                                                     </div>
                                                                 </div>
+                                                                {errors.yearOfBirth && errors.yearOfBirth.length == 49  && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
                                                             </div>
                                                             <h5>Privacy & Legal</h5>
 

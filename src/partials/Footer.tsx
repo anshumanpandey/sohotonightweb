@@ -7,7 +7,7 @@ function Footer() {
         <footer className="footer">
             <div className="container" style={{ display: 'flex' }}>
                 <p className="text-muted">
-                    Copyright &copy; Company - All rights reserved
+                    Copyright &copy; Sohotonight Limited - All rights reserved
                 </p>
                 <div style={{ marginLeft: 'auto', width: "55%", display: "flex", justifyContent: "space-around" }}>
                     <Link style={{ marginLeft: 'auto' }} className="text-muted" to={"/privacyPolicy"}>

@@ -27,10 +27,11 @@ function RegionsPage() {
                         <div className="row">
                             <div className="col-md-12 col-sm-12 col-xs-12">
                                 <div className="widget">
-                                    <div style={{ minHeight: '60vh',alignItems: 'center',display: 'flex',justifyContent: 'space-around', flexDirection: 'row' }} className="widget-body">
+                                    <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'row' }} className="widget-body">
                                         {data?.map((e: any) => {
                                             return <div
-                                                style={{ fontSize: 18, color: BrandColor, cursor: 'pointer' }}
+                                                key={e.town}
+                                                style={{ fontSize: 18, color: BrandColor, cursor: 'pointer', marginRight: '3%', marginBottom: '2%' }}
                                                 onClick={() => {
                                                     setSelectedTown(e.town)
                                                     setRedirect(true)

@@ -48,7 +48,7 @@ function ProfileHeader({ user, extraContent }: any) {
                             </li>
 
                         </ul>
-                        <div style={{ marginLeft: 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: "end", paddingRight: '2%' }}>
+                        <div style={{ marginLeft: 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: "flex-end", paddingRight: '2%' }}>
                             {user?.isLogged ? (
                                 <>
                                     <p style={{ fontSize: 18, color: BrandColor, margin: 0 }}>Logged</p>

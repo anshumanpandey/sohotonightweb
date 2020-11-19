@@ -57,6 +57,9 @@ function ProfileEditPage() {
             if (values.aboutYouDetail && values.aboutYouDetail.split(' ').length < 20) {
                 errors.aboutYouDetail = 'Must be at least 20 words';
             }
+            if (moment().diff(moment(`${values.yearOfBirth}-${values.monthOfBirth}-${values.dayOfBirth}`, "YYYY-MMMM-DD"), 'years') > 18) {
+                errors.birthDate = "Only legal age people are allowed on this website";
+            }
 
             return errors;
         },
@@ -345,7 +348,7 @@ function ProfileEditPage() {
                                                                 />
                                                             </Dropdown.Menu>
                                                         </Dropdown>
-
+                                                        {formik.errors.birthDate && <ErrorLabel message={formik.errors.birthDate.toString()} />}
                                                     </div>
                                                 </div>
 

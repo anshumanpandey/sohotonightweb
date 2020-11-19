@@ -1,8 +1,34 @@
 import React from 'react';
+import { useFormik } from 'formik';
+import useAxios from 'axios-hooks'
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 
 function ContactUs() {
+    const [{ data, loading, error }, sendMail] = useAxios({
+        url: '/user/public/contact',
+        method: 'POST'
+    }, { manual: true });
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            message: '',
+        },
+        onSubmit: data => {
+            sendMail({
+                data: {
+                    name: formik.values.name,
+                    email: formik.values.email,
+                    message: formik.values.message,
+                }
+            })
+            .then(() => {
+
+            })
+        },
+    });
     return (
         <>
             <NavBar />
@@ -76,55 +102,55 @@ function ContactUs() {
                                             <h2>Get In Touch </h2>
 
 
-                                            <form role="form" action="">
+                                            <div role="form" >
                                                 <div className="form-group">
                                                     <label htmlFor="xsinput">Name</label>
-                                                    <input type="text" className="form-control input-sm" id="xsinput" placeholder="Nickname" />
+                                                    <input
+                                                        type="text"
+                                                        className="form-control input-sm"
+                                                        id="xsinput"
+                                                        placeholder="Nickname"
+                                                        name="name"
+                                                        value={formik.values.name}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                    />
                                                 </div>
                                                 <div className="form-group">
                                                     <label htmlFor="lginput">Email Address</label>
-                                                    <input type="text" className="form-control" id="lginput" placeholder="Email Address" />
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="lginput"
+                                                        placeholder="Email Address"
+                                                        name="email"
+                                                        value={formik.values.email}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                    />
                                                 </div>
 
 
                                                 <div className="form-group">
                                                     <label htmlFor="lginput">Message</label>
-                                                    <textarea name="" className="form-control" style={{ height: "109px", resize: "none" }}></textarea>
+                                                    <textarea
+                                                        className="form-control"
+                                                        name="message"
+                                                        value={formik.values.message}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        style={{ height: "109px", resize: "none" }}>
+
+                                                        </textarea>
                                                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                                                 <div className="form-group">
-                                                    <input type="submit" value="Submit" />
+                                                    <input onClick={() => formik.handleSubmit()} type="submit" value="Submit" />
                                                 </div>
 
-                                            </form>
-
-
-
-
-
+                                            </div>
 
                                         </div>
-
-
-
-
 
                                     </div>
                                 </div>

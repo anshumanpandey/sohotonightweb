@@ -27,17 +27,20 @@ function RegionsPage() {
                         <div className="row">
                             <div className="col-md-12 col-sm-12 col-xs-12">
                                 <div className="widget">
-                                    <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'row' }} className="widget-body">
-                                        {data?.map((e: any) => {
-                                            return <div
-                                                key={e.town}
-                                                style={{ fontSize: 18, color: BrandColor, cursor: 'pointer', marginRight: '3%', marginBottom: '2%' }}
-                                                onClick={() => {
-                                                    setSelectedTown(e.town)
-                                                    setRedirect(true)
-                                                }}
-                                            >{e.town} ({e.amount})</div>
-                                        })}
+                                    <div style={{ minHeight: '60vh' }} className="widget-body">
+                                        <h3 style={{ textAlign: 'center'}}>Select your local escort</h3>
+                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                            {data?.map((e: any) => {
+                                                return <div
+                                                    key={e.town}
+                                                    style={{ textDecoration: 'underline', fontSize: 18, color: BrandColor, cursor: 'pointer', marginRight: '3%', marginBottom: '2%' }}
+                                                    onClick={() => {
+                                                        setSelectedTown(e.town)
+                                                        setRedirect(true)
+                                                    }}
+                                                >{e.town} ({e.amount})</div>
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

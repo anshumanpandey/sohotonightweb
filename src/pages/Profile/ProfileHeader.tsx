@@ -4,10 +4,12 @@ import cover from '../../img/Cover/profile-cover.jpg';
 import '../../css/cover.css';
 import { BrandColor } from '../../utils/Colors';
 import { useGlobalState } from '../../state/GlobalState';
+import IsOwnProfile from '../../utils/IsOwnProfile';
 
 function ProfileHeader({ user, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
     const location = useLocation()
+    const [userData] = useGlobalState("userData")
 
     return (
         <div className="row">
@@ -17,7 +19,6 @@ function ProfileHeader({ user, extraContent }: any) {
                         <div className="image">
                             <img src={user?.bannerImage || cover} className="show-in-modal" alt="people" />
                         </div>
-
                     </div>
                     <div className="cover-info" style={{ display: 'flex' }}>
                         <div className="avatar">
@@ -48,19 +49,21 @@ function ProfileHeader({ user, extraContent }: any) {
                             </li>
 
                         </ul>
-                        <div style={{ marginLeft: 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: "flex-end", paddingRight: '2%' }}>
-                            {user?.isLogged ? (
-                                <>
-                                    <p style={{ fontSize: 18, color: BrandColor, margin: 0 }}>Logged</p>
-                                    <i style={{ color: 'green', marginLeft: '1%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                </>
-                            ) : (
+                        {!IsOwnProfile({ user: userData }) && (
+                            <div style={{ marginLeft: 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: "flex-end", paddingRight: '2%' }}>
+                                {user?.isLogged ? (
                                     <>
-                                        <p style={{ fontSize: 18, color: BrandColor, margin: 0 }}>Offline</p>
-                                        <i style={{ color: 'gray', marginLeft: '1%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                        <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Logged</p>
+                                        <i style={{ color: 'green', marginLeft: '1%' }} className="fa fa-circle" aria-hidden="true"></i>
                                     </>
-                            )}
-                        </div>
+                                ) : (
+                                        <>
+                                            <p style={{ fontSize: 18, color: 'gray', margin: 0 }}>Offline</p>
+                                            <i style={{ color: 'gray', marginLeft: '1%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                        </>
+                                    )}
+                            </div>
+                        )}
                         {extraContent && extraContent}
                     </div>
                     <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">

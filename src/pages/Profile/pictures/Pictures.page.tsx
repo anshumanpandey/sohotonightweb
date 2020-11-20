@@ -147,8 +147,10 @@ function PicturesPage() {
                                                             <div className="mix col-sm-4 page1 page4 margin30">
                                                                     <PictureItem
                                                                         isFree={p.isFree}
-                                                                        image={p.isFree ? p : {imageName: require("../../../img/soho-watchme.png")}} key={p.id.toString() + "-item"}
-                                                                        onClick={() => setShowPreviewModal(p)}
+                                                                        image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}} key={p.id.toString() + "-item"}
+                                                                        onClick={() => {
+                                                                            setGoToPayment(p)
+                                                                        }}
                                                                     />
                                                             </div>
                                                         )

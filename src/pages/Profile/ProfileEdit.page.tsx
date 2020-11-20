@@ -324,30 +324,16 @@ function ProfileEditPage() {
 
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Date of Birth:</label>
-                                                    <div className="col-sm-10 col-md-6">
-                                                        <Dropdown open={open}>
-                                                            <Dropdown.Toggle
-                                                                btnStyle="link"
-                                                                noCaret
-                                                                style={{ padding: 0, border: 1, backgroundColor: 'white' }}
-                                                            >
-                                                                <div onClick={() => setOpen(true)}>
-                                                                    <DateInput
-                                                                        value={moment(formik.values.birthDate).format('D/M/YYYY')}
-                                                                        defaultValue={moment(formik.values.birthDate).format('D/M/YYYY')}
-                                                                    />
-                                                                </div>
-                                                            </Dropdown.Toggle>
-                                                            <Dropdown.Menu style={{ padding: 8 }}>
-                                                                <DatePicker
-                                                                    date={formik.values.birthDate}
-                                                                    onSelect={(date: string) => {
-                                                                        setOpen(false)
-                                                                        formik.setFieldValue("birthDate", moment(date, "YYYY-MM-DD").toDate())
-                                                                    }}
-                                                                />
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
+                                                    <div className="col-sm-10 col-md-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            name="phoneNumber"
+                                                            placeholder="Mobile/Cell Number"
+                                                            disabled={true}
+                                                            value={moment(formik.values.birthDate).format('D/M/YYYY')}
+                                                        />
+
                                                         {formik.errors.birthDate && <ErrorLabel message={formik.errors.birthDate.toString()} />}
                                                     </div>
                                                 </div>

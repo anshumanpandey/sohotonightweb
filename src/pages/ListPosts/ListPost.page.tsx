@@ -8,6 +8,7 @@ import GetUserAge from '../../utils/GetUserAge';
 import UkLocations from '../../utils/Location.json'
 import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
 import { useGlobalState } from '../../state/GlobalState';
+import { BrandColor } from '../../utils/Colors';
 
 enum FILTER_KEY {
     GENDER = "GENDER",
@@ -200,29 +201,33 @@ function ListPostPage() {
 
                             {filteredUsers.map((g: any) => {
                                 return (
-                                    <div key={g.nickname} className="unit">
+                                    <div key={g.nickname} className="unit" style={{ paddingTop: 0 }}>
+                                        <div>
+                                            <div className="field date">
+                                                <Link style={{ textDecoration: 'underline',width: "unset", fontSize: "unset", color: BrandColor }} to={`/profile-pictures/${g.id}`}>
+                                                    View Images
+                                                </Link>
+                                                <Link style={{ textDecoration: 'underline',width: "unset", fontSize: "unset", color: BrandColor }} to={`/profile-video/${g.id}`}>
+                                                    View Video
+                                                </Link>
+                                            </div>
+                                        </div>
                                         <Link className="avatar" to={`/profile/${g.id}`}>
                                             <img src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                         </Link>
                                         <div style={{ display: 'flex', justifyContent: 'space-between' }} className="field2 title">
-                                            <Link to={`/profile/${g.id}`}>
-                                                {g.nickname}
-                                            </Link>
                                             <div>
-                                                <p>Call me now for one to one live chat: </p>
+                                                <Link style={{ marginBottom: '10px', display: 'inline-block' }} to={`/profile/${g.id}`}>
+                                                    {g.nickname}
+                                                </Link>
+                                                <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
+                                            </div>
+                                            <div>
+                                                <p style={{ fontFamily: 'AeroliteItalic'}}>Call me now for one to one live chat: </p>
                                                 <p style={{ fontWeight: 'bold' }}>{g.callNumber}</p>
                                             </div>
                                         </div>
-                                        <div className="field date">
-                                            <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
-                                            {g.aboutYouSummary && <p>{g.aboutYouSummary}</p>}
-                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-pictures/${g.id}`}>
-                                                View Images
-                                            </Link>
-                                            <Link style={{ width: "unset", fontSize: "unset" }} className="btn btn-azure" to={`/profile-video/${g.id}`}>
-                                                View Video
-                                            </Link>
-                                        </div>
+                                        {g.aboutYouDetail && <p style={{ wordWrap: "break-word" }}>{g.aboutYouDetail}</p>}
                                     </div>
                                 );
                             })}

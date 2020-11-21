@@ -16,6 +16,7 @@ import '@trendmicro/react-dropdown/dist/react-dropdown.css';
 import moment from 'moment';
 import ErrorLabel from '../../partials/ErrorLabel';
 import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
+import ServicesDropdown from '../../partials/ServicesDropdown';
 
 var months: { [k: string]: string } = {
     'January': '01',
@@ -37,7 +38,6 @@ function ProfileEditPage() {
     const [profile] = useGlobalState('userData')
     const [currentTab, setCurrentTab] = useState(0)
     const [redirect, setRedirect] = useState(false)
-    const [open, setOpen] = useState(false)
 
     const [{ data, loading, error }, updateProfile] = useAxios({
         url: '/user/update',
@@ -57,8 +57,11 @@ function ProfileEditPage() {
             if (values.aboutYouDetail && values.aboutYouDetail.split(' ').length < 20) {
                 errors.aboutYouDetail = 'Must be at least 20 words';
             }
-            if (moment().diff(moment(`${values.yearOfBirth}-${values.monthOfBirth}-${values.dayOfBirth}`, "YYYY-MMMM-DD"), 'years') > 18) {
-                errors.birthDate = "Only legal age people are allowed on this website";
+
+            if (currentTab == 0) {
+                if (!values.firstName) errors.firstName = 'Required';
+                if (!values.lastName) errors.lastName = 'Required';
+                if (!values.town) errors.town = 'Required';
             }
 
             return errors;
@@ -142,6 +145,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                         />
                                                     </div>
+                                                    {formik.errors.firstName && formik.touched.firstName && <ErrorLabel message={formik.errors.firstName.toString()} />}
                                                 </div>
 
                                                 <div className="form-group row">
@@ -157,6 +161,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                         />
                                                     </div>
+                                                    {formik.errors.lastName && formik.touched.lastName && <ErrorLabel message={formik.errors.lastName.toString()} />}
                                                 </div>
 
                                                 <div className="form-group row">
@@ -218,6 +223,7 @@ function ProfileEditPage() {
                                                             onBlur={formik.handleBlur}
                                                         />
                                                     </div>
+                                                    {formik.errors.town && formik.touched.town && <ErrorLabel message={formik.errors.town.toString()} />}
                                                 </div>
 
                                                 <div className="form-group row">
@@ -249,6 +255,24 @@ function ProfileEditPage() {
                                                         />
                                                     </div>
                                                 </div>
+
+                                                <h5
+                                                    style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>
+                                                    Services</h5>
+
+                                                <div className="form-group row">
+                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Allow Social marketing:</div>
+                                                    <div className="col-sm-10 col-md-6">
+                                                        <ServicesDropdown
+                                                            defaultValue={formik.values.Services.map((s: any) => s.id)}
+                                                            onChange={(e) => {
+                                                                const values = Array.from(e.target.selectedOptions, option => option.value)
+                                                                console.log(values)
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
 
                                                 <h5
                                                     style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>

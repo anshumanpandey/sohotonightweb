@@ -14,6 +14,20 @@ import { BrandColor } from '../../utils/Colors';
 import moment from 'moment';
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+var months = {
+    'January' : '01',
+    'February' : '02',
+    'March' : '03',
+    'April' : '04',
+    'May' : '05',
+    'June' : '06',
+    'July' : '07',
+    'August' : '08',
+    'September' : '09',
+    'October' : '10',
+    'November' : '11',
+    'December' : '12'
+}
 
 function LoginPage() {
     const [registered, setRegistered] = useState(false)
@@ -41,7 +55,7 @@ function LoginPage() {
             .string()
             .required('Please Enter your password')
             .matches(
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#_?&]{8,}$/,
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$_!%*#?&])[A-Za-z\d@$!%*#_?&]{8,}$/,
                 "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
             ),
         confirmPassword: Yup.string()
@@ -53,7 +67,9 @@ function LoginPage() {
         yearOfBirth: Yup.string()
             .required('Required')
             .test("above18", "Only legal age people are allowed on this website", function (values) {
-                return moment().diff(moment(`${this.parent.yearOfBirth}-${this.parent.monthOfBirth}-${this.parent.dayOfBirth}`, "YYYY-MM-DD"), 'years') >= 18;
+                //@ts-ignore
+                const birthDate = new Date(this.parent.yearOfBirth, months[this.parent.monthOfBirth] - 1, this.parent.dayOfBirth)
+                return moment().diff(moment(birthDate), 'years') >= 18;
             }),
         acceptPolicies: Yup.boolean().oneOf([true], "Must Accept Concent"),
     })

@@ -13,6 +13,7 @@ function ProfileHeader({ user, extraContent }: any) {
 
     console.log(user.id)
     console.log(IsOwnProfile({ user: user }))
+    console.log(user?.isLogged)
 
     return (
         <div className="row">

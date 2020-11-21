@@ -222,10 +222,12 @@ function ListPostPage() {
                                                 </Link>
                                                 <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
                                             </div>
-                                            <div>
-                                                <p style={{ fontFamily: 'AeroliteItalic'}}>Call me now for one to one live chat: </p>
-                                                <p style={{ fontWeight: 'bold' }}>{g.callNumber}</p>
-                                            </div>
+                                            {g.callNumber && (
+                                                <div>
+                                                    <p style={{ fontFamily: 'AeroliteItalic'}}>Call me now for one to one live chat: </p>
+                                                    <p style={{ fontWeight: 'bold' }}>{g.callNumber}</p>
+                                                </div>
+                                            )}
                                         </div>
                                         {g.aboutYouDetail && <p style={{ wordWrap: "break-word" }}>{g.aboutYouDetail}</p>}
                                     </div>

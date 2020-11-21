@@ -10,7 +10,7 @@ function Landing() {
     const [continueBtn, setContinueBtn] = useState(false);
 
     if (above18 && continueBtn) {
-        return <Redirect to="regions" />
+        return <Redirect to="/list-post" />
     }
     return (
         <>

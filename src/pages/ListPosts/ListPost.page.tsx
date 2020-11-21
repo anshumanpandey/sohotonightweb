@@ -234,7 +234,7 @@ function ListPostPage() {
                                     <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
                                         <div style={{ width: '20%', paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
                                             <Link style={{ display: 'block' }} to={`/profile/${g.id}`}>
-                                                <img style={{ borderRadius: "50%", maxWidth: "100%", height: "100%" }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                                <img style={{ borderRadius: "50%", maxWidth: "100%" }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                             </Link>
                                             <div style={{ alignItems: "center", flex: 1, display: "flex", justifyContent: "center" }}>
                                                 {g?.isLogged ? (

@@ -7,7 +7,7 @@ import { useGlobalState } from '../state/GlobalState';
 
 function NavBar() {
     const [userData] = useGlobalState("userData")
-    const goTo = userData ? `/profile/${userData.id}`:"/regions" 
+    const goTo = userData ? `/profile/${userData.id}`:"/list-post" 
     return (
         <nav className="navbar navbar-white navbar-fixed-top">
             <div className="container">

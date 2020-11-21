@@ -11,6 +11,7 @@ import { Redirect, useParams } from 'react-router-dom';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 import GetUserAge from '../../utils/GetUserAge';
 import IsOwnProfile from '../../utils/IsOwnProfile';
+import { BrandColor } from '../../utils/Colors';
 
 function AboutPage() {
     let { id } = useParams<{ id: string }>();
@@ -181,6 +182,17 @@ function AboutPage() {
                   </div>
                                                 <div className="col-xs-7">
                                                     {user?.orientation || "N/A"}
+                                                </div>
+                                            </div>
+
+                                            <div className="row content-info">
+                                                <div className="col-xs-5">
+                                                    Services:
+                  </div>
+                                                <div className="col-xs-7" style={{ display: 'flex', flexWrap: "wrap", }}>
+                                                    {user?.Services?.map((s: any) => {
+                                                        return <p style={{ margin: 0, lineHeight: 'normal',borderStyle: 'solid', borderRadius: 30 ,padding: "0.5rem", marginBottom: '0.5rem',marginRight: '0.5rem',borderWidth: 1, borderColor: BrandColor }}>{s.name}</p>
+                                                    })}
                                                 </div>
                                             </div>
 

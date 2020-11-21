@@ -1,13 +1,14 @@
 import React from 'react';
 import useAxios from 'axios-hooks'
 
-function ServicesDropdown({ onChange, ...props }: React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>) {
+function    ServicesDropdown({ onChange, ...props }: React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>) {
 
     const [{ data, loading, error }, getUser] = useAxios({
         url: '/services/',
     });
 
-    if (error) return <p>Could not load servives</p>
+    if (error) return <p>Could not load services</p>
+    if (loading) return <p>Loading services</p>
 
     return (
         <select
@@ -15,7 +16,6 @@ function ServicesDropdown({ onChange, ...props }: React.DetailedHTMLProps<React.
             disabled={loading}
             style={{ width: "100%" }}
             className="form-control"
-            name={"country"}
             onChange={onChange}
             {...props}
         >

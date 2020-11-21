@@ -11,6 +11,9 @@ function ProfileHeader({ user, extraContent }: any) {
     const location = useLocation()
     const [userData] = useGlobalState("userData")
 
+    console.log(user.id)
+    console.log(IsOwnProfile({ user: user }))
+
     return (
         <div className="row">
             <div className="col-md-12">
@@ -49,17 +52,17 @@ function ProfileHeader({ user, extraContent }: any) {
                             </li>
 
                         </ul>
-                        {!IsOwnProfile({ user: userData }) && (
+                        {!IsOwnProfile({ user }) && (
                             <div style={{ marginLeft: 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: "flex-end", paddingRight: '2%' }}>
                                 {user?.isLogged ? (
                                     <>
+                                        <i style={{ color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
                                         <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Logged</p>
-                                        <i style={{ color: 'green', marginLeft: '1%' }} className="fa fa-circle" aria-hidden="true"></i>
                                     </>
                                 ) : (
                                         <>
+                                            <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
                                             <p style={{ fontSize: 18, color: 'gray', margin: 0 }}>Offline</p>
-                                            <i style={{ color: 'gray', marginLeft: '1%' }} className="fa fa-circle" aria-hidden="true"></i>
                                         </>
                                     )}
                             </div>
@@ -69,8 +72,8 @@ function ProfileHeader({ user, extraContent }: any) {
                     <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
                         <div className="phone_no_area">
                             <ul>
-                                <li>Call me now for one to one live chat</li>
-                                <li style={{ textAlign: "center" }}>1223334444</li>
+                                <li style={{ fontStyle: 'italic'}}>Call me now for one to one live chat</li>
+                                <li style={{ textAlign: "center" }}>{user?.callNumber}</li>
                             </ul>
                         </div>
                     </div>

@@ -261,15 +261,17 @@ function ProfileEditPage() {
                                                     Services</h5>
 
                                                 <div className="form-group row">
-                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Allow Social marketing:</div>
+                                                    <div className="col-sm-2 col-md-offset-2 col-form-label">Services:</div>
                                                     <div className="col-sm-10 col-md-6">
                                                         <ServicesDropdown
                                                             defaultValue={formik.values.Services.map((s: any) => s.id)}
                                                             onChange={(e) => {
                                                                 const values = Array.from(e.target.selectedOptions, option => option.value)
                                                                 console.log(values)
+                                                                formik.setFieldValue("Services", values)
                                                             }}
                                                         />
+                                                    <p style={{ color: 'gray', fontStyle: "italic"}}>Press Ctrl to select multiple services</p>
                                                     </div>
                                                 </div>
 

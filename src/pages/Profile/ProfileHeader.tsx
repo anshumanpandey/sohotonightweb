@@ -57,7 +57,7 @@ function ProfileHeader({ user, extraContent }: any) {
                                 {user?.isLogged ? (
                                     <>
                                         <i style={{ color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                        <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Logged</p>
+                                        <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Online</p>
                                     </>
                                 ) : (
                                         <>

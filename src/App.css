@@ -61,3 +61,8 @@
   font-family: "AeroliteItalic";
   src: url(../src/fonts/AeroliteItalic.otf);
 }
+
+@font-face {
+  font-family: "Eutemia";
+  src: url(../src/fonts/Eutemia.ttf);
+}

@@ -22,7 +22,7 @@ function NavBar() {
                     <Link className="navbar-brand" to={goTo}>
                         <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" />
                     </Link>
-                    <p style={{ marginTop: "auto", marginBottom: "auto", fontSize: "38px", color: '#cd2b6b', fontFamily: 'Aerolite' }}>
+                    <p style={{ marginTop: "auto", marginBottom: "auto", fontSize: "38px", color: '#cd2b6b', fontFamily: 'Eutemia' }}>
                         UK's #1 Adult Directory
                     </p>
                 </div>

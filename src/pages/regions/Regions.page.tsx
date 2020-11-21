@@ -28,7 +28,7 @@ function RegionsPage() {
                             <div className="col-md-12 col-sm-12 col-xs-12">
                                 <div className="widget">
                                     <div style={{ minHeight: '60vh' }} className="widget-body">
-                                        <h3 style={{ textAlign: 'center'}}>Select your local escort</h3>
+                                        <h3 style={{ textAlign: 'center'}}>Select city of your choice</h3>
                                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                                             {data?.map((e: any) => {
                                                 return <div

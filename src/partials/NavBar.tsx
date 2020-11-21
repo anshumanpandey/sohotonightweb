@@ -7,7 +7,7 @@ import { useGlobalState } from '../state/GlobalState';
 
 function NavBar() {
     const [userData] = useGlobalState("userData")
-    const goTo = userData ? `/profile/${userData.id}`:"/" 
+    const goTo = userData ? `/profile/${userData.id}`:"/regions" 
     return (
         <nav className="navbar navbar-white navbar-fixed-top">
             <div className="container">
@@ -28,7 +28,7 @@ function NavBar() {
                 </div>
                 <div id="navbar" className="navbar-collapse collapse">
                     <ul className="nav navbar-nav navbar-right">
-                        <li><Link to="/regions">Home</Link></li>
+                        <li><Link to={goTo}>Home</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
                         {UserIsLogged() && <li><Link to="/logout">Logout</Link></li>}

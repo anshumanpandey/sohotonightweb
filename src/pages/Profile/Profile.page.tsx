@@ -60,7 +60,7 @@ function ProfilePage() {
                                         <div className="col-md-12">
                                             <ul className="img-grid" style={{ margin: "0 auto" }}>
                                                 {user?.Pictures?.length == 0 && <p>No images</p>}
-                                                {user?.Pictures?.length != 0 && user?.Pictures?.map((p: any) => {
+                                                {user?.Pictures?.length != 0 && user?.Pictures?.filter((v: any) => v.isFree)?.map((p: any) => {
                                                     return (
                                                         <li onClick={() => setShowPreviewModal(p)} key={p.imageName}>
                                                             <a href="#">
@@ -93,7 +93,7 @@ function ProfilePage() {
                                         <div className="col-md-12">
                                             <ul className="img-grid" style={{ margin: "0 auto" }}>
                                                 {user?.Videos?.length == 0 && <p>No Videos</p>}
-                                                {user?.Videos?.length != 0 && user?.Videos?.map((p: any) => {
+                                                {user?.Videos?.length != 0 && user?.Videos?.filter((v: any) => v.isFree)?.map((p: any) => {
                                                     return (
                                                         <li style={{ position: 'relative'}} key={p.videoUrl}>
                                                             <video controls style={{ height: 80 }} src={p.videoUrl} />

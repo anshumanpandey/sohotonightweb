@@ -69,14 +69,16 @@ function ProfileHeader({ user, extraContent }: any) {
                         )}
                         {extraContent && extraContent}
                     </div>
-                    <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
-                        <div className="phone_no_area">
-                            <ul>
-                                <li style={{ fontStyle: 'italic'}}>Call me now for one to one live chat</li>
-                                <li style={{ textAlign: "center" }}>{user?.callNumber}</li>
-                            </ul>
+                    {user?.callNumber && (
+                        <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
+                            <div className="phone_no_area">
+                                <ul>
+                                    <li style={{ fontStyle: 'italic'}}>Call me now for one to one live chat</li>
+                                    <li style={{ textAlign: "center" }}>{user?.callNumber}</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

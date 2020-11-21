@@ -233,19 +233,19 @@ function ListPostPage() {
                                 return (
                                     <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
                                         <div style={{ width: '20%', paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
-                                            <Link style={{ display: 'block' }} to={`/profile/${g.id}`}>
-                                                <img style={{ borderRadius: "50%", maxWidth: "100%" }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                            <Link style={{ display: "flex", justifyContent: "center" }} to={`/profile/${g.id}`}>
+                                                <img style={{ borderRadius: "50%", maxWidth: "100%", height: 100 }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                             </Link>
                                             <div style={{ alignItems: "center", flex: 1, display: "flex", justifyContent: "center" }}>
                                                 {g?.isLogged ? (
                                                     <>
                                                         <i style={{ color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                                        <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Online</p>
+                                                        <p style={{ fontSize: 15, color: 'green', margin: 0 }}>Online</p>
                                                     </>
                                                 ) : (
                                                         <>
                                                             <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                                            <p style={{ fontSize: 18, color: 'gray', margin: 0 }}>Offline</p>
+                                                            <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
                                                         </>
                                                     )}
                                             </div>

@@ -54,12 +54,12 @@ function ProfileHeader({ user, extraContent }: any) {
                                 {user?.isLogged ? (
                                     <>
                                         <i style={{ color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                        <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Online</p>
+                                        <p style={{ fontSize: 15, color: 'green', margin: 0 }}>Online</p>
                                     </>
                                 ) : (
                                         <>
                                             <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                            <p style={{ fontSize: 18, color: 'gray', margin: 0 }}>Offline</p>
+                                            <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
                                         </>
                                     )}
                             </div>
@@ -70,8 +70,8 @@ function ProfileHeader({ user, extraContent }: any) {
                         <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
                             <div className="phone_no_area">
                                 <ul>
-                                    <li style={{ fontStyle: 'italic'}}>Call me now for one to one live chat</li>
-                                    <li style={{ textAlign: "center" }}>{user?.callNumber}</li>
+                                    <li style={{ fontStyle: 'italic', fontFamily: "AeroliteItalic",fontSize: 55 }}>Call me now for one to one live chat</li>
+                                    <li style={{ textAlign: "center", fontFamily: "AeroliteItalic",fontSize: 55 }}>{user?.callNumber}</li>
                                 </ul>
                             </div>
                         </div>

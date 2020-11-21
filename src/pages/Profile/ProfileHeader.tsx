@@ -11,10 +11,6 @@ function ProfileHeader({ user, extraContent }: any) {
     const location = useLocation()
     const [userData] = useGlobalState("userData")
 
-    console.log(user.id)
-    console.log(IsOwnProfile({ user: user }))
-    console.log(user?.isLogged)
-
     return (
         <div className="row">
             <div className="col-md-12">

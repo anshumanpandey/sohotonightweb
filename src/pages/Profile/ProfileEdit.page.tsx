@@ -33,6 +33,15 @@ var months: { [k: string]: string } = {
     'December': '12'
 }
 
+const getServicesList = (option: any, currentValues: any[]) => {
+    const found = currentValues.find((val: any) => val.id == option.id)
+    if (found) {
+        return currentValues.filter(v => v.id != option.id)
+    } else {
+        return [...currentValues, option]
+    }
+}
+
 function ProfileEditPage() {
     const bannerRef = useRef<HTMLImageElement | null>(null)
     const [profile] = useGlobalState('userData')
@@ -43,6 +52,10 @@ function ProfileEditPage() {
         url: '/user/update',
         method: 'PUT',
     }, { manual: true });
+
+    const [servicesReq, getServices] = useAxios({
+        url: '/services/',
+    });
 
     const formik = useFormik({
         initialValues: {
@@ -74,6 +87,7 @@ function ProfileEditPage() {
                 profileImageFile,
                 bannerImageFile,
                 authenticationProfilePic,
+                Services,
                 ...fields
             } = values
 
@@ -82,11 +96,15 @@ function ProfileEditPage() {
             if (profileImageFile) data.append("profilePic", profileImageFile)
             if (bannerImageFile) data.append("bannerImage", bannerImageFile)
             if (authenticationProfilePic) data.append("authenticatePic", authenticationProfilePic)
+            if (Services.length != 0) {
+                data.append("Services", Services.map((s: any) => s.id).join(","))
+            }
             Object.keys(fields).forEach(k => {
                 if (values[k]) {
                     data.append(k, values[k])
                 }
             })
+
             updateProfile({ data })
                 .then(({ data }) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
@@ -262,16 +280,24 @@ function ProfileEditPage() {
 
                                                 <div className="form-group row">
                                                     <div className="col-sm-2 col-md-offset-2 col-form-label">Services:</div>
-                                                    <div className="col-sm-10 col-md-6">
-                                                        <ServicesDropdown
-                                                            defaultValue={formik.values.Services.map((s: any) => s.id)}
-                                                            onChange={(e) => {
-                                                                const values = Array.from(e.target.selectedOptions, option => option.value)
-                                                                console.log(values)
-                                                                formik.setFieldValue("Services", values)
-                                                            }}
-                                                        />
-                                                    <p style={{ color: 'gray', fontStyle: "italic"}}>Press Ctrl to select multiple services</p>
+                                                    <div className="col-sm-10 col-md-6" style={{ display: 'flex', flexWrap: 'wrap', alignItems: "flex-end" }}>
+                                                        {servicesReq?.data?.map((s: any) => {
+                                                            return (
+                                                                <div key={s.name} className="checkbox" style={{ width: '33%', height: '34px'}}>
+                                                                    <label>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            onChange={() => {
+                                                                                const servicesState = getServicesList(s, formik.values.Services)
+                                                                                formik.setFieldValue("Services", servicesState)
+                                                                            }}
+                                                                            checked={formik.values.Services.find((currentSer: any) => currentSer.id == s.id)}
+                                                                        />
+                                                                        <span className="text">{s.name}</span>
+                                                                    </label>
+                                                                </div>
+                                                            )
+                                                        })}
                                                     </div>
                                                 </div>
 

@@ -143,7 +143,7 @@ function App() {
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
-      <CookieConsent>
+      <CookieConsent buttonText="Accept Cookies">
         This website uses cookies to enhance the user experience.{' '}
         <Link to="/cookiePolicy">See more</Link>
       </CookieConsent>

@@ -5,8 +5,6 @@ import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
-import UkLocations from '../../utils/Location.json'
-import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
 import { useGlobalState } from '../../state/GlobalState';
 import { BrandColor } from '../../utils/Colors';
 
@@ -15,11 +13,12 @@ enum FILTER_KEY {
     ORIENTATION = "ORIENTATION",
     COUNTY = "COUNTY",
     LOCATION = "LOCATION",
+    SERVICE = "SERVICE",
 }
 
-const getCountiesFromUsers = (users: any = []) => {
-    const counties = users.map((u: any) => u.county).filter((c: any) => c)
-    return Array.from(new Set(counties).values())
+const getTownsFromUsers = (users: any = []) => {
+    const town = users.map((u: any) => u.town).filter((c: any) => c)
+    return Array.from(new Set(town).values())
 }
 
 type FilterObject = { forSearchKey: FILTER_KEY, val: any }
@@ -31,11 +30,10 @@ const useFilters = () => {
         const filtersOfThisKey = filters.filter(f => f.forSearchKey == forKey)
         const found = filtersOfThisKey.find(f => f.val == val)
 
-
         setFilters(prev => {
             let newState = prev
             if (found) {
-                newState = prev.filter(f => f.forSearchKey != found.forSearchKey && f.val != found.val)
+                newState = prev.filter(f => f.forSearchKey == found.forSearchKey && f.val != found.val)
             } else {
                 newState.push({ forSearchKey: forKey, val })
             }
@@ -86,8 +84,11 @@ function ListPostPage() {
         url: '/user/public/getUsers',
     }, { manual: true });
 
+    const [servicesReq, getServices] = useAxios({
+        url: '/services/',
+    });
+
     useEffect(() => {
-        setValueFor(FILTER_KEY.LOCATION, selectedTown)
         getUser()
             .then(({ data }) => setFilteredUsers(data.filter(userIsVerified)))
     }, [])
@@ -111,6 +112,10 @@ function ListPostPage() {
             .filter((a: any) => {
                 const filters = getValuesFiltersFor(FILTER_KEY.LOCATION)
                 return filters.length != 0 ? filters.some(f => a.town?.startsWith(f)) : true
+            })
+            .filter((a: any) => {
+                const filters = getValuesFiltersFor(FILTER_KEY.SERVICE)
+                return filters.length != 0 ? filters.some(f => a.Services?.find((s: any) => s.name == f)) : true
             })
         setFilteredUsers([...r])
     }, [filters, data])
@@ -185,6 +190,31 @@ function ListPostPage() {
                                                     <span className="text">Straight</span>
                                                 </label>
                                             </div>
+
+                                            <h5 style={{ fontWeight: "normal" }}>Cities</h5>
+
+                                            {getTownsFromUsers(data).map((t: any) => {
+                                                return (
+                                                    <div className="checkbox">
+                                                        <label>
+                                                            <input onClick={() => { addValueFor(FILTER_KEY.LOCATION, t) }} type="checkbox" />
+                                                            <span className="text">{t}</span>
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
+
+                                            <h5 style={{ fontWeight: "normal" }}>Services</h5>
+                                            {servicesReq?.data?.map((t: any) => {
+                                                return (
+                                                    <div className="checkbox">
+                                                        <label>
+                                                            <input onClick={() => { addValueFor(FILTER_KEY.SERVICE, t.name) }} type="checkbox" />
+                                                            <span className="text">{t.name}</span>
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>
@@ -201,35 +231,42 @@ function ListPostPage() {
 
                             {filteredUsers.map((g: any) => {
                                 return (
-                                    <div key={g.nickname} className="unit" style={{ paddingTop: 0 }}>
-                                        <div>
-                                            <div className="field date">
-                                                <Link style={{ textDecoration: 'underline',width: "unset", fontSize: "unset", color: BrandColor }} to={`/profile-pictures/${g.id}`}>
-                                                    View Images
-                                                </Link>
-                                                <Link style={{ textDecoration: 'underline',width: "unset", fontSize: "unset", color: BrandColor }} to={`/profile-video/${g.id}`}>
-                                                    View Video
-                                                </Link>
+                                    <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
+                                        <div style={{ width: '20%', paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
+                                            <Link style={{ display: 'block' }} to={`/profile/${g.id}`}>
+                                                <img style={{ borderRadius: "50%", maxWidth: "100%", height: "100%" }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                            </Link>
+                                            <div style={{ alignItems: "center", flex: 1, display: "flex", justifyContent: "center" }}>
+                                                {g?.isLogged ? (
+                                                    <>
+                                                        <i style={{ color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                                        <p style={{ fontSize: 18, color: 'green', margin: 0 }}>Online</p>
+                                                    </>
+                                                ) : (
+                                                        <>
+                                                            <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                                            <p style={{ fontSize: 18, color: 'gray', margin: 0 }}>Offline</p>
+                                                        </>
+                                                    )}
                                             </div>
                                         </div>
-                                        <Link className="avatar" to={`/profile/${g.id}`}>
-                                            <img src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
-                                        </Link>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between' }} className="field2 title">
-                                            <div>
-                                                <Link style={{ marginBottom: '10px', display: 'inline-block' }} to={`/profile/${g.id}`}>
+                                        <div style={{ width: '80%', paddingTop: '2rem', display: 'flex', flexDirection: 'row' }}>
+                                            <div style={{ width: '100%' }}>
+                                                <Link style={{ marginBottom: '10px', fontSize: 15, display: 'inline-block', color: 'black', fontWeight: 'bold' }} to={`/profile/${g.id}`}>
                                                     {g.nickname}
                                                 </Link>
                                                 <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
+                                                {g.aboutYouDetail && <p style={{ wordWrap: "break-word" }}>{g.aboutYouDetail}</p>}
                                             </div>
-                                            {g.callNumber && (
-                                                <div>
-                                                    <p style={{ fontFamily: 'AeroliteItalic'}}>Call me now for one to one live chat: </p>
-                                                    <p style={{ fontWeight: 'bold' }}>{g.callNumber}</p>
-                                                </div>
-                                            )}
+                                            <div style={{ width: '100%' }}>
+                                                {g.callNumber && (
+                                                    <div>
+                                                        <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: "end" }}>Call me now for one to one live chat: </p>
+                                                        <p style={{ fontWeight: 'bold', textAlign: "end" }}>{g.callNumber}</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                        {g.aboutYouDetail && <p style={{ wordWrap: "break-word" }}>{g.aboutYouDetail}</p>}
                                     </div>
                                 );
                             })}

@@ -7,9 +7,9 @@ const ListPostItem = ({ girl: g } : { girl: any }) => {
     const isMobile = UseIsMobile();
     return (
         <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
-            <div style={{ width: isMobile ? "50%":'20%', paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
+            <div style={{ paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
                 <Link style={{ display: "flex", justifyContent: "center" }} to={`/profile/${g.id}`}>
-                    <img style={{ borderRadius: "50%", maxWidth: "100%", height: 100 }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                    <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 100 }} src={g.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                 </Link>
                 <div style={{ alignItems: "center", flex: 1, display: "flex", justifyContent: "center" }}>
                     {g?.isLogged ? (
@@ -25,7 +25,7 @@ const ListPostItem = ({ girl: g } : { girl: any }) => {
                         )}
                 </div>
             </div>
-            <div style={{ width: '80%', paddingTop: '2rem', display: 'flex', flexDirection: isMobile ? 'column': 'row' }}>
+            <div style={{ width: isMobile ? '70%': '75%', paddingTop: '2rem', display: 'flex', flexDirection: isMobile ? 'column': 'row' }}>
                 <div style={{ width: '100%' }}>
                     <Link style={{ marginBottom: '10px', fontSize: 15, display: 'inline-block', color: 'black', fontWeight: 'bold' }} to={`/profile/${g.id}`}>
                         {g.nickname}

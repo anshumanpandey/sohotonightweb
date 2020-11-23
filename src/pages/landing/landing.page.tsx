@@ -51,7 +51,7 @@ function Landing() {
                                                 <li>You are not offended by nudity, sexual imagery or any sexual activity.</li>
 
                                                 <li>You will not permit any minor, or other person for who it is illegal, to access or view material
-                    that sxists within this website.</li>
+                    that exist within this website.</li>
 
                                                 <li>This website uses cookies and you permit them to be stored on your devices.</li>
 

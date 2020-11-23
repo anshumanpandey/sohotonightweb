@@ -16,7 +16,7 @@ function NavBar() {
     return (
         <nav className="navbar navbar-white navbar-fixed-top">
             <div className="container">
-                <div className="navbar-header" style={{ display: 'flex', flexDirection: 'row', width: isLess1200 ? "100%" : undefined}}>
+                <div className="navbar-header" style={{ display: 'flex', flexDirection: 'row', width: isLess1200 ? "100%" : "60%"}}>
                     <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
                         <span className="sr-only">Toggle navigation</span>
@@ -24,9 +24,9 @@ function NavBar() {
                         <span className="icon-bar"></span>
                         <span className="icon-bar"></span>
                     </button>
-                    <div style={{ marginLeft: 'auto', marginRight: 'auto', display: 'flex', justifyContent: 'center', flexDirection: isMobile ? 'column': "row"}}>
+                    <div style={{ width: '100%',display: 'flex', flexDirection: isMobile ? 'column': "row", justifyContent: isLess1200 ? "center": "space-between" }}>
                     <Link className="navbar-brand" to={goTo}>
-                        <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" style={{ display: 'block', marginLeft: 'auto', float: 'none'}} />
+                        <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" style={{ width: isMobile ? "35%": "60%" ,display: 'block', marginRight: 'auto', marginLeft: isMobile ? "auto":'unset', float: 'none'}} />
                     </Link>
                     <p style={{ textAlign: isMobile ? 'center': 'left',marginTop: "auto", marginBottom: "auto", fontSize: "38px", color: '#cd2b6b', fontFamily: 'Aerolite' }}>
                         #1 Adult Directory

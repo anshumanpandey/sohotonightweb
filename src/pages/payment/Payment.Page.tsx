@@ -140,7 +140,7 @@ const StepOne = ({ formik, history, ...props }: any) => {
                         value={formik.values.country}
                     >
                         <option>Select</option>
-                        {countries.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+                        {countries.sort((a,b) => a.name.localeCompare(b.name)).map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
                     </select>
                     {formik.errors.country && formik.touched.country && <ErrorLabel message={formik.errors.country} />}
                 </div>
@@ -212,6 +212,7 @@ function PaymentPage() {
         return Object.keys(formik.values).some((k) => !formik.values[k as keyof typeof initialValues])
     }
 
+    console.log(assetReq?.data?.price)    
 
     const StepTwo = ({ history }: any) => {
         return (
@@ -221,7 +222,7 @@ function PaymentPage() {
                         amount={assetReq?.data?.price || 0}
                         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                         onSuccess={(details: any, data: any) => {
-                            doSave({ data: { ...formik.values, transactionId: data.orderID } })
+                            doSave({ data: { ...formik.values, transactionId: data.orderID, assetType: type, assetId: id } })
                                 .then(() => {
                                     setSuccessAlert("Payment Saved!")
                                     history.goBack()

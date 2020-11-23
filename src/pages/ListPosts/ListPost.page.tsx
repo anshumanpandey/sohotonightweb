@@ -71,9 +71,6 @@ const useFilters = () => {
     }
 }
 
-const userIsVerified = (u: any) => {
-    return u.authenticationProfilePicIsAuthenticated == true
-}
 
 function ListPostPage() {
     const { filters, addValueFor, setValueFor, clearFilterFor, getValuesFiltersFor } = useFilters()
@@ -91,13 +88,12 @@ function ListPostPage() {
 
     useEffect(() => {
         getUser()
-            .then(({ data }) => setFilteredUsers(data.filter(userIsVerified)))
+            .then(({ data }) => setFilteredUsers(data))
     }, [])
 
     useEffect(() => {
         if (!data) return
         const r = data
-            .filter(userIsVerified)
             .filter((a: any) => {
                 const filters = getValuesFiltersFor(FILTER_KEY.GENDER)
                 return filters.length != 0 ? filters.includes(a.gender) : true

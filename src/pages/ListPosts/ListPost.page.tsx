@@ -8,6 +8,8 @@ import GetUserAge from '../../utils/GetUserAge';
 import { useGlobalState } from '../../state/GlobalState';
 import { BrandColor } from '../../utils/Colors';
 import ListPostItem from './ListPostItem';
+import UseIsMobile from '../../utils/UseIsMobile';
+import SohoButton from '../../partials/SohoButton';
 
 enum FILTER_KEY {
     GENDER = "GENDER",
@@ -74,7 +76,7 @@ const useFilters = () => {
 
 function ListPostPage() {
     const { filters, addValueFor, setValueFor, clearFilterFor, getValuesFiltersFor } = useFilters()
-    const [selectedTown] = useGlobalState("selectedTown")
+    const isMobile = UseIsMobile();
 
     const [filteredUsers, setFilteredUsers] = useState<any>([])
 
@@ -127,7 +129,11 @@ function ListPostPage() {
                             <div className="main-box clearfix">
                                 <h4>Advanced Search</h4>
 
-                                <div className="profile-details">
+                                {isMobile && (
+                                    <SohoButton style={{ width: '100%'}} data-toggle="collapse" data-target="#collapse-menu" onClick={() => {}} value="Open" />
+                                )}
+
+                                <div id="collapse-menu" className={`${isMobile ? "": "show"} collapse profile-details`}>
                                     <div className="widget-body bordered-top bordered-sky">
                                         <div className="form-group">
 

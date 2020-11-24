@@ -212,8 +212,6 @@ function PaymentPage() {
         return Object.keys(formik.values).some((k) => !formik.values[k as keyof typeof initialValues])
     }
 
-    console.log(assetReq?.data?.price)    
-
     const StepTwo = ({ history }: any) => {
         return (
             <>
@@ -229,7 +227,7 @@ function PaymentPage() {
                                 })
                         }}
                         options={{
-                            clientId: "Ad_1yqkg40dYYOkw1oWZLkl0L_RKHEnGgklSB2fG33FzKrtJoPV8QIg_olt4npLOrpBXfukUARdretzX",
+                            clientId: "ARFkBF4dcyHCmdvyA9OYKHC1ybUW1Mt1H_32dbDhb_b3TzihXiv86NRYxhAUUnBp4t0h-O6lYOn6LVjr",
                             currency: 'GBP'
                         }}
                     />

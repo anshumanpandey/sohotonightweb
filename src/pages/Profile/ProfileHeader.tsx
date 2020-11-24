@@ -5,11 +5,12 @@ import '../../css/cover.css';
 import { BrandColor } from '../../utils/Colors';
 import { useGlobalState } from '../../state/GlobalState';
 import IsOwnProfile from '../../utils/IsOwnProfile';
+import UseIsMobile from '../../utils/UseIsMobile';
 
 function ProfileHeader({ user, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
     const location = useLocation()
-    const [userData] = useGlobalState("userData")
+    const isMobile = UseIsMobile();
 
     return (
         <div className="row">
@@ -20,11 +21,13 @@ function ProfileHeader({ user, extraContent }: any) {
                             <img src={user?.bannerImage || cover} className="show-in-modal" alt="people" />
                         </div>
                     </div>
-                    <div className="cover-info" style={{ display: 'flex' }}>
-                        <div className="avatar">
-                            <img src={user?.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} alt="people" />
+                    <div className="cover-info" style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
+                        <div>
+                            <div className="avatar">
+                                <img src={user?.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} alt="people" />
+                            </div>
+                            <div className="name"><a href="#">{user?.nickname}</a></div>
                         </div>
-                        <div className="name"><a href="#">{user?.nickname}</a></div>
                         <ul className="cover-nav">
                             <li className={`${location.pathname.includes("/profile/") && "active"}`}>
                                 <Link to={`/profile/${id}`}>
@@ -50,15 +53,15 @@ function ProfileHeader({ user, extraContent }: any) {
 
                         </ul>
                         {!IsOwnProfile({ user }) && (
-                            <div style={{ marginLeft: 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: "flex-end", paddingRight: '2%' }}>
+                            <div style={{ marginLeft: isMobile ? 'unset':'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: isMobile ? "unset":"flex-end", paddingRight: '2%' }}>
                                 {user?.isLogged ? (
                                     <>
-                                        <i style={{ color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                        <i style={{ paddingLeft: isMobile ? "15px": 'unset', color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
                                         <p style={{ fontSize: 15, color: 'green', margin: 0 }}>Online</p>
                                     </>
                                 ) : (
                                         <>
-                                            <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                            <i style={{ paddingLeft: isMobile ? "15px": 'unset', color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
                                             <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
                                         </>
                                     )}
@@ -70,8 +73,8 @@ function ProfileHeader({ user, extraContent }: any) {
                         <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
                             <div className="phone_no_area">
                                 <ul>
-                                    <li style={{ fontStyle: 'italic', fontFamily: "AeroliteItalic",fontSize: 55 }}>Call me now for one to one live chat</li>
-                                    <li style={{ textAlign: "center", fontFamily: "AeroliteItalic",fontSize: 55 }}>{user?.callNumber}</li>
+                                    <li style={{ fontStyle: 'italic', fontFamily: "AeroliteItalic",fontSize: isMobile ? '7vw' :'5vw' }}>Call me now for one to one live chat</li>
+                                    <li style={{ textAlign: "center", fontFamily: "AeroliteItalic",fontSize: isMobile ? '7vw' :'5vw' }}>{user?.callNumber}</li>
                                 </ul>
                             </div>
                         </div>

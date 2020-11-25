@@ -11,6 +11,7 @@ import { setInfoAlert, setSuccessAlert } from '../../state/GlobalState';
 import StepWizard from 'react-step-wizard';
 import SohoButton from '../../partials/SohoButton';
 import countries from "../../utils/countries.json"
+import UseIsMobile from '../../utils/UseIsMobile';
 
 const stepDict = [
     "Personal Data",
@@ -41,6 +42,8 @@ const Nav = (props: any) => {
 
 const StepOne = ({ formik, history, ...props }: any) => {
     const nextDisabled = Object.keys(formik.values).some(k => !formik.values[k])
+    const isMobile = UseIsMobile();
+
     return (
         <>
             <div className="form-group row">
@@ -163,7 +166,7 @@ const StepOne = ({ formik, history, ...props }: any) => {
                 </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: "space-between", width: "15%", marginLeft: "auto" }} className="form-group">
+            <div style={{ display: 'flex', justifyContent: "space-between", width: isMobile ? 'unset':"15%", marginLeft: isMobile ? 'unset':"auto" }} className="form-group">
                 <SohoButton value="Back to Profile" onClick={(e) => { e.preventDefault(); history.goBack() }} />
                 <SohoButton disabled={nextDisabled} value="Next" onClick={() => props.goToStep(2)} />
             </div>

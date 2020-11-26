@@ -17,6 +17,7 @@ import moment from 'moment';
 import ErrorLabel from '../../partials/ErrorLabel';
 import UkLocationsDropdown from '../../partials/UkLocationsDropdown';
 import ServicesDropdown from '../../partials/ServicesDropdown';
+import UseIsMobile from '../../utils/UseIsMobile';
 
 var months: { [k: string]: string } = {
     'January': '01',
@@ -47,6 +48,7 @@ function ProfileEditPage() {
     const [profile] = useGlobalState('userData')
     const [currentTab, setCurrentTab] = useState(0)
     const [redirect, setRedirect] = useState(false)
+    const isMobile = UseIsMobile();
 
     const [{ data, loading, error }, updateProfile] = useAxios({
         url: '/user/update',
@@ -356,7 +358,7 @@ function ProfileEditPage() {
 
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', flexDirection: 'row', width: "25%", marginLeft: 'auto', justifyContent: "space-between" }}>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset":"25%", marginLeft: isMobile ? "unset":'auto', justifyContent: "space-between" }}>
                                                     <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
                                                     </div>

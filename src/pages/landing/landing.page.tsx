@@ -4,12 +4,12 @@ import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
 import { BrandColor } from '../../utils/Colors';
-import UseIsMobile from '../../utils/UseIsMobile';
+import UseIsLess1200Res from '../../utils/UseIsLess1200Res';
 
 function Landing() {
     const [above18, setAbove18] = useState(false);
     const [continueBtn, setContinueBtn] = useState(false);
-    const isMobile = UseIsMobile();
+    const isMobile = UseIsLess1200Res();
 
     if (above18 && continueBtn) {
         return <Redirect to="/list-post" />
@@ -17,7 +17,7 @@ function Landing() {
     return (
         <>
             <NavBar />
-            <div style={{ marginTop: isMobile ? '130px': '70px'}} className="container page-content" >
+            <div style={{ marginTop: isMobile ? '140px': '70px'}} className="container page-content" >
 
                 <div className="row">
                     <div className="col-md-12 col-sm-12 col-xs-12">

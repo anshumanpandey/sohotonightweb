@@ -16,7 +16,7 @@ function LogoutPage() {
     }, [])
 
     if (!userData) {
-        return <Redirect to="/preview" />
+        return <Redirect to="/list-post" />
     }
     return (<></>);
 }

@@ -81,9 +81,6 @@ function App() {
     <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
       <Switch>
         <Route exact path="/">
-          <ComingSoon />
-        </Route>
-        <Route exact path="/preview">
           <Landing />
         </Route>
         <Route exact path="/cookiePolicy">

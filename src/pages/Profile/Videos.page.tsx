@@ -156,7 +156,7 @@ function VideoUpload() {
                                                     },
                                                     nonAuthenticated: () => {
                                                         return (
-                                                            <div key={p.videoUrl.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                            <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                                 {p.isFree ? (
                                                                     <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
                                                                         <video style={{ height: 300 }} controls src={p.videoUrl} />

@@ -670,7 +670,7 @@ function ProfileEditPage() {
                                                     Profile Authentication</h5>
                                                 <div>
                                                     <p>There are few things you can do to help authenticate your profile and be included in certain
-                        searc</p>
+                        search</p>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label htmlFor="" className="col-sm-6 col-form-label">Upload a Verification Photo to your profile</label>

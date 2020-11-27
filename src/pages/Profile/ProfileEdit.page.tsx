@@ -309,13 +309,13 @@ function ProfileEditPage() {
 
                                                 <div className="form-group row">
                                                     <div className="form-group row">
-                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Name:</label>
+                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Bank:</label>
                                                         <div className="col-sm-10 col-md-6">
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
                                                                 name=""
-                                                                placeholder="Name"
+                                                                placeholder="Bank"
                                                             />
                                                         </div>
                                                     </div>
@@ -331,13 +331,13 @@ function ProfileEditPage() {
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
-                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Account Number:</label>
+                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Account Name:</label>
                                                         <div className="col-sm-10 col-md-6">
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
                                                                 name=""
-                                                                placeholder="Account Number"
+                                                                placeholder="Account Name"
                                                             />
                                                         </div>
                                                     </div>

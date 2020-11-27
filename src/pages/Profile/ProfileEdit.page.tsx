@@ -315,7 +315,7 @@ function ProfileEditPage() {
                                                                 type="text"
                                                                 className="form-control"
                                                                 name=""
-                                                                placeholder="Bank"
+                                                                placeholder="Name"
                                                             />
                                                         </div>
                                                     </div>

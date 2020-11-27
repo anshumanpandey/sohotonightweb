@@ -533,7 +533,7 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
-                                                <div style={{ display: 'flex', flexDirection: 'row', width: "25%", marginLeft: 'auto', justifyContent: "space-between" }}>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset":"25%", marginLeft: isMobile ? "unset":'auto', justifyContent: "space-between" }}>
                                                     <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
                                                     </div>
@@ -698,7 +698,7 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
-                                                <div style={{ display: 'flex', flexDirection: 'row', width: "25%", marginLeft: 'auto', justifyContent: "space-between" }}>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset":"25%", marginLeft: isMobile ? "unset":'auto', justifyContent: "space-between" }}>
                                                     <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
                                                     </div>

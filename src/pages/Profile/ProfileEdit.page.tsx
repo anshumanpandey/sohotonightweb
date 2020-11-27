@@ -285,7 +285,7 @@ function ProfileEditPage() {
                                                     <div className="col-sm-10 col-md-6" style={{ display: 'flex', flexWrap: 'wrap', alignItems: "flex-end" }}>
                                                         {servicesReq?.data?.map((s: any) => {
                                                             return (
-                                                                <div key={s.name} className="checkbox" style={{ width: '33%', height: '34px'}}>
+                                                                <div key={s.name} className="checkbox" style={{ width: '33%', height: '34px' }}>
                                                                     <label>
                                                                         <input
                                                                             type="checkbox"
@@ -303,6 +303,45 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
+                                                <h5
+                                                    style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>
+                                                    Bank Account Details</h5>
+
+                                                <div className="form-group row">
+                                                    <div className="form-group row">
+                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Bank:</label>
+                                                        <div className="col-sm-10 col-md-6">
+                                                            <input
+                                                                type="text"
+                                                                className="form-control"
+                                                                name=""
+                                                                placeholder="Bank"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-group row">
+                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Sort Code:</label>
+                                                        <div className="col-sm-10 col-md-6">
+                                                            <input
+                                                                type="text"
+                                                                className="form-control"
+                                                                name=""
+                                                                placeholder="Sort Code"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-group row">
+                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Account Number:</label>
+                                                        <div className="col-sm-10 col-md-6">
+                                                            <input
+                                                                type="text"
+                                                                className="form-control"
+                                                                name=""
+                                                                placeholder="Account Number"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                                 <h5
                                                     style={{ borderBottom: "2px solid #cf2c6b", margin: "26px 0 25px 0", padding: '0 0 7px 0', fontWeight: "bold" }}>
@@ -358,7 +397,7 @@ function ProfileEditPage() {
 
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset":"25%", marginLeft: isMobile ? "unset":'auto', justifyContent: "space-between" }}>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset" : "25%", marginLeft: isMobile ? "unset" : 'auto', justifyContent: "space-between" }}>
                                                     <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
                                                     </div>
@@ -533,7 +572,7 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
-                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset":"25%", marginLeft: isMobile ? "unset":'auto', justifyContent: "space-between" }}>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset" : "25%", marginLeft: isMobile ? "unset" : 'auto', justifyContent: "space-between" }}>
                                                     <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
                                                     </div>
@@ -698,7 +737,7 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
 
-                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset":"25%", marginLeft: isMobile ? "unset":'auto', justifyContent: "space-between" }}>
+                                                <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset" : "25%", marginLeft: isMobile ? "unset" : 'auto', justifyContent: "space-between" }}>
                                                     <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
                                                     </div>

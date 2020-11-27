@@ -309,13 +309,13 @@ function ProfileEditPage() {
 
                                                 <div className="form-group row">
                                                     <div className="form-group row">
-                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Bank:</label>
+                                                        <label htmlFor="" className="col-sm-2 col-md-offset-2 col-form-label">Name:</label>
                                                         <div className="col-sm-10 col-md-6">
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
                                                                 name=""
-                                                                placeholder="Bank"
+                                                                placeholder="Name"
                                                             />
                                                         </div>
                                                     </div>

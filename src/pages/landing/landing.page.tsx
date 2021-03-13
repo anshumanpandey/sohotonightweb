@@ -5,11 +5,15 @@ import NavBar from '../../partials/NavBar';
 import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
 import { BrandColor } from '../../utils/Colors';
 import UseIsLess1200Res from '../../utils/UseIsLess1200Res';
+import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
+
 
 function Landing() {
     const [above18, setAbove18] = useState(false);
     const [continueBtn, setContinueBtn] = useState(false);
     const isMobile = UseIsLess1200Res();
+
+    const r = UseTwilioVoiceCall()
 
     if (above18 && continueBtn) {
         return <Redirect to="/list-post" />

@@ -3,16 +3,20 @@ import { useEffect, useState } from "react";
 
 import { Device } from "twilio-client";
 
-export const UseTwilioVoiceCall = () => {
+export const UseTwilioVoiceCall = ({ identity }: { identity: string }) => {
     const [twilioDevice, setTwilioDevice] = useState<undefined | Device>();
     const [callStatus, setCallStatus] = useState<undefined | string>();
-    const [identity, setIdentity] = useState<undefined | string>();
+    const [myIdentity, setMyIdentity] = useState<undefined | string>();
     const [deviceIsReady, setDeviceIsReady] = useState<boolean>(false);
 
     const [callTokenReq, request] = useAxios({
         url: '/call/generateCallToken',
         method: 'GET',
     }, { manual: true })
+
+    useEffect(() => {
+        setMyIdentity(identity)
+    },[identity])
 
     useEffect(() => {
         if (!callTokenReq.data) return 
@@ -48,7 +52,6 @@ export const UseTwilioVoiceCall = () => {
     }, [callTokenReq.loading])
 
     const requestCall = ({ identity }: { identity: string }) => {
-        setIdentity(identity)
         request({ url: `/call/generateCallToken?identity=${identity}` })
     }
 

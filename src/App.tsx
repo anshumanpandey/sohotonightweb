@@ -37,6 +37,7 @@ import AntiSlavery from './pages/antiSlavery/AntiSlavery.page';
 import MarketplaceAgreement from './pages/marketplaceAgreement/MarketplaceAgreement.page';
 import RegionsPage from './pages/regions/Regions.page';
 import CallTest from './pages/callTest/CallTest.page';
+import VideoTest from './pages/videoTest/VideoTest.page';
 
 function App() {
   const alert = useAlert()
@@ -89,6 +90,9 @@ function App() {
         </Route>
         <Route exact path="/callTest">
           <CallTest />
+        </Route>
+        <Route exact path="/videoTest">
+          <VideoTest />
         </Route>
         <Route exact path="/privacyPolicy">
           <PrivacyPolicy />

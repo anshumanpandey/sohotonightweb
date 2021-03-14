@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import SohoButton from '../../partials/SohoButton';
+import { UseTwilioVideoCall } from '../../utils/UseTwilioVideoCall';
 import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
 
-function CallTest() {
+function VideoTest() {
     const [callerName, setCallerName] = useState("Caller1");
-    const r = UseTwilioVoiceCall({ identity: callerName })
+    const r = UseTwilioVideoCall()
 
     return (
         <>
@@ -23,10 +24,11 @@ function CallTest() {
 
 
                                         <div className="main-contact-section">
+                                            <div id="video-display"></div>
 
                                             <SohoButton value="Set Caller 1" onClick={() => setCallerName("Caller1")} />
                                             <SohoButton value="Set Caller 2" onClick={() => setCallerName("Caller2")} />
-                                            <SohoButton value="Init Call" onClick={() => r.requestCall({ identity: callerName == "Caller1" ? "Caller2": "Caller1"  })} />
+                                            <SohoButton value="Init Video" onClick={() => r.initVideoCall({ identity: callerName == "Caller1" ? "Caller2": "Caller1", roomName: 'test', divNode: document.getElementById("video-display")  })} />
 
                                         </div>
 
@@ -47,4 +49,4 @@ function CallTest() {
         </>
     );
 }
-export default CallTest;
+export default VideoTest;

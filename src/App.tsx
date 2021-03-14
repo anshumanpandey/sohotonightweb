@@ -36,6 +36,7 @@ import WebUserAgreement from './pages/webUserAgreement/WebUserAgreement.page';
 import AntiSlavery from './pages/antiSlavery/AntiSlavery.page';
 import MarketplaceAgreement from './pages/marketplaceAgreement/MarketplaceAgreement.page';
 import RegionsPage from './pages/regions/Regions.page';
+import CallTest from './pages/callTest/CallTest.page';
 
 function App() {
   const alert = useAlert()
@@ -85,6 +86,9 @@ function App() {
         </Route>
         <Route exact path="/cookiePolicy">
           <CookiePolicy />
+        </Route>
+        <Route exact path="/callTest">
+          <CallTest />
         </Route>
         <Route exact path="/privacyPolicy">
           <PrivacyPolicy />

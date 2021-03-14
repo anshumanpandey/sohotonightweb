@@ -13,8 +13,6 @@ function Landing() {
     const [continueBtn, setContinueBtn] = useState(false);
     const isMobile = UseIsLess1200Res();
 
-    const r = UseTwilioVoiceCall()
-
     if (above18 && continueBtn) {
         return <Redirect to="/list-post" />
     }

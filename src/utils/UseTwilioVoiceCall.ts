@@ -1,7 +1,7 @@
 import useAxios from "axios-hooks";
 import { useEffect, useState } from "react";
 
-import { Device } from "twilio-client";
+import { Device, Connection } from "twilio-client";
 
 export const UseTwilioVoiceCall = () => {
     const [twilioDevice, setTwilioDevice] = useState<undefined | Device>();
@@ -35,6 +35,7 @@ export const UseTwilioVoiceCall = () => {
         return request({ url: `/call/generateCallToken?identity=${identity}` })
         .then((r) => {
             setCallToken(r.data.token)
+            return r.data.token
         })
     }
 
@@ -42,7 +43,7 @@ export const UseTwilioVoiceCall = () => {
         const device = new Device(token, { debug: true });
 
         return new Promise<Device>((resolve) => {
-            device.on('incoming', connection => {
+            device.on('incoming', (connection: Connection) => {
                 // immediately accepts incoming connection
                 connection.accept();
                 setCallStatus(connection.status())
@@ -68,14 +69,23 @@ export const UseTwilioVoiceCall = () => {
 
     const requestCallTo = ({ identity, token }: { token: string, identity: string }) => {
         updateStatus()
-        createTwilioClient({ token })
-        .then((client) => client.connect({ recipient: identity }))
+        return createTwilioClient({ token })
+        .then((client) => {
+            client.connect({ recipient: identity })
+            return client
+        })
+        
+    }
+
+    const listenCalls = ({ token }: { token: string }) => {
+        return createTwilioClient({ token })
     }
 
     return {
         requestCallTo,
         requestToken,
         onStatusChange,
+        listenCalls,
         callToken
     }
 

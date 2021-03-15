@@ -1,21 +1,20 @@
 import React from 'react';
-import { useGlobalState } from '../state/GlobalState';
+import { callEnded, useGlobalState } from '../state/GlobalState';
 import SohoModal from './SohoModal';
 
-const SohoCallModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-    const [isCalling] = useGlobalState("isCalling");
-    const [callStatus] = useGlobalState("callStatus")
+const SohoCallModal: React.FC = () => {
+    const [currentCall] = useGlobalState("currentCall");
 
     return (
         <SohoModal
-            onClose={() => onClose()}
-            show={isCalling}
+            onClose={() => callEnded()}
+            show={currentCall.isCalling ? currentCall.isCalling : false}
             title="Calling..."
             footer={() => <button onClick={() => {
-                onClose()
+                callEnded()
             }} type="button" className="btn btn-default">Close</button>}
         >
-            {callStatus}
+            {currentCall?.callStatus}
         </SohoModal>
     );
 }

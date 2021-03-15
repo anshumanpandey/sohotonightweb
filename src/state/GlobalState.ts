@@ -1,5 +1,8 @@
 import { createStore } from 'react-hooks-global-state';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { buildCallObject, CallObject } from '../types/CallObject';
+import { Device } from 'twilio-client';
+import { UserData } from '../types/UserData';
 
 export enum GLOBAL_STATE_ACIONS {
   JWT_TOKEN,
@@ -11,8 +14,7 @@ export enum GLOBAL_STATE_ACIONS {
   INFO,
   SET_TOWN,
   SET_VISITOR_ID,
-  SET_CALLING,
-  SET_CALL_STATUS,
+  SET_CALL,
   SUCCESS,
   GLOBAL_LOADING,
 }
@@ -20,13 +22,26 @@ export enum GLOBAL_STATE_ACIONS {
 const token = localStorage.getItem("jwtToken")
 const userData = localStorage.getItem("userData")
 const selectedTown = localStorage.getItem("selectedTown")
+const callToken = localStorage.getItem("callToken") || undefined
 
-const initialState = {
+interface State {
+  globalLoading: boolean,
+  error: null | string,
+  info: null | string,
+  currentCall: CallObject,
+  visitorId: null,
+  success: null,
+  selectedTown: null | string,
+  jwtToken: null | string,
+  userData: null | UserData,
+  above18: boolean,
+}
+
+const initialState: State = {
   globalLoading: false,
-  isCalling: false,
-  callStatus: "",
   error: null,
   info: null,
+  currentCall: buildCallObject({ isCalling: false, callToken: callToken }),
   visitorId: null,
   success: null,
   selectedTown: !selectedTown ? null : selectedTown,
@@ -42,8 +57,8 @@ const reducer = (state: any, action: any) => {
     case GLOBAL_STATE_ACIONS.INFO: return { ...state, info: action.payload }
     case GLOBAL_STATE_ACIONS.ERROR: return { ...state, error: action.payload }
     case GLOBAL_STATE_ACIONS.SET_VISITOR_ID: return { ...state, visitorId: action.payload }
-    case GLOBAL_STATE_ACIONS.SET_CALLING: return { ...state, isCalling: action.payload }
-    case GLOBAL_STATE_ACIONS.SET_CALL_STATUS: return { ...state, callStatus: action.payload }    
+    case GLOBAL_STATE_ACIONS.SET_CALL: return { ...state, currentCall: action.payload }    
+    
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
       return { ...state, jwtToken: action.payload }
@@ -75,7 +90,7 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-export const { dispatch: dispatchGlobalState, useGlobalState, getState: getGlobalState } = createStore(reducer, initialState);
+export const { dispatch: dispatchGlobalState, useGlobalState, getState: getGlobalState } = createStore<State, any>(reducer, initialState);
 
 export const startGlobalLoading = () => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.GLOBAL_LOADING, payload: true })
@@ -98,14 +113,35 @@ export const setSelectedTown = (msg: string) => {
 }
 
 export const callStarted = () => {
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALLING, payload: true })
+  const s = getGlobalState()
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ isCalling: true }, s.currentCall ) })
 }
 export const callEnded = () => {
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALLING, payload: false })
-  updateCallStatus("")
+  const s = getGlobalState()
+  s.currentCall.device?.disconnectAll()
+  const newCall = buildCallObject({ isCalling: false, callStatus: '' }, s.currentCall)
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: newCall })
 }
-export const updateCallStatus = (s:string) => {
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL_STATUS, payload: s })
+
+export const updateCallStatus = (callStatus: string) => {
+  const s = getGlobalState()
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ callStatus }, s.currentCall) })
+}
+
+export const setDevice = (device: Device) => {
+  const s = getGlobalState()
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ device }, s.currentCall) })
+}
+
+export const userIsLogged = () => {
+  const s = getGlobalState()
+  return s.jwtToken !== null
+}
+
+export const updateCallRequestToken = (callToken: string) => {
+  localStorage.setItem("callToken", callToken)
+  const s = getGlobalState()
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ callToken }, s.currentCall) })
 }
 
 export const updateVisitorId = () => {

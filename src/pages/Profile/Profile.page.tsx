@@ -11,13 +11,19 @@ import PostWidgetForm from '../../partials/PostWidgetForm';
 import PostItem from '../../partials/PostItem';
 import SohoModal from '../../partials/SohoModal';
 import IsOwnProfile from '../../utils/IsOwnProfile';
+import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
+import { callStarted, setDevice, useGlobalState } from '../../state/GlobalState';
+import SohoCallModal from '../../partials/CallModal';
 
 function ProfilePage() {
     let { id } = useParams<{ id: string }>();
+    const [currentCall] = useGlobalState("currentCall")
     const [user, setUser] = useState<any>({});
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
     const [showVideoModal, setShowVideoModal] = useState<false | any>(false);
     const [goToPayment, setGoToPayment] = useState<any>(false);
+
+    const call = UseTwilioVoiceCall()
 
     const [{ data, loading, error }, getUser] = useAxios({
         url: `/user/public/getUser/${id}`,
@@ -30,6 +36,17 @@ function ProfilePage() {
 
     useEffect(() => {
         refetchUser()
+        call.onStatusChange((s) => {
+            if (s == "open") {
+                callStarted();
+            }
+        })
+        if (currentCall?.callToken) {
+            call.listenCalls({ token: currentCall.callToken })
+            .then((d) => {
+                setDevice(d)
+            })
+        }
     }, [id])
 
     if (goToPayment && goToPayment.id) return <Redirect to={`/payment/video/${goToPayment.id}`} />
@@ -237,6 +254,7 @@ function ProfilePage() {
                     <video style={{ maxHeight: "350px" }} controls autoPlay src={showVideoModal.videoUrl} />
                 </div>
             </SohoModal>
+            <SohoCallModal />
             <Footer />
         </>
     );

@@ -59,13 +59,13 @@ function ProfileEditPage() {
         url: '/services/',
     });
 
-    const formik = useFormik({
+    const formik = useFormik<any>({
         initialValues: {
             ...profile,
-            birthDate: new Date(`${profile.yearOfBirth}/${months[profile.monthOfBirth]}/${profile.dayOfBirth}`),
-            bannerImagePreview: profile.bannerImage,
-            profileImagePreview: profile.profilePic,
-            authenticationProfilePicPreview: profile.authenticationProfilePic,
+            birthDate: new Date(`${profile?.yearOfBirth}/${months[profile?.monthOfBirth || ""]}/${profile?.dayOfBirth}`),
+            bannerImagePreview: profile?.bannerImage,
+            profileImagePreview: profile?.profilePic,
+            authenticationProfilePicPreview: profile?.authenticationProfilePic,
         },
         validate: values => {
             const errors: any = {};
@@ -119,8 +119,8 @@ function ProfileEditPage() {
         },
     });
 
-    if (redirect) {
-        return <Redirect to={`/profile/${profile.id}`} />
+    if (redirect && profile) {
+        return <Redirect to={`/profile/${profile?.id}`} />
     }
 
     return (

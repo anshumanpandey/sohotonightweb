@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCallRequestToken } from '../state/GlobalState';
 import { Redirect } from 'react-router-dom';
 import SohoButton from './SohoButton';
 import ErrorLabel from './ErrorLabel';
+import { UseTwilioVoiceCall } from '../utils/UseTwilioVoiceCall';
 
 function SohoLoginForm({ disabled }: { disabled?: boolean }) {
-    const [redirect, setRedirect] = useState<false | any>(false)
+    const [redirect, setRedirect] = useState<boolean>(false)
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
+    const call = UseTwilioVoiceCall()
 
-    if (redirect) {
-        return <Redirect to={`/profile/${redirect.id}`} />
+    if (redirect === true) {
+        return <Redirect to={`/profile/${data.id}`} />
     }
 
     return (
@@ -32,8 +34,10 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
                     .then(({ data }) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
                         dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data })
-                        setRedirect(data)
+                        return call.requestToken({ identity: data.nickname })
                     })
+                    .then(token => updateCallRequestToken(token))
+                    .then(() => setRedirect(true))
             }}
         >
             {({

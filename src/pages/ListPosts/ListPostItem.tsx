@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SohoLink from '../../partials/SohoLink';
-import { callStarted, updateCallStatus } from '../../state/GlobalState';
+import { callStarted, setDevice, updateCallStatus } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
 import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
@@ -51,6 +51,7 @@ const ListPostItem = ({ girl: g, callToken } : { girl: any, callToken?: string }
                                     if (callToken) {
                                         callStarted()
                                         call.requestCallTo({ identity: g.nickname, token: callToken })
+                                        .then(d => setDevice(d))
                                     }
                                 }}
                                 disabled={!g?.isLogged || !callToken }

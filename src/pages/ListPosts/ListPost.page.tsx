@@ -5,7 +5,7 @@ import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
-import { callEnded, updateVisitorId, useGlobalState } from '../../state/GlobalState';
+import { callEnded, updateVisitorId, useGlobalState, userIsLogged } from '../../state/GlobalState';
 import { BrandColor } from '../../utils/Colors';
 import ListPostItem from './ListPostItem';
 import UseIsMobile from '../../utils/UseIsMobile';
@@ -92,8 +92,10 @@ function ListPostPage() {
     });
 
     useEffect(() => {
-        updateVisitorId()
-        .then((id) => call.requestToken({ identity: id }))
+        if (userIsLogged() === false) { 
+            updateVisitorId()
+            .then((id) => call.requestToken({ identity: id }))
+        }
         getUser()
             .then(({ data }) => setFilteredUsers(data))
     }, [])
@@ -253,11 +255,7 @@ function ListPostPage() {
                     </div>
                 </div>
             </div>
-            <SohoCallModal
-                onClose={() => {
-                    callEnded()
-                }}
-            />
+            <SohoCallModal />
             <Footer />
         </>
     );

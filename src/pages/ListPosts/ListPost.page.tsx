@@ -5,11 +5,13 @@ import useAxios from 'axios-hooks'
 import "../../css/timeline.css"
 import { Link } from 'react-router-dom';
 import GetUserAge from '../../utils/GetUserAge';
-import { useGlobalState } from '../../state/GlobalState';
+import { callEnded, updateVisitorId, useGlobalState } from '../../state/GlobalState';
 import { BrandColor } from '../../utils/Colors';
 import ListPostItem from './ListPostItem';
 import UseIsMobile from '../../utils/UseIsMobile';
 import SohoButton from '../../partials/SohoButton';
+import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
+import SohoCallModal from '../../partials/CallModal';
 
 enum FILTER_KEY {
     GENDER = "GENDER",
@@ -77,6 +79,7 @@ const useFilters = () => {
 function ListPostPage() {
     const { filters, addValueFor, setValueFor, clearFilterFor, getValuesFiltersFor } = useFilters()
     const isMobile = UseIsMobile();
+    const call = UseTwilioVoiceCall()
 
     const [filteredUsers, setFilteredUsers] = useState<any>([])
 
@@ -89,6 +92,8 @@ function ListPostPage() {
     });
 
     useEffect(() => {
+        updateVisitorId()
+        .then((id) => call.requestToken({ identity: id }))
         getUser()
             .then(({ data }) => setFilteredUsers(data))
     }, [])
@@ -198,7 +203,7 @@ function ListPostPage() {
 
                                             {getTownsFromUsers(data).map((t: any) => {
                                                 return (
-                                                    <div className="checkbox">
+                                                    <div key={t} className="checkbox">
                                                         <label>
                                                             <input onClick={() => { addValueFor(FILTER_KEY.LOCATION, t) }} type="checkbox" />
                                                             <span className="text">{t}</span>
@@ -210,7 +215,7 @@ function ListPostPage() {
                                             <h5 style={{ fontWeight: "normal" }}>Services</h5>
                                             {servicesReq?.data?.map((t: any) => {
                                                 return (
-                                                    <div className="checkbox">
+                                                    <div key={t.name} className="checkbox">
                                                         <label>
                                                             <input onClick={() => { addValueFor(FILTER_KEY.SERVICE, t.name) }} type="checkbox" />
                                                             <span className="text">{t.name}</span>
@@ -233,7 +238,7 @@ function ListPostPage() {
                             {!loading && filteredUsers.length == 0 && <p style={{ fontSize: 20, textAlign: 'center', color: "#d32a6b" }}>No user found</p>}
 
                             {filteredUsers.map((g: any) => {
-                                return (<ListPostItem girl={g} />);
+                                return (<ListPostItem key={g.nickname} callToken={call.callToken} girl={g} />);
                             })}
 
                         </div>
@@ -248,6 +253,11 @@ function ListPostPage() {
                     </div>
                 </div>
             </div>
+            <SohoCallModal
+                onClose={() => {
+                    callEnded()
+                }}
+            />
             <Footer />
         </>
     );

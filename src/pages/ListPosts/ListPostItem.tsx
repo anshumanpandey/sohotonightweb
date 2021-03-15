@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import SohoLink from '../../partials/SohoLink';
+import { callStarted, updateCallStatus } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
+import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
 
-const ListPostItem = ({ girl: g } : { girl: any }) => {
+const ListPostItem = ({ girl: g, callToken } : { girl: any, callToken?: string }) => {
     const isMobile = UseIsMobile();
+    const call = UseTwilioVoiceCall()
+
+    useEffect(() => {
+        call.onStatusChange(updateCallStatus)
+    }, [])
+
     return (
         <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
             <div style={{ flex: 1,paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
@@ -18,11 +27,11 @@ const ListPostItem = ({ girl: g } : { girl: any }) => {
                             <p style={{ fontSize: 15, color: 'green', margin: 0 }}>Online</p>
                         </>
                     ) : (
-                            <>
-                                <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
-                            </>
-                        )}
+                        <>
+                            <i style={{ color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                            <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
+                        </>
+                    )}
                 </div>
             </div>
             <div style={{ width: isMobile ? '70%': '75%', paddingTop: '2rem', display: 'flex', flexDirection: isMobile ? 'column': 'row' }}>
@@ -37,7 +46,17 @@ const ListPostItem = ({ girl: g } : { girl: any }) => {
                     {g.callNumber && (
                         <div>
                             <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: isMobile ? "start":"end" }}>Call me now for one to one live chat: </p>
-                            <p style={{ fontWeight: 'bold', textAlign: isMobile ? "start":"end" }}>{g.callNumber}</p>
+                            <SohoLink
+                                onClick={() => {
+                                    if (callToken) {
+                                        callStarted()
+                                        call.requestCallTo({ identity: g.nickname, token: callToken })
+                                    }
+                                }}
+                                disabled={!g?.isLogged || !callToken }
+                                style={{ textAlign: 'end' }}>
+                                {g.callNumber}
+                            </SohoLink>
                         </div>
                     )}
                 </div>

@@ -6,7 +6,7 @@ import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
 
 function CallTest() {
     const [callerName, setCallerName] = useState("Caller1");
-    const r = UseTwilioVoiceCall({ identity: callerName })
+    const r = UseTwilioVoiceCall()
 
     return (
         <>
@@ -26,7 +26,7 @@ function CallTest() {
 
                                             <SohoButton value="Set Caller 1" onClick={() => setCallerName("Caller1")} />
                                             <SohoButton value="Set Caller 2" onClick={() => setCallerName("Caller2")} />
-                                            <SohoButton value="Init Call" onClick={() => r.requestCall({ identity: callerName == "Caller1" ? "Caller2": "Caller1"  })} />
+                                            {/*<SohoButton value="Init Call" onClick={() => r.requestCallTo({ identity: callerName == "Caller1" ? "Caller2": "Caller1"  })} />*/}
 
                                         </div>
 

@@ -1,4 +1,5 @@
 import { createStore } from 'react-hooks-global-state';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 export enum GLOBAL_STATE_ACIONS {
   JWT_TOKEN,
@@ -9,6 +10,9 @@ export enum GLOBAL_STATE_ACIONS {
   ERROR,
   INFO,
   SET_TOWN,
+  SET_VISITOR_ID,
+  SET_CALLING,
+  SET_CALL_STATUS,
   SUCCESS,
   GLOBAL_LOADING,
 }
@@ -19,8 +23,11 @@ const selectedTown = localStorage.getItem("selectedTown")
 
 const initialState = {
   globalLoading: false,
+  isCalling: false,
+  callStatus: "",
   error: null,
   info: null,
+  visitorId: null,
   success: null,
   selectedTown: !selectedTown ? null : selectedTown,
   jwtToken: !token ? null : JSON.parse(token),
@@ -34,6 +41,9 @@ const reducer = (state: any, action: any) => {
     case GLOBAL_STATE_ACIONS.SUCCESS: return { ...state, success: action.payload }
     case GLOBAL_STATE_ACIONS.INFO: return { ...state, info: action.payload }
     case GLOBAL_STATE_ACIONS.ERROR: return { ...state, error: action.payload }
+    case GLOBAL_STATE_ACIONS.SET_VISITOR_ID: return { ...state, visitorId: action.payload }
+    case GLOBAL_STATE_ACIONS.SET_CALLING: return { ...state, isCalling: action.payload }
+    case GLOBAL_STATE_ACIONS.SET_CALL_STATUS: return { ...state, callStatus: action.payload }    
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
       return { ...state, jwtToken: action.payload }
@@ -86,3 +96,26 @@ export const setSuccessAlert = (msg: string) => {
 export const setSelectedTown = (msg: string) => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_TOWN, payload: msg })
 }
+
+export const callStarted = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALLING, payload: true })
+}
+export const callEnded = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALLING, payload: false })
+  updateCallStatus("")
+}
+export const updateCallStatus = (s:string) => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL_STATUS, payload: s })
+}
+
+export const updateVisitorId = () => {
+  return FingerprintJS.load()
+  .then((fp) => {
+    return fp.get()
+  })
+  .then((result) => {
+    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_VISITOR_ID, payload: result.visitorId })
+    return result.visitorId
+  })
+}
+

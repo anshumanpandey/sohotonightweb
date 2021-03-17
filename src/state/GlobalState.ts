@@ -3,6 +3,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { buildCallObject, CallObject } from '../types/CallObject';
 import { Device } from 'twilio-client';
 import { UserData } from '../types/UserData';
+import { AxiosInstance } from '../utils/AxiosBootstrap';
 
 export enum GLOBAL_STATE_ACIONS {
   JWT_TOKEN,
@@ -15,6 +16,7 @@ export enum GLOBAL_STATE_ACIONS {
   SET_TOWN,
   SET_VISITOR_ID,
   SET_CALL,
+  IS_BUYING_TOKENS,
   SUCCESS,
   GLOBAL_LOADING,
 }
@@ -29,12 +31,13 @@ interface State {
   error: null | string,
   info: null | string,
   currentCall: CallObject,
-  visitorId: null,
+  visitorId: string | null,
   success: null,
   selectedTown: null | string,
   jwtToken: null | string,
   userData: null | UserData,
   above18: boolean,
+  buyTokenModal: boolean,
 }
 
 const initialState: State = {
@@ -48,6 +51,7 @@ const initialState: State = {
   jwtToken: !token ? null : JSON.parse(token),
   userData: !userData ? null : JSON.parse(userData),
   above18: localStorage.getItem("above18") && localStorage.getItem("above18") == "1" ? true : false,
+  buyTokenModal: false,
 };
 
 const reducer = (state: any, action: any) => {
@@ -57,7 +61,8 @@ const reducer = (state: any, action: any) => {
     case GLOBAL_STATE_ACIONS.INFO: return { ...state, info: action.payload }
     case GLOBAL_STATE_ACIONS.ERROR: return { ...state, error: action.payload }
     case GLOBAL_STATE_ACIONS.SET_VISITOR_ID: return { ...state, visitorId: action.payload }
-    case GLOBAL_STATE_ACIONS.SET_CALL: return { ...state, currentCall: action.payload }    
+    case GLOBAL_STATE_ACIONS.SET_CALL: return { ...state, currentCall: action.payload }
+    case GLOBAL_STATE_ACIONS.IS_BUYING_TOKENS: return { ...state, buyTokenModal: action.payload }    
     
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
@@ -104,6 +109,10 @@ export const setInfoAlert = (msg: string) => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.INFO, payload: msg })
 }
 
+export const showBuyTokensModal = (show: boolean) => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.IS_BUYING_TOKENS, payload: show })
+}
+
 export const setSuccessAlert = (msg: string) => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SUCCESS, payload: msg })
 }
@@ -142,6 +151,15 @@ export const updateCallRequestToken = (callToken: string) => {
   localStorage.setItem("callToken", callToken)
   const s = getGlobalState()
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ callToken }, s.currentCall) })
+}
+
+export const updateCurrentUser = () => {
+  return AxiosInstance({
+    url: "/user/getUser"
+  })
+  .then((r) => {
+    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: r.data })
+  })
 }
 
 export const updateVisitorId = () => {

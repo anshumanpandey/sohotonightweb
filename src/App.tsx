@@ -37,7 +37,8 @@ import AntiSlavery from './pages/antiSlavery/AntiSlavery.page';
 import MarketplaceAgreement from './pages/marketplaceAgreement/MarketplaceAgreement.page';
 import RegionsPage from './pages/regions/Regions.page';
 import CallTest from './pages/callTest/CallTest.page';
-import VideoTest from './pages/videoTest/VideoTest.page';
+import VideoChat from './pages/Profile/VideoChat.page';
+import BuyTokenModal from './partials/BuyTokenModal';
 
 function App() {
   const alert = useAlert()
@@ -91,9 +92,6 @@ function App() {
         <Route exact path="/callTest">
           <CallTest />
         </Route>
-        <Route exact path="/videoTest">
-          <VideoTest />
-        </Route>
         <Route exact path="/privacyPolicy">
           <PrivacyPolicy />
         </Route>
@@ -136,6 +134,9 @@ function App() {
         <Route path="/profile-about/:id?">
           <AboutPage />
         </Route>
+        <Route path="/video-chat/:id?">
+          <VideoChat />
+        </Route>
         <Route path="/profile-video/:id?">
           <VideosPage />
         </Route>
@@ -148,6 +149,7 @@ function App() {
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
+      <BuyTokenModal />
       <CookieConsent buttonText="Accept Cookies">
         This website uses cookies to enhance the user experience.{' '}
         <Link to="/cookiePolicy">See more</Link>

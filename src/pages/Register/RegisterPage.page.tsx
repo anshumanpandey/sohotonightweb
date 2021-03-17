@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
 import { Link, Redirect } from 'react-router-dom';
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
 import "../../css/login_register.css"
 import SohoButton from '../../partials/SohoButton';
 import { BrandColor } from '../../utils/Colors';
@@ -31,6 +31,8 @@ var months = {
 
 function LoginPage() {
     const [registered, setRegistered] = useState(false)
+    const [userData] = useGlobalState("userData")
+
     const formInitialValues = {
         nickname: '',
         password: '',
@@ -78,7 +80,7 @@ function LoginPage() {
     const [loginReq, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
 
-    if (registered) {
+    if (registered || userData) {
         return <Redirect to="/profile-edit" />
     }
 

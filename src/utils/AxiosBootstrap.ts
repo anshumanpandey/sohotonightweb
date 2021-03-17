@@ -2,7 +2,7 @@ import { configure } from 'axios-hooks'
 import Axios from 'axios'
 import { dispatchGlobalState, getGlobalState, GLOBAL_STATE_ACIONS } from '../state/GlobalState'
 
-const AxiosInstance = Axios.create({
+export const AxiosInstance = Axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 })
 AxiosInstance.interceptors.request.use((r) => {

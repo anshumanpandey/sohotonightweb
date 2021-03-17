@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AuthenticatedFactory from '../utils/AuthenticatedFactory';
 import logo from '../img/Photos/logo.png'
 import UserIsLogged from '../utils/UserIsLogged';
-import { useGlobalState } from '../state/GlobalState';
+import { showBuyTokensModal, useGlobalState } from '../state/GlobalState';
 import UseIsMobile from '../utils/UseIsMobile';
 import UseIsLess1200Res from '../utils/UseIsLess1200Res';
+import SohoLink from './SohoLink';
 
 function NavBar() {
     const isMobile = UseIsMobile();
@@ -38,7 +39,12 @@ function NavBar() {
                         <li><Link to={goTo}>Home</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
-                        {UserIsLogged() && <li><Link to="/logout">Logout</Link></li>}
+                        {UserIsLogged() && (
+                            <>
+                            <li><Link to="/logout">Logout</Link></li>
+                            <li><SohoLink onClick={() => showBuyTokensModal(true)} disabled={true}>Tokens {userData?.tokensBalance}</SohoLink></li>
+                            </>
+                        )}
                     </ul>
                 </div>
             </div>

@@ -6,8 +6,9 @@ import { BrandColor } from '../../utils/Colors';
 import { useGlobalState } from '../../state/GlobalState';
 import IsOwnProfile from '../../utils/IsOwnProfile';
 import UseIsMobile from '../../utils/UseIsMobile';
+import UserIsLogged from '../../utils/UserIsLogged';
 
-function ProfileHeader({ user, extraContent }: any) {
+function ProfileHeader({ user = {}, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
     const location = useLocation()
     const isMobile = UseIsMobile();
@@ -51,20 +52,28 @@ function ProfileHeader({ user, extraContent }: any) {
                                             </Link>
                             </li>
 
+                            {UserIsLogged() && (
+                                <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
+                                    <Link to={`/video-chat/${id}`}>
+                                        <i className="fa fa-video-camera"></i> VideoChat
+                                    </Link>
+                                </li>
+                            )}
+
                         </ul>
                         {!IsOwnProfile({ user }) && (
-                            <div style={{ marginLeft: isMobile ? 'unset':'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: isMobile ? "unset":"flex-end", paddingRight: '2%' }}>
+                            <div style={{ marginLeft: isMobile ? 'unset' : 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: isMobile ? "unset" : "flex-end", paddingRight: '2%' }}>
                                 {user?.isLogged ? (
                                     <>
-                                        <i style={{ paddingLeft: isMobile ? "15px": 'unset', color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                        <i style={{ paddingLeft: isMobile ? "15px" : 'unset', color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
                                         <p style={{ fontSize: 15, color: 'green', margin: 0 }}>Online</p>
                                     </>
                                 ) : (
-                                        <>
-                                            <i style={{ paddingLeft: isMobile ? "15px": 'unset', color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
-                                            <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
-                                        </>
-                                    )}
+                                    <>
+                                        <i style={{ paddingLeft: isMobile ? "15px" : 'unset', color: 'gray', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>
+                                        <p style={{ fontSize: 15, color: 'gray', margin: 0 }}>Offline</p>
+                                    </>
+                                )}
                             </div>
                         )}
                         {extraContent && extraContent}
@@ -73,8 +82,8 @@ function ProfileHeader({ user, extraContent }: any) {
                         <div style={{ boxShadow: 'unset', position: "absolute", top: '10%', backgroundColor: 'unset', right: 0 }} className="box profile-info n-border-top phone_cont">
                             <div className="phone_no_area">
                                 <ul>
-                                    <li style={{ fontStyle: 'italic', fontFamily: "AeroliteItalic",fontSize: isMobile ? '7vw' :'5vw' }}>Call me now for one to one live chat</li>
-                                    <li style={{ textAlign: "center", fontFamily: "AeroliteItalic",fontSize: isMobile ? '7vw' :'5vw' }}>{user?.callNumber}</li>
+                                    <li style={{ fontStyle: 'italic', fontFamily: "AeroliteItalic", fontSize: isMobile ? '7vw' : '5vw' }}>Call me now for one to one live chat</li>
+                                    <li style={{ textAlign: "center", fontFamily: "AeroliteItalic", fontSize: isMobile ? '7vw' : '5vw' }}>{user?.callNumber}</li>
                                 </ul>
                             </div>
                         </div>

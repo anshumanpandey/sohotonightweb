@@ -8,6 +8,7 @@ export interface UserData {
     town?: string
     gender?: string
     postCode?: string
+    tokensBalance: number
     aboutYouSummary?: string
     aboutYouDetail?: string
     orientation?: string

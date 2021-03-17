@@ -143,7 +143,7 @@ function App() {
         <Route path="/profile-pictures/:id?">
           <PicturesPage />
         </Route>
-        <Route path="/payment/:type?/:id?">
+        <Route path="/payment">
           <PaymentPage />
         </Route>
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />

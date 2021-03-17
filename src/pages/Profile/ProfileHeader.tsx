@@ -7,6 +7,7 @@ import { useGlobalState } from '../../state/GlobalState';
 import IsOwnProfile from '../../utils/IsOwnProfile';
 import UseIsMobile from '../../utils/UseIsMobile';
 import UserIsLogged from '../../utils/UserIsLogged';
+import UserLoggedIsModel from '../../utils/UserLoggedIsModel';
 
 function ProfileHeader({ user = {}, extraContent }: any) {
     let { id } = useParams<{ id: string }>();

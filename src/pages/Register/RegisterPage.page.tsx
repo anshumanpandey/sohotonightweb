@@ -15,18 +15,18 @@ import moment from 'moment';
 
 const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 var months = {
-    'January' : '01',
-    'February' : '02',
-    'March' : '03',
-    'April' : '04',
-    'May' : '05',
-    'June' : '06',
-    'July' : '07',
-    'August' : '08',
-    'September' : '09',
-    'October' : '10',
-    'November' : '11',
-    'December' : '12'
+    'January': '01',
+    'February': '02',
+    'March': '03',
+    'April': '04',
+    'May': '05',
+    'June': '06',
+    'July': '07',
+    'August': '08',
+    'September': '09',
+    'October': '10',
+    'November': '11',
+    'December': '12'
 }
 
 function LoginPage() {
@@ -42,6 +42,7 @@ function LoginPage() {
         monthOfBirth: '',
         yearOfBirth: '',
         country: '',
+        role: '',
 
         escortServices: false,
         phoneChat: false,
@@ -66,6 +67,7 @@ function LoginPage() {
         emailAddress: Yup.string().email('Invalid email').required('Required'),
         dayOfBirth: Yup.string().required('Required'),
         monthOfBirth: Yup.string().required('Required'),
+        role: Yup.string().required('Required'),
         yearOfBirth: Yup.string()
             .required('Required')
             .test("above18", "Only legal age people are allowed on this website", function (values) {
@@ -80,8 +82,9 @@ function LoginPage() {
     const [loginReq, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
 
-    if (registered || userData) {
-        return <Redirect to="/profile-edit" />
+    if (registered && userData) {
+        if (userData.role == "Model") return <Redirect to="/profile-edit" />
+        if (userData.role == "User") return <Redirect to="/payment" />
     }
 
     return (
@@ -239,11 +242,31 @@ function LoginPage() {
                                                                                 );
                                                                             })}
                                                                         </select>
-                                                                        {errors.yearOfBirth && errors.yearOfBirth.length < 49  && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
+                                                                        {errors.yearOfBirth && errors.yearOfBirth.length < 49 && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
                                                                     </div>
                                                                 </div>
-                                                                {errors.yearOfBirth && errors.yearOfBirth.length == 49  && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
+                                                                {errors.yearOfBirth && errors.yearOfBirth.length == 49 && touched.yearOfBirth && <ErrorLabel message={errors.yearOfBirth} />}
                                                             </div>
+                                                            <div className="form-group">
+                                                                        <label htmlFor="xlginput">Type</label>
+                                                                        <div className="row">
+                                                                            <div className="col-md-4 col-sm-4 col-xs-12">
+                                                                                <select
+                                                                                    style={{ width: "100%" }}
+                                                                                    name={"role"}
+                                                                                    onChange={handleChange}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={values.role}
+                                                                                >
+                                                                                    <option>Select a role</option>
+                                                                                    {["Model", "User"].map((role, idx) => {
+                                                                                        return <option key={idx.toString() + "-item"} value={role}>{role}</option>
+                                                                                    })}
+                                                                                </select>
+                                                                                {errors.role && touched.role && <ErrorLabel message={errors.role} />}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                             <h5>Privacy & Legal</h5>
 
                                                             <div className="row">

@@ -7,6 +7,7 @@ import { showBuyTokensModal, useGlobalState } from '../state/GlobalState';
 import UseIsMobile from '../utils/UseIsMobile';
 import UseIsLess1200Res from '../utils/UseIsLess1200Res';
 import SohoLink from './SohoLink';
+import UserLoggedIsModel from '../utils/UserLoggedIsModel';
 
 function NavBar() {
     const isMobile = UseIsMobile();
@@ -42,8 +43,10 @@ function NavBar() {
                         {UserIsLogged() && (
                             <>
                             <li><Link to="/logout">Logout</Link></li>
-                            <li><SohoLink onClick={() => showBuyTokensModal(true)} disabled={true}>Tokens {userData?.tokensBalance}</SohoLink></li>
                             </>
+                        )}
+                        {!UserLoggedIsModel() && UserIsLogged() && (
+                            <li><SohoLink onClick={() => showBuyTokensModal(true)} disabled={true}>Tokens {userData?.tokensBalance}</SohoLink></li>
                         )}
                     </ul>
                 </div>

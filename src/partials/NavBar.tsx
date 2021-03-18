@@ -14,7 +14,12 @@ function NavBar() {
     const isLess1200 = UseIsLess1200Res()
 
     const [userData] = useGlobalState("userData")
-    const goTo = userData ? `/profile/${userData.id}`:"/list-post" 
+    
+    let goTo = "/list-post" 
+    if (userData && userData.role === "MODEL") {
+        goTo = `/profile/${userData.id}`
+    }
+    
     return (
         <nav className="navbar navbar-white navbar-fixed-top">
             <div className="container">

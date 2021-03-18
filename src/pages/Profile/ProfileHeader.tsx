@@ -11,6 +11,7 @@ import UserLoggedIsModel from '../../utils/UserLoggedIsModel';
 
 function ProfileHeader({ user = {}, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
+    const [userData] = useGlobalState("userData")
     const location = useLocation()
     const isMobile = UseIsMobile();
 
@@ -54,8 +55,8 @@ function ProfileHeader({ user = {}, extraContent }: any) {
                             </li>
 
                             {UserIsLogged() && (
-                                <li className={`${location.pathname.includes("/profile-video") && "active"}`}>
-                                    <Link to={`/video-chat/${id}`}>
+                                <li className={`${location.pathname.includes("/video-chat") && "active"}`}>
+                                    <Link to={userData && userData.tokensBalance === 0 ? `/payment`: `/video-chat/${id}`}>
                                         <i className="fa fa-video-camera"></i> VideoChat
                                     </Link>
                                 </li>

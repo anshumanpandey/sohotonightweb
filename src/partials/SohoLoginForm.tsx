@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCallRequestToken } from '../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCallRequestToken, useGlobalState } from '../state/GlobalState';
 import { Redirect } from 'react-router-dom';
 import SohoButton from './SohoButton';
 import ErrorLabel from './ErrorLabel';
@@ -9,11 +9,13 @@ import { UseTwilioVoiceCall } from '../utils/UseTwilioVoiceCall';
 
 function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [redirect, setRedirect] = useState<boolean>(false)
+    const [userData] = useGlobalState("userData")
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
     const call = UseTwilioVoiceCall()
 
-    if (redirect === true) {
-        return <Redirect to={`/profile/${data.id}`} />
+    if (redirect && userData) {
+        if (userData.role == "MODEL") return <Redirect to="/profile-edit" />
+        if (userData.role == "USER") return <Redirect to="/payment" />
     }
 
     return (

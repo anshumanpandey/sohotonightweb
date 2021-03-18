@@ -77,7 +77,8 @@ const useFilters = () => {
 
 
 function ListPostPage() {
-    const { filters, addValueFor, setValueFor, clearFilterFor, getValuesFiltersFor } = useFilters()
+    const { filters, addValueFor, getValuesFiltersFor } = useFilters()
+    const [userData] = useGlobalState("userData");
     const isMobile = UseIsMobile();
     const call = UseTwilioVoiceCall()
 
@@ -92,13 +93,15 @@ function ListPostPage() {
     });
 
     useEffect(() => {
-        if (userIsLogged() === false) { 
-            updateVisitorId()
-            .then((id) => call.requestToken({ identity: id }))
-        }
         getUser()
             .then(({ data }) => setFilteredUsers(data))
     }, [])
+
+    useEffect(() => {
+        if (userData) { 
+            call.requestToken({ identity: userData.nickname })
+        }
+    }, [userData])
 
     useEffect(() => {
         if (!data) return

@@ -34,6 +34,7 @@
     "react-cookie-consent": "^6.0.0",
     "react-dom": "^16.14.0",
     "react-hooks-global-state": "^1.0.1",
+    "react-loader-spinner": "^4.0.0",
     "react-paypal-button-v2": "^2.6.2",
     "react-player": "^2.6.2",
     "react-responsive": "^8.1.1",

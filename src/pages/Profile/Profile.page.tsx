@@ -22,6 +22,7 @@ function ProfilePage() {
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
     const [showVideoModal, setShowVideoModal] = useState<false | any>(false);
     const [goToPayment, setGoToPayment] = useState<any>(false);
+    const [redirectOnNotFound, setRedirectOnNotFound] = useState<boolean>(false);
 
     const call = UseTwilioVoiceCall()
 
@@ -32,6 +33,7 @@ function ProfilePage() {
     const refetchUser = () => {
         getUser()
             .then(({ data }) => setUser(data))
+            .catch(() => setRedirectOnNotFound(true))
     }
 
     useEffect(() => {
@@ -41,14 +43,9 @@ function ProfilePage() {
                 callStarted();
             }
         })
-        if (currentCall?.callToken) {
-            call.listenCalls({ token: currentCall.callToken })
-            .then((d) => {
-                setDevice(d)
-            })
-        }
     }, [id])
 
+    if (redirectOnNotFound === true) return <Redirect to={`/list-post`} />
     if (goToPayment && goToPayment.id) return <Redirect to={`/payment/video/${goToPayment.id}`} />
 
     return (

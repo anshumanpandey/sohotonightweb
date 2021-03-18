@@ -14,7 +14,7 @@ const BuyTokenModal: React.FC = () => {
             title="Buy Tokens"
             footer={() => <button onClick={() => showBuyTokensModal(false)} type="button" className="btn btn-default">Close</button>}
         >
-            <BuyTokenForm />
+            <BuyTokenForm onPaymenDone={() => setSuccessAlert("Payment Saved!")} />
         </SohoModal>
     );
 }

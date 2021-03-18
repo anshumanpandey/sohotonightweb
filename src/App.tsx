@@ -39,14 +39,16 @@ import RegionsPage from './pages/regions/Regions.page';
 import CallTest from './pages/callTest/CallTest.page';
 import VideoChat from './pages/Profile/VideoChat.page';
 import BuyTokenModal from './partials/BuyTokenModal';
+import { UseTwilioVoiceCall } from './utils/UseTwilioVoiceCall';
 
 function App() {
   const alert = useAlert()
   const location = useLocation()
+  const [userData] = useGlobalState('userData')
   const [error] = useGlobalState('error')
   const [info] = useGlobalState('info')
   const [success] = useGlobalState('success')
-  const [globalLoading] = useGlobalState('globalLoading')
+  const call = UseTwilioVoiceCall()
 
   useEffect(() => {
     if (!error) return
@@ -74,6 +76,15 @@ function App() {
       }
     })
   }, [success])
+
+  useEffect(() => {
+    if (userData && userData.role === "MODEL") {
+      call.onCallInvitationReceived((i: any) => {
+        console.log(i)
+      })
+      call.listeCallRequest()
+    }
+  }, [userData])
 
   const pageToShowBackgroundImg = () => {
     return currentPageIs(location.pathname, "preview") ||

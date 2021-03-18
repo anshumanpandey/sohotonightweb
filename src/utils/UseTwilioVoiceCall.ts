@@ -8,6 +8,7 @@ export const UseTwilioVoiceCall = () => {
     const [callToken, setCallToken] = useState<undefined | string>();
     const [callStatus, setCallStatus] = useState<undefined | string>();
     const [statusListenerCb, setStatusListenerCb] = useState<undefined | ((s: string) => void)>();
+    const [callInvitationReceivedCb, setCallInvitationReceivedCb] = useState<undefined | ((s: any) => void)>();
     const [deviceIsReady, setDeviceIsReady] = useState<boolean>(false);
 
     const [callTokenReq, request] = useAxios({
@@ -67,25 +68,33 @@ export const UseTwilioVoiceCall = () => {
         })
     }
 
-    const requestCallTo = ({ identity, token }: { token: string, identity: string }) => {
-        updateStatus()
-        return createTwilioClient({ token })
-        .then((client) => {
-            client.connect({ recipient: identity })
-            return client
+    const requestCallTo = ({ toNickname }: { toNickname: string }) => {
+        return request({
+            url: `/call/create`,
+            method: 'POST',
+            data: { toUserNickname: toNickname }
         })
         
     }
 
-    const listenCalls = ({ token }: { token: string }) => {
-        return createTwilioClient({ token })
+    const listeCallRequest = () => {
+        return request({
+            url: `/call/invitations`,
+        })
+        .then(r => r.data)
+        .then((invitations) => invitations.map((i: any) => callInvitationReceivedCb && callInvitationReceivedCb(i)))
+    }
+
+    const onCallInvitationReceived = (cb: (i: any) => void) => {
+        setCallInvitationReceivedCb(() => cb)
     }
 
     return {
         requestCallTo,
         requestToken,
         onStatusChange,
-        listenCalls,
+        listeCallRequest,
+        onCallInvitationReceived,
         callToken
     }
 

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import BuyTokenForm from '../../partials/BuyTokenForm';
+import { BrandColor } from '../../utils/Colors';
 
 function PaymentPage() {
+    const [paymentDone , setPaymentDone] = useState(false)
     return (
         <>
             <NavBar />
@@ -15,13 +17,18 @@ function PaymentPage() {
                             <div className="col-md-12 col-sm-12 col-xs-12">
                                 <div className="widget">
                                     <div className="widget-header">
-                                        <span className="widget-caption" style={{ fontSize: "18px" }}><strong>Payment Info</strong></span>
+                                        <span className="widget-caption" style={{ fontSize: "18px" }}><strong>Buy Tokens</strong></span>
                                     </div>
                                     <div className="widget-body">
                                         <div className="collapse in">
-                                            <div>
-                                                <BuyTokenForm />
-                                            </div>
+                                                {paymentDone === false && (<BuyTokenForm onPaymenDone={() => setPaymentDone(true)} />)}
+                                                {paymentDone === true && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                                        <img src={require("../../img/Photos/logo.png")} />
+                                                        <h3 style={{ color: BrandColor }}>Thanks for your payment</h3>
+                                                        <p>Your payment details has been send to your email</p>
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                 </div>

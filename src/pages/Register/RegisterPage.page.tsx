@@ -83,8 +83,8 @@ function LoginPage() {
 
 
     if (registered && userData) {
-        if (userData.role == "Model") return <Redirect to="/profile-edit" />
-        if (userData.role == "User") return <Redirect to="/payment" />
+        if (userData.role == "MODEL") return <Redirect to="/profile-edit" />
+        if (userData.role == "USER") return <Redirect to="/payment" />
     }
 
     return (
@@ -259,8 +259,11 @@ function LoginPage() {
                                                                                     value={values.role}
                                                                                 >
                                                                                     <option>Select a role</option>
-                                                                                    {["Model", "User"].map((role, idx) => {
-                                                                                        return <option key={idx.toString() + "-item"} value={role}>{role}</option>
+                                                                                    {[
+                                                                                        { label: "Values Offering Services", val: "Model"},
+                                                                                        { label: "Seeking Services", val: "User"},
+                                                                                    ].map((role, idx) => {
+                                                                                        return <option key={idx.toString() + "-item"} value={role.val}>{role.label}</option>
                                                                                     })}
                                                                                 </select>
                                                                                 {errors.role && touched.role && <ErrorLabel message={errors.role} />}

@@ -17,6 +17,7 @@ import SohoButton from '../../partials/SohoButton';
 import { useGlobalState, userIsLogged } from '../../state/GlobalState';
 import { UserData } from '../../types/UserData';
 import UserIsLogged from '../../utils/UserIsLogged';
+import { UsePeerVideo } from '../../utils/PeerClient';
 
 function VideoChat() {
     let { id } = useParams<{ id: string }>();
@@ -25,7 +26,8 @@ function VideoChat() {
     const [user, setUser] = useState<UserData | undefined>();
     const [invitations, setInvitations] = useState<any[]>([]);
 
-    const twilioVideo = UseTwilioVideoCall({ node: document.getElementById("video-window") })
+    const peerVideo = UsePeerVideo({ parentNode: document.getElementById("video-window") as HTMLElement })
+    //{ node: document.getElementById("video-window") }
 
     const [{ data, loading, error }, getUser] = useAxios<UserData>({
         url: `/user/public/getUser/${id}`,
@@ -34,6 +36,9 @@ function VideoChat() {
     useEffect(() => {
         setInterval(() => {
             refetchInvitations()
+            .then(() => {
+                peerVideo.getAcceptedInvitations()
+            })
         }, 1000 * 15)
     }, [])
 
@@ -49,7 +54,7 @@ function VideoChat() {
     }, [user])
 
     const refetchInvitations = () => {
-        return twilioVideo.getInvitations()
+        return peerVideo.getInvitations()
         .then((invitations) => {
             setInvitations(invitations)
         })
@@ -119,21 +124,15 @@ function VideoChat() {
                                                         disabled={isChatButtonDisabled()}
                                                         value={"Start Video Chat"}
                                                         onClick={() => {
-                                                            if (!userData || !user) return
-                                                            const node = document.getElementById("video-window") as HTMLMediaElement
+                                                            if (!user) return
 
-                                                            twilioVideo.initVideoCall({
-                                                                identity: userData?.nickname,
-                                                                divNode: node,
-                                                                toUserNickname: user.nickname
-                                                            })
+                                                            peerVideo.sendRequest({ toUserNickname: user.nickname })
                                                         }}
                                                     />
                                                     <SohoButton
-                                                        disabled={!twilioVideo.isConnected}
                                                         value={"End Chat"}
                                                         onClick={() => {
-                                                            twilioVideo.endCall()
+                                                            //peerVideo.endCall()
                                                         }}
                                                     />
                                                 </div>
@@ -157,14 +156,14 @@ function VideoChat() {
                                                                         if (!userData) return 
                                                                         const node = document.getElementById("video-window") as HTMLMediaElement
 
-                                                                        twilioVideo.acceptInvitation({ invitation: i, user: userData, divNode: node })
+                                                                        peerVideo.acceptInvitation({ invitation: i, divNode: node })
                                                                         .then(() => refetchInvitations())
                                                                     }}
                                                                     value="Accept"
                                                                 />
                                                                 <SohoButton
                                                                     onClick={() => {
-                                                                        twilioVideo.rejectInvitation({ invitationId: i.id })
+                                                                        peerVideo.rejectInvitation({ invitationId: i.id })
                                                                         .then(() => refetchInvitations())
                                                                     }}
                                                                     value="Decline"

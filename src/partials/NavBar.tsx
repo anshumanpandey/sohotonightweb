@@ -50,7 +50,7 @@ function NavBar() {
                             <li><Link to="/logout">Logout</Link></li>
                             </>
                         )}
-                        {!UserLoggedIsModel() && UserIsLogged() && (
+                        {!UserLoggedIsModel() && UserIsLogged() && !UserLoggedIsModel() && (
                             <li><SohoLink onClick={() => showBuyTokensModal(true)} disabled={true}>Tokens {userData?.tokensBalance}</SohoLink></li>
                         )}
                     </ul>

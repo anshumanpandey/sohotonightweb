@@ -1,8 +1,8 @@
 import useAxios from "axios-hooks"
 import { useEffect, useState } from "react"
-import { connect, Room } from "twilio-video"
 import { updateCurrentUser, useGlobalState } from "../state/GlobalState"
 import { UserData } from "../types/UserData"
+import { connect } from "./PeerClient"
 
 const buildDefaultPlayerMessage = () => {
     const newDiv = document.createElement("h2");
@@ -64,7 +64,7 @@ const UseCallTracker = () => {
 export const UseTwilioVideoCall = ({ node }: { node: any}) => {
     const [userData] = useGlobalState("userData")
     const [onCallReceiveCb, setOnCallReceiveCb] = useState<undefined | (() => void)>()
-    const [currentRoom, setCurrentRoom] = useState<undefined | Room>()
+    const [currentRoom, setCurrentRoom] = useState<undefined | any>()
     const [isConnected, setIsConnected] = useState<boolean>(false)
     const [currentHtmlNode, setCurrentHtmlNode] = useState<any | undefined>()
 
@@ -99,7 +99,7 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
     const initVideoCall = async (params: { identity: string, toUserNickname: string, divNode: HTMLMediaElement }) => {
         return request({ url: '/video/create', method: "post", data: { identity: params.identity, toUserNickname: params.toUserNickname } })
         .then(({ data }) => {
-            return connect(data.token)
+            return connect({ invitation: data })
             .then((room) => ({ room, data }))
         })
         .then(({ room, data }) => {
@@ -107,21 +107,21 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
         })
     }
 
-    const onConnectionSuccess = ({ room, divNode, onUserConected }: { room: Room, divNode: HTMLMediaElement, onUserConected?: () => void }) => {
+    const onConnectionSuccess = ({ room, divNode, onUserConected }: { room: any, divNode: HTMLMediaElement, onUserConected?: () => void }) => {
         setIsConnected(true)
         setCurrentHtmlNode(divNode)
         const videoPlayer = buildDefaultPlayer()
         setChildNode({ parentNode: divNode, node: videoPlayer })
 
-        room.on('participantDisconnected', participant => {
+        /*room.on('participantDisconnected', participant => {
             const message = buildDefaultPlayerMessage()
             setChildNode({ parentNode: currentHtmlNode, node: message })
-        })
+        })*/
 
 
-        room.on('participantConnected', participant => {
+        /*room.on('participantConnected', participant => {
 
-            console.log(`Participant "${participant.identity}" connected`);
+            console.log(`Participant connected`);
             onUserConected && onUserConected()
             participant.tracks.forEach(publication => {
               if (publication.isSubscribed) {
@@ -149,7 +149,9 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
                 //@ts-ignore
               track.attach(videoPlayer);
             });
-        });
+        });*/
+
+        room.attach(videoPlayer)
 
         setCurrentRoom(room)
 
@@ -193,18 +195,10 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
             method: 'post',
             data: { invitationId: invitation.id },
         })
-        .then((r) => {
-            return connectToRoom({ roomName: invitation.videoChat.roomName, identity: user.nickname, divNode })
-        })
     }
 
-    const connectToRoom = ({ roomName, identity, divNode }: { identity: string, roomName: string, divNode: any }) => {
-        return request({
-            url: '/video/generateVideoToken',
-            method: 'post',
-            data: { identity, roomName }
-        })
-        .then(({ data }) => connect(data.token))
+    const connectToRoom = ({ invitation, divNode }: { invitation: any, divNode: any }) => {
+        return connect(invitation)
         .then((room) => onConnectionSuccess({ room, divNode }))
     }
 

@@ -56,7 +56,7 @@ function ProfileHeader({ user = {}, extraContent }: any) {
 
                             {UserIsLogged() && (
                                 <li className={`${location.pathname.includes("/video-chat") && "active"}`}>
-                                    <Link to={userData && userData.tokensBalance === 0 ? `/payment`: `/video-chat/${id}`}>
+                                <Link to={userData && userData.role === "USER" && userData.tokensBalance === 0 ? `/payment`: `/video-chat/${id}`}>
                                         <i className="fa fa-video-camera"></i> VideoChat
                                     </Link>
                                 </li>

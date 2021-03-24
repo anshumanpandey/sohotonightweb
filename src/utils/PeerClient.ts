@@ -1,10 +1,22 @@
 import useAxios from 'axios-hooks';
 import Peer from 'peerjs';
 import { useEffect, useState } from 'react';
+import { UseCallTracker } from '../hooks/UseCallTracker';
+import { startSocketConnection } from '../request/socketClient';
+import { updateCurrentUser, useGlobalState } from '../state/GlobalState';
+
+const buildDefaultPlayerMessage = () => {
+    const newDiv = document.createElement("h2");
+    const newContent = document.createTextNode("Wait for a invitation and start a video chat");
+    newDiv.appendChild(newContent); //añade texto al div creado.
+
+    return newDiv
+}
 
 const buildDefaultPlayer = () => {
     const videoPlayer = document.createElement("video");
     videoPlayer.controls = true
+    videoPlayer.autoplay = true
     videoPlayer.style.width = "100%"
     const text = document.createTextNode("Your browser does not support HTML5 video.");
     videoPlayer.appendChild(text)
@@ -12,25 +24,38 @@ const buildDefaultPlayer = () => {
     return videoPlayer
 }
 
+type InvitationCb = (i: any) => void
 export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
-    const [acceptedCalls, setAcceptedCalls] = useState<any[]>([])
-    const [cb, setcb] = useState<boolean>(false)
+    const [userData] = useGlobalState("userData")
+    const [currentVideoChat, setCurrentVideoChat] = useState<undefined | any>()
+    const [onInvitationReceivedCb, setOnInvitationReceivedCb] = useState<undefined | InvitationCb>()
     const [videoNode, setVideoNode] = useState<HTMLElement | undefined>()
+
+    const timeTracker = UseCallTracker()
 
     const [callTokenReq, request] = useAxios({
         method: 'GET',
     }, { manual: true })
 
     useEffect(() => {
-        if (acceptedCalls[0] && cb === false) {
-            onInvitationAccepted(acceptedCalls[0])
-            setcb(true)
-        }
-    }, [acceptedCalls])
+        const socket = startSocketConnection()
+        socket?.on("NEW_INVITATION", (i: any) => {
+            console.log(i)
+            onInvitationReceivedCb && onInvitationReceivedCb(i)
+        })
+    }, [userData, onInvitationReceivedCb])
+
+    useEffect(() => {
+        const socket = startSocketConnection()
+        socket?.on("INVITATION_ACCEPTED", (i: any) => {
+            console.log(i)
+            onInvitationAccepted(i)
+        })
+    }, [userData])
 
     useEffect(() => {
         setVideoNode(parentNode)
-    },[parentNode])
+    }, [parentNode])
 
     const setChildNode = ({ node }: { node: any }) => {
         if (videoNode) {
@@ -48,14 +73,8 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
             .then(({ data }) => data)
     }
 
-    const getAcceptedInvitations = () => {
-        return request({
-            url: '/video/acceptedInvitations',
-        })
-            .then(({ data }) => setAcceptedCalls(data))
-    }
-
     const onInvitationAccepted = (invitation: any) => {
+        setCurrentVideoChat(invitation.videoChat)
         const peer = new Peer(invitation.senderUuid);
 
         peer.on('connection', () => console.log('connected'))
@@ -71,15 +90,20 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
                 player.srcObject = globalMediaStream
                 setChildNode({ node: player })
 
+                const socket = startSocketConnection()
+                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream, peer }))
+
+
                 call.on('error', () => {
                     console.log('could not connect')
                 })
 
                 call.on('stream', (remoteStream) => {
                     remoteStream.getTracks()
-                    .forEach((s) => {
-                        globalMediaStream.addTrack(s)
-                    })
+                        .forEach((s) => {
+                            globalMediaStream.addTrack(s)
+                            timeTracker.startTracker({ videoChatId: invitation.videoChat.id })
+                        })
                 });
             })
     }
@@ -98,119 +122,74 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         })
     }
 
-    const acceptInvitation = ({ invitation, divNode }: { invitation: any, divNode: HTMLMediaElement }) => {
-        return request({
-            url: '/video/invitation/accept',
-            method: 'post',
-            data: { invitationId: invitation.id },
-        })
-            .then((r) => {
-                const peer = new Peer(invitation.receiverUuid);
+    const acceptInvitation = ({ invitation }: { invitation: any }) => {
+        const socket = startSocketConnection()
 
-                peer.on('connection', () => console.log('connected'))
-                peer.on('error', (err) => {
-                    console.log(err)
-                })
+        return new Promise<void>((resolve, rejected) => {
+            setCurrentVideoChat(invitation.videoChat)
+            const peer = new Peer(invitation.receiverUuid);
 
-                peer.on('call', (call) => {
-                    const player = buildDefaultPlayer()
-                    const globalMediaStream = new MediaStream();
-                    player.srcObject = globalMediaStream
-                    setChildNode({ node: player })
+            peer.on('open', () => {
+                console.log('open')
+                socket?.emit("ACCEPT_INVITATION", invitation)
+                resolve()
+            })
+            peer.on('error', (err) => {
+                console.log(err)
+                rejected(err)
+            })
 
-                    call.on('stream', (remoteStream) => {
-                        remoteStream.getTracks()
-                            .forEach((s) => {
-                                globalMediaStream.addTrack(s)
-                            })
-                    });
+            peer.on('call', (call) => {
+                const player = buildDefaultPlayer()
+                const globalMediaStream = new MediaStream();
+                player.srcObject = globalMediaStream
+                setChildNode({ node: player })
 
-                    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-                        .then((localStream) => {
-                            call.answer(localStream); // Answer the call with an A/V stream.
+                call.on('stream', (remoteStream) => {
+                    remoteStream.getTracks()
+                        .forEach((s) => {
+                            globalMediaStream.addTrack(s)
                         })
                 });
-            })
+
+                navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                    .then((localStream) => {
+                        call.answer(localStream); // Answer the call with an A/V stream.
+                        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer }))
+                    })
+            });
+        })
+    }
+
+    const onInvitationReceived = (cb: InvitationCb) => {
+        setOnInvitationReceivedCb(() => cb)
+    }
+
+    const endCall = () => {
+        if (!currentVideoChat) return
+        const socket = startSocketConnection()
+        socket?.emit("END_VIDEO_CHAT", currentVideoChat)
+        setCurrentVideoChat(undefined)
+        const message = buildDefaultPlayerMessage()
+        setChildNode({ node: message })
+    }
+
+    const onCallEnded = ({ peer, stream }: { peer: Peer, stream: MediaStream }) => {
+        peer.disconnect()
+        stream.getTracks().forEach(s => s.stop())
+        timeTracker.endTracker()
+        const m = buildDefaultPlayerMessage()
+        setChildNode({ node: m })
     }
 
     return {
         getInvitations,
         sendRequest,
         rejectInvitation,
-        acceptInvitation,
         onInvitationAccepted,
-        getAcceptedInvitations
-    }
-
-}
-
-export const connect = ({ invitation }: { invitation: any }) => {
-    let errorCounter = 0
-    const peer = new Peer(invitation.senderUuid);
-
-    peer.on('connection', () => console.log('connected'))
-    peer.on('error', (err) => {
-        console.log(err)
-    })
-
-    return navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-            return new Promise((resolve, rejected) => {
-                let call = peer.call("123456", stream);
-                const globalMediaStream = new MediaStream();
-
-                call.on('error', () => {
-                    if (errorCounter != 3) {
-                        errorCounter = 1 + errorCounter
-                        console.log(`connection atemp ${errorCounter}`)
-                        call = peer.call("123456", stream)
-                    } else {
-                        rejected('vould not connect')
-                    }
-                })
-
-                call.on('stream', (remoteStream) => {
-
-                });
-            })
-        })
-
-}
-
-export const listenCalls = ({ peerId, node }: { peerId: string, node: HTMLMediaElement }) => {
-    const store = new Map<string, Peer.MediaConnection>()
-
-    const acceptCall = (id: string) => {
-        const globalMediaStream = new MediaStream();
-
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((remoteStream) => {
-                store.get(id)?.answer(remoteStream); // Answer the call with an A/V stream.
-                remoteStream.getTracks()
-                    .forEach((s) => {
-                        globalMediaStream.addTrack(s)
-                    })
-            })
-    }
-
-    const listen = () => {
-        const peer = new Peer(peerId, { debug: 2 });
-        const globalMediaStream = new MediaStream();
-        node.srcObject = globalMediaStream
-
-        peer.on('connection', (a) => {
-            console.log(a)
-        })
-        peer.on('error', (err) => {
-            console.log(err)
-        })
-        peer.on('call', (call) => {
-            store.set("d", call)
-        });
-    }
-
-    return {
-        listen
+        onInvitationReceived,
+        acceptInvitation,
+        endCall
     }
 
 }

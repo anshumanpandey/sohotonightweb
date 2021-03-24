@@ -43,6 +43,7 @@
     "react-scripts": "3.4.3",
     "react-step-wizard": "^5.3.5",
     "serve": "^11.3.2",
+    "socket.io-client": "^4.0.0",
     "twilio-client": "^1.14.0",
     "twilio-video": "^2.13.0",
     "typescript": "~3.7.2",

@@ -40,6 +40,7 @@ import CallTest from './pages/callTest/CallTest.page';
 import VideoChat from './pages/Profile/VideoChat.page';
 import BuyTokenModal from './partials/BuyTokenModal';
 import { UseTwilioVoiceCall } from './utils/UseTwilioVoiceCall';
+import { answerInvitation } from './request/socketClient';
 
 function App() {
   const alert = useAlert()
@@ -49,6 +50,10 @@ function App() {
   const [info] = useGlobalState('info')
   const [success] = useGlobalState('success')
   const call = UseTwilioVoiceCall()
+
+  useEffect(() => {
+    answerInvitation()
+  }, [])
 
   useEffect(() => {
     if (!error) return

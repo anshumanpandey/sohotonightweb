@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import SohoButton from './SohoButton';
 import ErrorLabel from './ErrorLabel';
 import { UseTwilioVoiceCall } from '../utils/UseTwilioVoiceCall';
+import { startSocketConnection } from '../request/socketClient';
 
 function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [redirect, setRedirect] = useState<boolean>(false)

@@ -34,15 +34,6 @@ function VideoChat() {
     }, { manual: true });
 
     useEffect(() => {
-        setInterval(() => {
-            refetchInvitations()
-            .then(() => {
-                peerVideo.getAcceptedInvitations()
-            })
-        }, 1000 * 15)
-    }, [])
-
-    useEffect(() => {
         getUser()
             .then(({ data }) => setUser(data))
     }, [id])
@@ -50,6 +41,10 @@ function VideoChat() {
     useEffect(() => {
         if (user && UserIsLogged() && IsOwnProfile({ user }) ) {
             refetchInvitations()
+            peerVideo.onInvitationReceived((i) => {
+                console.log(i)
+                setInvitations(p => [...p, i])
+            })
         }
     }, [user])
 
@@ -132,7 +127,7 @@ function VideoChat() {
                                                     <SohoButton
                                                         value={"End Chat"}
                                                         onClick={() => {
-                                                            //peerVideo.endCall()
+                                                            peerVideo.endCall()
                                                         }}
                                                     />
                                                 </div>
@@ -154,9 +149,7 @@ function VideoChat() {
                                                                 <SohoButton
                                                                     onClick={() => {
                                                                         if (!userData) return 
-                                                                        const node = document.getElementById("video-window") as HTMLMediaElement
-
-                                                                        peerVideo.acceptInvitation({ invitation: i, divNode: node })
+                                                                        peerVideo.acceptInvitation({ invitation: i })
                                                                         .then(() => refetchInvitations())
                                                                     }}
                                                                     value="Accept"

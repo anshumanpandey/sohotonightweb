@@ -1,8 +1,8 @@
 import useAxios from "axios-hooks"
 import { useEffect, useState } from "react"
+import { startSocketConnection } from "../request/socketClient"
 import { updateCurrentUser, useGlobalState } from "../state/GlobalState"
 import { UserData } from "../types/UserData"
-import { connect } from "./PeerClient"
 
 const buildDefaultPlayerMessage = () => {
     const newDiv = document.createElement("h2");
@@ -83,6 +83,14 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
         }
     }, [node])
 
+    useEffect(() => {
+        if (onCallReceiveCb) {
+            const socket = startSocketConnection()
+            socket?.on("invitationAccepted", onCallReceiveCb)
+
+        }
+    }, [onCallReceiveCb])
+
     const [callTokenReq, request] = useAxios({
         method: 'GET',
     }, { manual: true })
@@ -99,11 +107,6 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
     const initVideoCall = async (params: { identity: string, toUserNickname: string, divNode: HTMLMediaElement }) => {
         return request({ url: '/video/create', method: "post", data: { identity: params.identity, toUserNickname: params.toUserNickname } })
         .then(({ data }) => {
-            return connect({ invitation: data })
-            .then((room) => ({ room, data }))
-        })
-        .then(({ room, data }) => {
-            onConnectionSuccess({ room, divNode: params.divNode , onUserConected: () => tracker.startTracker({ videoChatId: data.id }) })
         })
     }
 
@@ -198,8 +201,6 @@ export const UseTwilioVideoCall = ({ node }: { node: any}) => {
     }
 
     const connectToRoom = ({ invitation, divNode }: { invitation: any, divNode: any }) => {
-        return connect(invitation)
-        .then((room) => onConnectionSuccess({ room, divNode }))
     }
 
     return {

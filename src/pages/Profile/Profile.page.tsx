@@ -11,20 +11,16 @@ import PostWidgetForm from '../../partials/PostWidgetForm';
 import PostItem from '../../partials/PostItem';
 import SohoModal from '../../partials/SohoModal';
 import IsOwnProfile from '../../utils/IsOwnProfile';
-import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
 import { callStarted, setDevice, useGlobalState } from '../../state/GlobalState';
 import SohoCallModal from '../../partials/CallModal';
 
 function ProfilePage() {
     let { id } = useParams<{ id: string }>();
-    const [currentCall] = useGlobalState("currentCall")
     const [user, setUser] = useState<any>({});
     const [showPreviewModal, setShowPreviewModal] = useState<false | any>(false);
     const [showVideoModal, setShowVideoModal] = useState<false | any>(false);
     const [goToPayment, setGoToPayment] = useState<any>(false);
     const [redirectOnNotFound, setRedirectOnNotFound] = useState<boolean>(false);
-
-    const call = UseTwilioVoiceCall()
 
     const [{ data, loading, error }, getUser] = useAxios({
         url: `/user/public/getUser/${id}`,
@@ -35,16 +31,7 @@ function ProfilePage() {
             .then(({ data }) => setUser(data))
             .catch(() => setRedirectOnNotFound(true))
     }
-
-    useEffect(() => {
-        refetchUser()
-        call.onStatusChange((s) => {
-            if (s == "open") {
-                callStarted();
-            }
-        })
-    }, [id])
-
+    
     if (redirectOnNotFound === true) return <Redirect to={`/list-post`} />
     if (goToPayment && goToPayment.id) return <Redirect to={`/payment/video/${goToPayment.id}`} />
 

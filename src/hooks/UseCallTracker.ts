@@ -19,15 +19,15 @@ export const UseCallTracker = () => {
         setOnDiscountCb(() => cb)
     }
 
-    const onTick = ({ videoChatId }: { videoChatId: string }) => {
+    const onTick = ({ callId, callType }: { callId: string, callType: "VIDEO" | "VOICE"  }) => {
         const socket = startSocketConnection()
         
-        Promise.resolve(socket?.emit("DISCOUNT_VIDEO_CHAT", { videoChatId }))
+        Promise.resolve(socket?.emit(callType == "VIDEO" ? "DISCOUNT_VIDEO_CHAT": "VOICE_CALL_ENDED", { callId: callId }))
         .then(() => updateCurrentUser())
         .then(() => onDiscountCb && onDiscountCb())
     }
 
-    const startTracker = (p: { videoChatId: string }) => {
+    const startTracker = (p: { callId: string, callType: "VIDEO" | "VOICE" }) => {
         if (started === true) return
         console.log("Time tracker started!")
         started = true

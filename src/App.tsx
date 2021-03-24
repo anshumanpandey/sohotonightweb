@@ -39,8 +39,8 @@ import RegionsPage from './pages/regions/Regions.page';
 import CallTest from './pages/callTest/CallTest.page';
 import VideoChat from './pages/Profile/VideoChat.page';
 import BuyTokenModal from './partials/BuyTokenModal';
-import { UseTwilioVoiceCall } from './utils/UseTwilioVoiceCall';
 import { answerInvitation } from './request/socketClient';
+import VoiceCallsTracker from './partials/VoiceCallsTracker';
 
 function App() {
   const alert = useAlert()
@@ -49,7 +49,6 @@ function App() {
   const [error] = useGlobalState('error')
   const [info] = useGlobalState('info')
   const [success] = useGlobalState('success')
-  const call = UseTwilioVoiceCall()
 
   useEffect(() => {
     answerInvitation()
@@ -81,15 +80,6 @@ function App() {
       }
     })
   }, [success])
-
-  useEffect(() => {
-    if (userData && userData.role === "MODEL") {
-      call.onCallInvitationReceived((i: any) => {
-        console.log(i)
-      })
-      call.listeCallRequest()
-    }
-  }, [userData])
 
   const pageToShowBackgroundImg = () => {
     return currentPageIs(location.pathname, "preview") ||
@@ -166,6 +156,7 @@ function App() {
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
       <BuyTokenModal />
+      <VoiceCallsTracker />
       <CookieConsent buttonText="Accept Cookies">
         This website uses cookies to enhance the user experience.{' '}
         <Link to="/cookiePolicy">See more</Link>

@@ -17,7 +17,8 @@ import SohoButton from '../../partials/SohoButton';
 import { useGlobalState, userIsLogged } from '../../state/GlobalState';
 import { UserData } from '../../types/UserData';
 import UserIsLogged from '../../utils/UserIsLogged';
-import { UsePeerVideo } from '../../utils/PeerClient';
+import { UsePeerVideo } from '../../hooks/PeerClient';
+import { SohoAlert } from '../../partials/SohoAlert';
 
 function VideoChat() {
     let { id } = useParams<{ id: string }>();
@@ -139,30 +140,21 @@ function VideoChat() {
                                                 <h4>Chat invitations</h4>
                                                 {getNonRejectedInvitations(invitations).length != 0 ? getNonRejectedInvitations(invitations).map((i) => {
                                                     return (
-                                                        <div key={i.id} style={{ border: `1px solid ${BrandColor}`, borderRadius: '25px', marginBottom: '0.5rem' }}>
-                                                            <div style={{ backgroundColor: BrandColor, padding: "1rem", borderTopLeftRadius: '24px', borderTopRightRadius: '24px' }}>
-                                                                <p style={{ color: 'white', margin: 0 }}>
-                                                                    You have a video chat invitation from <b>{i.videoChat.createdBy.nickname}</b>
-                                                                </p>
-                                                            </div>
-                                                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: "1rem" }}>
-                                                                <SohoButton
-                                                                    onClick={() => {
-                                                                        if (!userData) return 
-                                                                        peerVideo.acceptInvitation({ invitation: i })
+                                                        <SohoAlert
+                                                            key={i.id}
+                                                            body={() => {
+                                                                return <>You have a video chat invitation from <b>{i.videoChat.createdBy.nickname}</b></>
+                                                            }}
+                                                            onClose={() => {
+                                                                peerVideo.rejectInvitation({ invitationId: i.id })
                                                                         .then(() => refetchInvitations())
-                                                                    }}
-                                                                    value="Accept"
-                                                                />
-                                                                <SohoButton
-                                                                    onClick={() => {
-                                                                        peerVideo.rejectInvitation({ invitationId: i.id })
-                                                                        .then(() => refetchInvitations())
-                                                                    }}
-                                                                    value="Decline"
-                                                                />
-                                                            </div>
-                                                        </div>
+                                                            }}
+                                                            onAccept={() => {
+                                                                if (!userData) return 
+                                                                peerVideo.acceptInvitation({ invitation: i })
+                                                                .then(() => refetchInvitations())
+                                                            }}
+                                                        />
                                                     )
                                                 }): (
                                                     <>

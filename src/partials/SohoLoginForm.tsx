@@ -5,14 +5,12 @@ import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCallRequestToken, useGl
 import { Redirect } from 'react-router-dom';
 import SohoButton from './SohoButton';
 import ErrorLabel from './ErrorLabel';
-import { UseTwilioVoiceCall } from '../utils/UseTwilioVoiceCall';
 import { startSocketConnection } from '../request/socketClient';
 
 function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [redirect, setRedirect] = useState<boolean>(false)
     const [userData] = useGlobalState("userData")
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
-    const call = UseTwilioVoiceCall()
 
     if (redirect && userData) {
         if (userData.role == "MODEL") return <Redirect to="/profile-edit" />
@@ -37,9 +35,7 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
                     .then(({ data }) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
                         dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data })
-                        return call.requestToken({ identity: data.nickname })
                     })
-                    .then(token => updateCallRequestToken(token))
                     .then(() => setRedirect(true))
             }}
         >

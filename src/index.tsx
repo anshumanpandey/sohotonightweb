@@ -21,11 +21,11 @@ const options = {
 }
 
 ReactDOM.render(
-    <AlertProvider template={AlertTemplate} {...options}>
-      <Router history={history}>
-        <App />
-      </Router>
-    </AlertProvider>,
+  <AlertProvider template={AlertTemplate} {...options}>
+    <Router history={history}>
+      <App />
+    </Router>
+  </AlertProvider>,
   document.getElementById('root')
 );
 

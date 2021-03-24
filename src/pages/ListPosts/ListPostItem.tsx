@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { UsePeerCall } from '../../hooks/UsePeerCall';
 import SohoLink from '../../partials/SohoLink';
 import { callStarted, setDevice, updateCallStatus, useGlobalState } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
-import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
 
-const ListPostItem = ({ girl: g, callToken } : { girl: any, callToken?: string }) => {
+const ListPostItem = ({ girl: g } : { girl: any }) => {
     const isMobile = UseIsMobile();
-    const call = UseTwilioVoiceCall()
+    const call = UsePeerCall()
     const [userData] = useGlobalState("userData");
 
     const callIsDisabled = () => {
         if (!g) return true
         if (g.isLogged === false) return true
 
-        if (callToken === undefined) return true
-
         if (!userData) return true
         if (userData.tokensBalance === 0) return true
 
         return false
     }
-
-    useEffect(() => {
-        call.onStatusChange(updateCallStatus)
-    }, [])
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
@@ -59,10 +53,8 @@ const ListPostItem = ({ girl: g, callToken } : { girl: any, callToken?: string }
                             <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: isMobile ? "start":"end" }}>Call me now for one to one live chat: </p>
                             <SohoLink
                                 onClick={() => {
-                                    if (callToken) {
-                                        callStarted()
-                                        call.requestCallTo({ toNickname: g.nickname })
-                                    }
+                                    callStarted()
+                                    call.sendCallRequest({ toNickname: g.nickname })
                                 }}
                                 disabled={callIsDisabled()}
                                 style={{ textAlign: 'end' }}>

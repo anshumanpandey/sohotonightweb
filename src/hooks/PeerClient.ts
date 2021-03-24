@@ -1,7 +1,7 @@
 import useAxios from 'axios-hooks';
 import Peer from 'peerjs';
 import { useEffect, useState } from 'react';
-import { UseCallTracker } from '../hooks/UseCallTracker';
+import { UseCallTracker } from './UseCallTracker';
 import { startSocketConnection } from '../request/socketClient';
 import { updateCurrentUser, useGlobalState } from '../state/GlobalState';
 
@@ -39,7 +39,7 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
 
     useEffect(() => {
         const socket = startSocketConnection()
-        socket?.on("NEW_INVITATION", (i: any) => {
+        socket?.on("NEW_VIDEO_INVITATION", (i: any) => {
             console.log(i)
             onInvitationReceivedCb && onInvitationReceivedCb(i)
         })
@@ -102,7 +102,7 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)
-                            timeTracker.startTracker({ videoChatId: invitation.videoChat.id })
+                            timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
                         })
                 });
             })

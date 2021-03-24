@@ -10,7 +10,6 @@ import { BrandColor } from '../../utils/Colors';
 import ListPostItem from './ListPostItem';
 import UseIsMobile from '../../utils/UseIsMobile';
 import SohoButton from '../../partials/SohoButton';
-import { UseTwilioVoiceCall } from '../../utils/UseTwilioVoiceCall';
 import SohoCallModal from '../../partials/CallModal';
 
 enum FILTER_KEY {
@@ -80,7 +79,6 @@ function ListPostPage() {
     const { filters, addValueFor, getValuesFiltersFor } = useFilters()
     const [userData] = useGlobalState("userData");
     const isMobile = UseIsMobile();
-    const call = UseTwilioVoiceCall()
 
     const [filteredUsers, setFilteredUsers] = useState<any>([])
 
@@ -96,12 +94,6 @@ function ListPostPage() {
         getUser()
             .then(({ data }) => setFilteredUsers(data))
     }, [])
-
-    useEffect(() => {
-        if (userData) { 
-            call.requestToken({ identity: userData.nickname })
-        }
-    }, [userData])
 
     useEffect(() => {
         if (!data) return
@@ -243,7 +235,7 @@ function ListPostPage() {
                             {!loading && filteredUsers.length == 0 && <p style={{ fontSize: 20, textAlign: 'center', color: "#d32a6b" }}>No user found</p>}
 
                             {filteredUsers.map((g: any) => {
-                                return (<ListPostItem key={g.nickname} callToken={call.callToken} girl={g} />);
+                                return (<ListPostItem key={g.nickname} girl={g} />);
                             })}
 
                         </div>

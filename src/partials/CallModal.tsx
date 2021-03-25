@@ -8,13 +8,13 @@ const SohoCallModal: React.FC = () => {
     return (
         <SohoModal
             onClose={() => callEnded()}
-            show={currentCall.isCalling ? currentCall.isCalling : false}
+            show={currentCall != null && !(currentCall == "Ending...")}
             title="Calling..."
-            footer={() => <button onClick={() => {
-                callEnded()
+            footer={(close) => <button onClick={() => {
+                close()
             }} type="button" className="btn btn-default">Close</button>}
         >
-            {currentCall?.callStatus}
+            {currentCall}
         </SohoModal>
     );
 }

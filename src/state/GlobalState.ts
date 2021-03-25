@@ -30,7 +30,7 @@ interface State {
   globalLoading: boolean,
   error: null | string,
   info: null | string,
-  currentCall: CallObject,
+  currentCall: null | string,
   visitorId: string | null,
   success: null,
   selectedTown: null | string,
@@ -44,7 +44,7 @@ const initialState: State = {
   globalLoading: false,
   error: null,
   info: null,
-  currentCall: buildCallObject({ isCalling: false, callToken: callToken }),
+  currentCall: null,
   visitorId: null,
   success: null,
   selectedTown: !selectedTown ? null : selectedTown,
@@ -123,34 +123,22 @@ export const setSelectedTown = (msg: string) => {
 
 export const callStarted = () => {
   const s = getGlobalState()
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ isCalling: true }, s.currentCall ) })
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: "Ringing" })
 }
 export const callEnded = () => {
-  const s = getGlobalState()
-  s.currentCall.device?.disconnectAll()
-  const newCall = buildCallObject({ isCalling: false, callStatus: '' }, s.currentCall)
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: newCall })
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: "Ending..." })
+  setTimeout(() => {
+    dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: null })
+  }, 100)
 }
 
 export const updateCallStatus = (callStatus: string) => {
-  const s = getGlobalState()
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ callStatus }, s.currentCall) })
-}
-
-export const setDevice = (device: Device) => {
-  const s = getGlobalState()
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ device }, s.currentCall) })
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: callStatus })
 }
 
 export const userIsLogged = () => {
   const s = getGlobalState()
   return s.jwtToken !== null
-}
-
-export const updateCallRequestToken = (callToken: string) => {
-  localStorage.setItem("callToken", callToken)
-  const s = getGlobalState()
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: buildCallObject({ callToken }, s.currentCall) })
 }
 
 export const updateCurrentUser = () => {

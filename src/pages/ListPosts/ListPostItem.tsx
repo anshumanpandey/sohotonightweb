@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UsePeerCall } from '../../hooks/UsePeerCall';
 import SohoLink from '../../partials/SohoLink';
-import { callStarted, setDevice, updateCallStatus, useGlobalState } from '../../state/GlobalState';
+import { callStarted, updateCallStatus, useGlobalState } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
 

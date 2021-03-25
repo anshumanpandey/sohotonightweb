@@ -2,13 +2,15 @@ import useAxios from "axios-hooks"
 import Peer from "peerjs"
 import { useEffect, useState } from "react"
 import { startSocketConnection } from "../request/socketClient"
-import { useGlobalState } from "../state/GlobalState"
+import { callEnded, updateCallStatus, useGlobalState } from "../state/GlobalState"
 import { UseCallTracker } from "./UseCallTracker"
 
 type CallReceivedCb = (i: any) => void
 export const UsePeerCall = () => {
     const [onCallReceivedCb, setOnCallReceivedCb] = useState<undefined | CallReceivedCb>()
     const [userData] = useGlobalState("userData")
+    const [currentCall] = useGlobalState("currentCall")
+    const [currentVoiceChat, setCurrentVoiceChat] = useState<undefined | any>()
 
     const timeTracker = UseCallTracker()
 
@@ -24,12 +26,19 @@ export const UsePeerCall = () => {
         })
     }, [userData, onCallReceivedCb])
 
+    useEffect(() => {
+        if (currentCall == 'Ending...') {
+            endPeerCall()
+        }
+    }, [currentCall])
+
     const onCallReceived = (cb: CallReceivedCb) => {
         setOnCallReceivedCb(() => cb)
     }
 
     const onCallAccepted = (invitation: any) => {
         const peer = new Peer(invitation.senderUuid);
+        setCurrentVoiceChat(invitation.voiceCall)
 
         peer.on('connection', () => console.log('connected'))
         peer.on('error', (err) => {
@@ -42,7 +51,10 @@ export const UsePeerCall = () => {
                 const globalMediaStream = new MediaStream();
 
                 const socket = startSocketConnection()
-                //socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream, peer }))
+                socket?.on("VOICE_CALL_ENDED", (i: any) => {
+                    stream.getTracks().forEach(t => t.stop())
+                    callEnded()
+                })
 
                 call.on('error', () => {
                     console.log('could not connect')
@@ -75,6 +87,8 @@ export const UsePeerCall = () => {
 
     const acceptCall = ({ invitation }: { invitation: any }) => {
         const socket = startSocketConnection()
+        setCurrentVoiceChat(invitation.voiceCall)
+        updateCallStatus("Waiting Connection...")
 
         return new Promise<void>((resolve, rejected) => {
             const peer = new Peer(invitation.receiverUuid);
@@ -102,6 +116,10 @@ export const UsePeerCall = () => {
                 navigator.mediaDevices.getUserMedia({ audio: true })
                     .then((localStream) => {
                         call.answer(localStream); // Answer the call with an A/V stream.
+                        const socket = startSocketConnection()
+                        socket?.on("VOICE_CALL_ENDED", (i: any) => {
+                            localStream.getTracks().forEach(t => t.stop())
+                        })
                     })
             });
 
@@ -109,13 +127,23 @@ export const UsePeerCall = () => {
         })
     }
 
-    const rejectCall = () => {
+    const endPeerCall = () => {
+        if (!currentVoiceChat) return
 
-        }
-
-        return {
-            onCallReceived,
-            sendCallRequest,
-            acceptCall
-        }
+        const socket = startSocketConnection()
+        socket?.emit("END_VOICE_CHAT", currentVoiceChat)
+        socket?.off("INVITATION_ACCEPTED")
+        setCurrentVoiceChat(undefined)
     }
+
+    const rejectCall = ({ invitation }: { invitation: any }) => {
+        return request({ url: `/invitation/reject`, method: "post", data: { invitationId: invitation.id }})
+    }
+
+    return {
+        onCallReceived,
+        sendCallRequest,
+        acceptCall,
+        rejectCall
+    }
+}

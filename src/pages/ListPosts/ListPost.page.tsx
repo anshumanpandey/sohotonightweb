@@ -250,7 +250,6 @@ function ListPostPage() {
                     </div>
                 </div>
             </div>
-            <SohoCallModal />
             <Footer />
         </>
     );

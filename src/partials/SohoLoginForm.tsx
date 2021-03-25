@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCallRequestToken, useGlobalState } from '../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../state/GlobalState';
 import { Redirect } from 'react-router-dom';
 import SohoButton from './SohoButton';
 import ErrorLabel from './ErrorLabel';
-import { startSocketConnection } from '../request/socketClient';
 
 function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [redirect, setRedirect] = useState<boolean>(false)

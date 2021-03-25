@@ -41,6 +41,7 @@ import VideoChat from './pages/Profile/VideoChat.page';
 import BuyTokenModal from './partials/BuyTokenModal';
 import { answerInvitation } from './request/socketClient';
 import VoiceCallsTracker from './partials/VoiceCallsTracker';
+import SohoCallModal from './partials/CallModal';
 
 function App() {
   const alert = useAlert()
@@ -155,6 +156,7 @@ function App() {
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
+      <SohoCallModal />
       <BuyTokenModal />
       <VoiceCallsTracker />
       <CookieConsent buttonText="Accept Cookies">

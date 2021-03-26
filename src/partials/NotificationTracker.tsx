@@ -2,7 +2,7 @@ import useAxios from 'axios-hooks';
 import React, { useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import { useHistory } from "react-router-dom";
-import { UsePeerVideo } from '../hooks/PeerClient';
+import { UsePeerVideo } from '../hooks/UsePeerVideoChat';
 import { UsePeerCall } from '../hooks/UsePeerCall';
 import { startSocketConnection } from '../request/socketClient';
 import { useGlobalState } from '../state/GlobalState';

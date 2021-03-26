@@ -8,6 +8,8 @@ import { updateCurrentUser, useGlobalState } from '../state/GlobalState';
 const buildDefaultPlayerMessage = () => {
     const newDiv = document.createElement("h2");
     const newContent = document.createTextNode("Wait for a invitation and start a video chat");
+    newDiv.style.textAlign = "center"
+
     newDiv.appendChild(newContent); //añade texto al div creado.
 
     return newDiv
@@ -52,7 +54,14 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
     }, [userData, onInvitationReceivedCb])
 
     useEffect(() => {
-        setVideoNode(parentNode)
+        if (parentNode) {
+            setVideoNode(parentNode)
+            const m = buildDefaultPlayerMessage()
+            while (parentNode.firstChild) {
+                parentNode.removeChild(parentNode.firstChild);
+            }
+            parentNode.appendChild(m)
+        }
     }, [parentNode])
 
     const listenInvitations = () => {

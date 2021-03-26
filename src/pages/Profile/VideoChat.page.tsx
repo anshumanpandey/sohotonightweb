@@ -17,7 +17,7 @@ import SohoButton from '../../partials/SohoButton';
 import { useGlobalState, userIsLogged } from '../../state/GlobalState';
 import { UserData } from '../../types/UserData';
 import UserIsLogged from '../../utils/UserIsLogged';
-import { UsePeerVideo } from '../../hooks/PeerClient';
+import { UsePeerVideo } from '../../hooks/UsePeerVideoChat';
 import { SohoAlert } from '../../partials/SohoAlert';
 
 function VideoChat() {
@@ -44,19 +44,19 @@ function VideoChat() {
         if (acceptedInvitationId) {
             const found = invitations.find(i => i.id == acceptedInvitationId)
             if (found) {
-                if (!userData) return 
+                if (!userData) return
 
                 setIsAcceptingInvitation(true)
                 peerVideo.acceptInvitation({ invitation: found })
-                .then(() => setIsAcceptingInvitation(true))
-                .then(() => refetchInvitations())
+                    .then(() => setIsAcceptingInvitation(true))
+                    .then(() => refetchInvitations())
             }
 
         }
     }, [acceptedInvitationId, invitations, userData])
 
     useEffect(() => {
-        if (user && UserIsLogged() && IsOwnProfile({ user }) ) {
+        if (user && UserIsLogged() && IsOwnProfile({ user })) {
             peerVideo.onInvitationReceived((i) => {
                 setInvitations(p => [i, ...p])
             })
@@ -65,9 +65,9 @@ function VideoChat() {
 
     const refetchInvitations = () => {
         return peerVideo.getInvitations()
-        .then((invitations) => {
-            setInvitations(() => [ ...invitations ])
-        })
+            .then((invitations) => {
+                setInvitations(() => [...invitations])
+            })
     }
 
     const isChatButtonDisabled = () => {
@@ -127,8 +127,8 @@ function VideoChat() {
                                         </ul>
                                     </div>
                                     <div className="row">
-                                        <div className="col-md-4 col-xs-12">
-                                            {user && !IsOwnProfile({ user }) && (
+                                        {user && !IsOwnProfile({ user }) && (
+                                            <div className="col-md-3 col-xs-12">
                                                 <div role="form">
                                                     <SohoButton
                                                         disabled={isChatButtonDisabled()}
@@ -146,42 +146,12 @@ function VideoChat() {
                                                         }}
                                                     />
                                                 </div>
-                                            )}
-                                            {invitations.length == 0 ? (
-                                                <h4>No calls invitations</h4>
-                                            ): (
-                                                <>
-                                                <h4>Chat invitations</h4>
-                                                {getNonRejectedInvitations(invitations).length != 0 ? getNonRejectedInvitations(invitations).map((i) => {
-                                                    return (
-                                                        <SohoAlert
-                                                            key={i.id}
-                                                            busy={isAcceptingInvitation}
-                                                            body={() => {
-                                                                return <>You have a video chat invitation from <b>{i.videoChat.createdBy.nickname}</b></>
-                                                            }}
-                                                            onClose={() => {
-                                                                peerVideo.rejectInvitation({ invitationId: i.id })
-                                                                        .then(() => refetchInvitations())
-                                                            }}
-                                                            onAccept={() => {
-                                                                if (!userData) return 
-                                                                peerVideo.acceptInvitation({ invitation: i })
-                                                                .then(() => refetchInvitations())
-                                                            }}
-                                                        />
-                                                    )
-                                                }): (
-                                                    <>
-                                                    <h4>No video chat invitations</h4>
-                                                    </>
-                                                )}
-                                                </>
-                                            )}
-                                        </div>
+                                            </div>
 
-                                        <div className="col-lg-8 col-md-8 col-xs-12">
-                                            <div id="video-window" style={{ width: '100%'}}></div>
+                                        )}
+                                        
+                                        <div className={`col-lg-${user && !IsOwnProfile({ user }) ? '9': '12'} col-md-${user && !IsOwnProfile({ user }) ? '9': '12'} col-xs-12`}>
+                                            <div id="video-window" style={{ width: '100%' }}></div>
                                         </div>
                                     </div>
                                 </div>

@@ -109,6 +109,10 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                 socket?.once("INVITATION_ACCEPTED", (i: any) => {
                     onCallAccepted(i)
                 })
+                socket?.once("INVITATION_DECLINED", (i: any) => {
+                    endPeerCall()
+                    callEnded()
+                })
             })
     }
 

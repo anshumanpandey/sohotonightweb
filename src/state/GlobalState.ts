@@ -1,7 +1,5 @@
 import { createStore } from 'react-hooks-global-state';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import { buildCallObject, CallObject } from '../types/CallObject';
-import { Device } from 'twilio-client';
 import { UserData } from '../types/UserData';
 import { AxiosInstance } from '../utils/AxiosBootstrap';
 

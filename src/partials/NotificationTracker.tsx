@@ -16,6 +16,7 @@ const VoiceCallsTracker: React.FC = () => {
     let history = useHistory();
     const [userData] = useGlobalState("userData")
     const [invitations, setInvitations] = useState<any[]>([])
+    const [rejectingVideoChat, setRejectingVideoChat] = useState<boolean>(false)
     const call = UsePeerCall()
     const peerVideo = UsePeerVideo({ parentNode: document.getElementById("video-window") as HTMLElement })
 
@@ -45,6 +46,10 @@ const VoiceCallsTracker: React.FC = () => {
         .then(({ data }) => setInvitations(data))
     }
 
+    const notificationIsBusy = () => {
+        return callTokenReq.loading === true || rejectingVideoChat === true
+    }
+
 
     return (
         <>
@@ -58,7 +63,7 @@ const VoiceCallsTracker: React.FC = () => {
                 return <div key={i.id} style={{ position: "fixed", right: 0, width: '25%', top: `${75 - (idx * 15)}vh` }}>
                     <SohoAlert
                         autoCloseOnSeconds={15}
-                        busy={callTokenReq.loading}
+                        busy={notificationIsBusy()}
                         body={() => notificationBody}
                         onAccept={() => {
                             if (isVideoChat(i)) {
@@ -71,9 +76,13 @@ const VoiceCallsTracker: React.FC = () => {
                         }}
                         onClose={() => {
                             if (isVideoChat(i)) {
+                                setRejectingVideoChat(true)
                                 peerVideo.rejectInvitation({ invitationId: i.id })
+                                .then(() => setRejectingVideoChat(false))
+                                .then(() => updateNotifications())
                             } else {
-                                call.rejectCall({ invitation: i }).then(() => updateNotifications())
+                                call.rejectCall({ invitation: i })
+                                .then(() => updateNotifications())
                             }
                         }} />
                 </div>

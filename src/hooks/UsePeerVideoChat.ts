@@ -133,11 +133,23 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         setChildNode({ node: player })
         return request({ url: '/video/create', method: "post", data: { toUserNickname: params.toUserNickname } })
         .then(() => setIsAwaitingResponse(true))
+        .then(() => {
+            const socket = startSocketConnection()
+            socket?.once("INVITATION_DECLINED", (i: any) => {
+                console.log('invitation declined', i)
+                if (i.videoChat) {
+                    setIsAwaitingResponse(false)
+                    setCurrentVideoChat(undefined)
+                    const message = buildDefaultPlayerMessage()
+                    setChildNode({ node: message })
+                }
+            })
+        })
     }
 
     const rejectInvitation = ({ invitationId }: { invitationId: string }) => {
         return request({
-            url: '/video/invitation/reject',
+            url: '/invitation/reject',
             method: 'post',
             data: { invitationId },
         })

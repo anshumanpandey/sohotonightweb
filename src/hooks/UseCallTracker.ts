@@ -1,4 +1,3 @@
-import useAxios from "axios-hooks"
 import { useEffect, useState } from "react"
 import { startSocketConnection } from "../request/socketClient"
 import { updateCurrentUser } from "../state/GlobalState"

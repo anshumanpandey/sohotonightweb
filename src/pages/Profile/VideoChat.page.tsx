@@ -21,30 +21,44 @@ import { UsePeerVideo } from '../../hooks/PeerClient';
 import { SohoAlert } from '../../partials/SohoAlert';
 
 function VideoChat() {
-    let { id } = useParams<{ id: string }>();
+    let { id, acceptedInvitationId } = useParams<{ id: string, acceptedInvitationId?: string }>();
     const [userData] = useGlobalState("userData")
     const [redirect, setRedirect] = useState(false);
     const [user, setUser] = useState<UserData | undefined>();
     const [invitations, setInvitations] = useState<any[]>([]);
+    const [isAcceptingInvitation, setIsAcceptingInvitation] = useState<boolean>(false);
 
     const peerVideo = UsePeerVideo({ parentNode: document.getElementById("video-window") as HTMLElement })
-    //{ node: document.getElementById("video-window") }
 
     const [{ data, loading, error }, getUser] = useAxios<UserData>({
         url: `/user/public/getUser/${id}`,
     }, { manual: true });
 
     useEffect(() => {
+        refetchInvitations()
         getUser()
             .then(({ data }) => setUser(data))
     }, [id])
 
     useEffect(() => {
+        if (acceptedInvitationId) {
+            const found = invitations.find(i => i.id == acceptedInvitationId)
+            if (found) {
+                if (!userData) return 
+
+                setIsAcceptingInvitation(true)
+                peerVideo.acceptInvitation({ invitation: found })
+                .then(() => setIsAcceptingInvitation(true))
+                .then(() => refetchInvitations())
+            }
+
+        }
+    }, [acceptedInvitationId, invitations, userData])
+
+    useEffect(() => {
         if (user && UserIsLogged() && IsOwnProfile({ user }) ) {
-            refetchInvitations()
             peerVideo.onInvitationReceived((i) => {
-                console.log(i)
-                setInvitations(p => [...p, i])
+                setInvitations(p => [i, ...p])
             })
         }
     }, [user])
@@ -52,12 +66,12 @@ function VideoChat() {
     const refetchInvitations = () => {
         return peerVideo.getInvitations()
         .then((invitations) => {
-            setInvitations(invitations)
+            setInvitations(() => [ ...invitations ])
         })
     }
 
     const isChatButtonDisabled = () => {
-        return !user || !userData || user.isLogged == false
+        return !user || !userData || user.isLogged == false || peerVideo.canStartChat === false
     }
 
     const getNonRejectedInvitations = (invitations: any[]) => {
@@ -128,7 +142,7 @@ function VideoChat() {
                                                     <SohoButton
                                                         value={"End Chat"}
                                                         onClick={() => {
-                                                            peerVideo.endCall()
+                                                            peerVideo.endCall(peerVideo.currentVideoChat)
                                                         }}
                                                     />
                                                 </div>
@@ -142,6 +156,7 @@ function VideoChat() {
                                                     return (
                                                         <SohoAlert
                                                             key={i.id}
+                                                            busy={isAcceptingInvitation}
                                                             body={() => {
                                                                 return <>You have a video chat invitation from <b>{i.videoChat.createdBy.nickname}</b></>
                                                             }}

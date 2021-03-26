@@ -40,7 +40,7 @@ import CallTest from './pages/callTest/CallTest.page';
 import VideoChat from './pages/Profile/VideoChat.page';
 import BuyTokenModal from './partials/BuyTokenModal';
 import { answerInvitation } from './request/socketClient';
-import VoiceCallsTracker from './partials/VoiceCallsTracker';
+import VoiceCallsTracker from './partials/NotificationTracker';
 import SohoCallModal from './partials/CallModal';
 
 function App() {
@@ -141,7 +141,7 @@ function App() {
         <Route path="/profile-about/:id?">
           <AboutPage />
         </Route>
-        <Route path="/video-chat/:id?">
+        <Route path="/video-chat/:id?/:acceptedInvitationId?">
           <VideoChat />
         </Route>
         <Route path="/profile-video/:id?">

@@ -24,10 +24,16 @@ const buildDefaultPlayer = () => {
     return videoPlayer
 }
 
+let currentVideoChat: any = undefined
+const setCurrentVideoChat = (s: any) => currentVideoChat = typeof s == 'function' ? s() : s
+
+
 type InvitationCb = (i: any) => void
 export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
     const [userData] = useGlobalState("userData")
-    const [currentVideoChat, setCurrentVideoChat] = useState<undefined | any>()
+    const [isAwaitingResponse, setIsAwaitingResponse] = useState<boolean>(false)
+    const [isOnCall, setIsOnCall] = useState<boolean>(false)
+    const [isListening, setIsListening] = useState<boolean>(false)
     const [onInvitationReceivedCb, setOnInvitationReceivedCb] = useState<undefined | InvitationCb>()
     const [videoNode, setVideoNode] = useState<HTMLElement | undefined>()
 
@@ -38,24 +44,26 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
     }, { manual: true })
 
     useEffect(() => {
+        if (!userData) return
         const socket = startSocketConnection()
         socket?.on("NEW_VIDEO_INVITATION", (i: any) => {
-            console.log(i)
             onInvitationReceivedCb && onInvitationReceivedCb(i)
         })
     }, [userData, onInvitationReceivedCb])
 
     useEffect(() => {
-        const socket = startSocketConnection()
-        socket?.on("INVITATION_ACCEPTED", (i: any) => {
-            console.log(i)
-            onInvitationAccepted(i)
-        })
-    }, [userData])
-
-    useEffect(() => {
         setVideoNode(parentNode)
     }, [parentNode])
+
+    const listenInvitations = () => {
+        if (isListening) return
+        const socket = startSocketConnection()
+        console.log('listening INVITATION_ACCEPTED')
+        setIsListening(true)
+        socket?.on("INVITATION_ACCEPTED", (i: any) => {
+            onInvitationAccepted(i)
+        })
+    }
 
     const setChildNode = ({ node }: { node: any }) => {
         if (videoNode) {
@@ -74,7 +82,7 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
     }
 
     const onInvitationAccepted = (invitation: any) => {
-        setCurrentVideoChat(invitation.videoChat)
+        setCurrentVideoChat(() => ({ ...invitation.videoChat }))
         const peer = new Peer(invitation.senderUuid);
 
         peer.on('connection', () => console.log('connected'))
@@ -102,8 +110,9 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)
-                            timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
                         })
+                        setIsOnCall(true)
+                        timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
                 });
             })
     }
@@ -112,6 +121,7 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         const player = buildDefaultPlayer()
         setChildNode({ node: player })
         return request({ url: '/video/create', method: "post", data: { toUserNickname: params.toUserNickname } })
+        .then(() => setIsAwaitingResponse(true))
     }
 
     const rejectInvitation = ({ invitationId }: { invitationId: string }) => {
@@ -126,8 +136,9 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         const socket = startSocketConnection()
 
         return new Promise<void>((resolve, rejected) => {
-            setCurrentVideoChat(invitation.videoChat)
             const peer = new Peer(invitation.receiverUuid);
+            setCurrentVideoChat(invitation.videoChat)
+            setIsAwaitingResponse(false)
 
             peer.on('open', () => {
                 console.log('open')
@@ -165,10 +176,11 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         setOnInvitationReceivedCb(() => cb)
     }
 
-    const endCall = () => {
-        if (!currentVideoChat) return
+    const endCall = (currentChat: any) => {
+        if (!currentChat) return
         const socket = startSocketConnection()
-        socket?.emit("END_VIDEO_CHAT", currentVideoChat)
+        socket?.emit("END_VIDEO_CHAT", currentChat)
+        setIsOnCall(false)
         setCurrentVideoChat(undefined)
         const message = buildDefaultPlayerMessage()
         setChildNode({ node: message })
@@ -189,7 +201,11 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         onInvitationAccepted,
         onInvitationReceived,
         acceptInvitation,
-        endCall
+        listenInvitations,
+        endCall,
+        canStartChat: isOnCall === false && isAwaitingResponse === false,
+        currentVideoChat
+
     }
 
 }

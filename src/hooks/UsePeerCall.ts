@@ -120,9 +120,9 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
         const socket = startSocketConnection()
         setCurrentVoiceChat(invitation.voiceCall)
         updateCallStatus("Waiting Connection...")
+        const peer = new Peer(invitation.receiverUuid);
 
         return new Promise<void>((resolve, rejected) => {
-            const peer = new Peer(invitation.receiverUuid);
 
             peer.on('open', () => {
                 console.log('open')

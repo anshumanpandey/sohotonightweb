@@ -98,7 +98,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                             })
                     });
 
-                    resolve()
+                    resolve(undefined)
                 })
             })
         })

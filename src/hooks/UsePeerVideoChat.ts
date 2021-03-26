@@ -101,7 +101,8 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
             console.log(err)
         })
 
-        return navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        peer.on('open', () => {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then((stream) => {
                 let call = peer.call(invitation.receiverUuid, stream);
                 const globalMediaStream = new MediaStream();
@@ -126,6 +127,7 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
                         timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
                 });
             })
+        })
     }
 
     const sendRequest = async (params: { toUserNickname: string }) => {
@@ -158,15 +160,20 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
     const acceptInvitation = ({ invitation }: { invitation: any }) => {
         const socket = startSocketConnection()
 
-        return new Promise<void>((resolve, rejected) => {
+        return new Promise<any>((resolve, rejected) => {
             const peer = new Peer(invitation.receiverUuid);
             setCurrentVideoChat(invitation.videoChat)
             setIsAwaitingResponse(false)
 
             peer.on('open', () => {
                 console.log('open')
-                socket?.emit("ACCEPT_INVITATION", invitation)
-                resolve()
+                request({
+                    url: '/invitation/accept',
+                    method: 'post',
+                    data: { invitationId: invitation.id }
+                })
+                .then((res) => resolve(res))
+                .catch((err) => resolve(err))
             })
             peer.on('error', (err) => {
                 console.log(err)

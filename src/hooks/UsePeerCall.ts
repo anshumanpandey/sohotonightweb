@@ -120,45 +120,48 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
         setCurrentVoiceChat(invitation.voiceCall)
         updateCallStatus("Waiting Connection...")
 
+        const peer = new Peer(invitation.receiverUuid);
+        peer.on('open', () => {
+            console.log('open')
+        })
+        peer.on('error', (err) => {
+            console.log(err)
+        })
+
+
         return request({
             url: '/invitation/accept',
             method: 'post',
             data: { invitationId: invitation.id }
         })
-        .then(() => {
-            const peer = new Peer(invitation.receiverUuid);
-            peer.on('open', () => {
-                console.log('open')
-            })
-            peer.on('error', (err) => {
-                console.log(err)
-            })
+            .then(() => {
 
-            peer.on('call', (call) => {
-                const globalMediaStream = new MediaStream();
+                peer.on('call', (call) => {
+                    const globalMediaStream = new MediaStream();
 
-                call.on('stream', (remoteStream) => {
-                    updateCallStatus("Talking")
-                    const player = buildDefaultPlayer(remoteStream)
-                    audioPlayer = player
-                    mainDiv?.appendChild(player)
+                    call.on('stream', (remoteStream) => {
+                        updateCallStatus("Talking")
+                        const player = buildDefaultPlayer(remoteStream)
+                        audioPlayer = player
+                        mainDiv?.appendChild(player)
 
-                    remoteStream.getTracks()
-                        .forEach((s) => {
-                            globalMediaStream.addTrack(s)
+                        remoteStream.getTracks()
+                            .forEach((s) => {
+                                globalMediaStream.addTrack(s)
+                            })
+                    });
+
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then((localStream) => {
+                            call.answer(localStream); // Answer the call with an A/V stream.
+                            const socket = startSocketConnection()
+                            socket?.on("VOICE_CALL_ENDED", (i: any) => {
+                                localStream.getTracks().forEach(t => t.stop())
+                            })
                         })
                 });
 
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then((localStream) => {
-                        call.answer(localStream); // Answer the call with an A/V stream.
-                        const socket = startSocketConnection()
-                        socket?.on("VOICE_CALL_ENDED", (i: any) => {
-                            localStream.getTracks().forEach(t => t.stop())
-                        })
-                    })
-            });
-        })
+            })
     }
 
     const endPeerCall = () => {
@@ -171,7 +174,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     }
 
     const rejectCall = ({ invitation }: { invitation: any }) => {
-        return request({ url: `/invitation/reject`, method: "post", data: { invitationId: invitation.id }})
+        return request({ url: `/invitation/reject`, method: "post", data: { invitationId: invitation.id } })
     }
 
     return {

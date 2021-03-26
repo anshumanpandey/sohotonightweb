@@ -68,33 +68,40 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
             console.log(err)
         })
 
-        return navigator.mediaDevices.getUserMedia({ audio: true })
-            .then((stream) => {
-                let call = peer.call(invitation.receiverUuid, stream);
-                const globalMediaStream = new MediaStream();
+        return new Promise((resolve, rejected) => {
+            peer.on('open', () => {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                .then((stream) => {
+                    let call = peer.call(invitation.receiverUuid, stream);
+                    const globalMediaStream = new MediaStream();
+    
+                    const socket = startSocketConnection()
+                    socket?.on("VOICE_CALL_ENDED", (i: any) => {
+                        stream.getTracks().forEach(t => t.stop())
+                        callEnded()
+                    })
+    
+                    call.on('error', (err) => {
+                        console.log('could not connect')
+                        rejected(err)
+                    })
+    
+                    call.on('stream', (remoteStream) => {
+                        updateCallStatus("Talking")
+                        const player = buildDefaultPlayer(remoteStream)
+                        mainDiv?.appendChild(player)
+                        audioPlayer = player
+                        timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
+                        remoteStream.getTracks()
+                            .forEach((s) => {
+                                globalMediaStream.addTrack(s)
+                            })
+                    });
 
-                const socket = startSocketConnection()
-                socket?.on("VOICE_CALL_ENDED", (i: any) => {
-                    stream.getTracks().forEach(t => t.stop())
-                    callEnded()
+                    resolve()
                 })
-
-                call.on('error', () => {
-                    console.log('could not connect')
-                })
-
-                call.on('stream', (remoteStream) => {
-                    updateCallStatus("Talking")
-                    const player = buildDefaultPlayer(remoteStream)
-                    mainDiv?.appendChild(player)
-                    audioPlayer = player
-                    timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
-                    remoteStream.getTracks()
-                        .forEach((s) => {
-                            globalMediaStream.addTrack(s)
-                        })
-                });
             })
+        })
     }
 
     const sendCallRequest = ({ toNickname }: { toNickname: string }) => {
@@ -126,6 +133,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
         })
 
         peer.on('call', (call) => {
+            console.log('call request receivec', call)
             const globalMediaStream = new MediaStream();
 
             call.on('stream', (remoteStream) => {

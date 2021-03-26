@@ -88,10 +88,10 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                     const player = buildDefaultPlayer(remoteStream)
                     mainDiv?.appendChild(player)
                     audioPlayer = player
+                    timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)
-                            timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
                         })
                 });
             })
@@ -122,16 +122,17 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
         updateCallStatus("Waiting Connection...")
         const peer = new Peer(invitation.receiverUuid);
 
-        return new Promise<void>((resolve, rejected) => {
-
+        return request({
+            url: '/invitation/accept',
+            method: 'post',
+            data: { invitationId: invitation.id }
+        })
+        .then(() => {
             peer.on('open', () => {
                 console.log('open')
-                socket?.emit("ACCEPT_INVITATION", invitation)
-                resolve()
             })
             peer.on('error', (err) => {
                 console.log(err)
-                rejected(err)
             })
 
             peer.on('call', (call) => {
@@ -158,8 +159,6 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                         })
                     })
             });
-
-
         })
     }
 

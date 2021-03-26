@@ -43,7 +43,7 @@ const VoiceCallsTracker: React.FC = () => {
 
     const updateNotifications = () => {
         return request()
-        .then(({ data }) => setInvitations(data))
+        .then(({ data }) => setInvitations([...data]))
     }
 
     const notificationIsBusy = () => {

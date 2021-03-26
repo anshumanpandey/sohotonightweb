@@ -36,7 +36,6 @@ const VoiceCallsTracker: React.FC = () => {
             setInvitations(p => [i, ...p])
         })
         peerVideo.onInvitationReceived((i) => {
-            console.log(i)
             setInvitations(p => [...p, i])
         })
     }, [userData])

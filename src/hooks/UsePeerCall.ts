@@ -61,6 +61,7 @@ export const UsePeerCall = () => {
                 })
 
                 call.on('stream', (remoteStream) => {
+                    updateCallStatus("Talking")
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)
@@ -107,6 +108,7 @@ export const UsePeerCall = () => {
                 const globalMediaStream = new MediaStream();
 
                 call.on('stream', (remoteStream) => {
+                    updateCallStatus("Talking")
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)

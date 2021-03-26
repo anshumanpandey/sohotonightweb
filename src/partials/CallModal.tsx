@@ -1,5 +1,6 @@
 import React from 'react';
 import { callEnded, useGlobalState } from '../state/GlobalState';
+import { BrandColor } from '../utils/Colors';
 import SohoModal from './SohoModal';
 
 const SohoCallModal: React.FC = () => {
@@ -14,7 +15,7 @@ const SohoCallModal: React.FC = () => {
                 close()
             }} type="button" className="btn btn-default">Close</button>}
         >
-            {currentCall}
+            <p style={{ fontSize: 20, color: BrandColor, textAlign: 'center' }}>{currentCall}</p>
         </SohoModal>
     );
 }

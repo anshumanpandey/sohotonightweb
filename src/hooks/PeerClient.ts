@@ -61,7 +61,9 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
         console.log('listening INVITATION_ACCEPTED')
         setIsListening(true)
         socket?.on("INVITATION_ACCEPTED", (i: any) => {
-            onInvitationAccepted(i)
+            if (i.videoChat) { 
+                onInvitationAccepted(i)
+            }
         })
     }
 

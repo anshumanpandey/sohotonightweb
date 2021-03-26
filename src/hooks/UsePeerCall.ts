@@ -6,7 +6,24 @@ import { callEnded, updateCallStatus, useGlobalState } from "../state/GlobalStat
 import { UseCallTracker } from "./UseCallTracker"
 
 type CallReceivedCb = (i: any) => void
-export const UsePeerCall = () => {
+
+const buildDefaultPlayer = (m: MediaStream) => {
+    const videoPlayer = document.createElement("audio");
+    videoPlayer.controls = false
+    videoPlayer.autoplay = true
+    videoPlayer.id = 'voice-player'
+    videoPlayer.style.width = "100%"
+    const text = document.createTextNode("Your browser does not support HTML5 video.");
+    videoPlayer.appendChild(text)
+    videoPlayer.srcObject = m
+
+    return videoPlayer
+}
+
+let mainDiv: any = undefined
+let audioPlayer: any = undefined
+
+export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     const [onCallReceivedCb, setOnCallReceivedCb] = useState<undefined | CallReceivedCb>()
     const [userData] = useGlobalState("userData")
     const [currentCall] = useGlobalState("currentCall")
@@ -25,6 +42,12 @@ export const UsePeerCall = () => {
             onCallReceivedCb && onCallReceivedCb(i)
         })
     }, [userData, onCallReceivedCb])
+
+    useEffect(() => {
+        if (p) {
+            mainDiv = p.node
+        }
+    }, [p])
 
     useEffect(() => {
         if (currentCall == 'Ending...') {
@@ -62,6 +85,9 @@ export const UsePeerCall = () => {
 
                 call.on('stream', (remoteStream) => {
                     updateCallStatus("Talking")
+                    const player = buildDefaultPlayer(remoteStream)
+                    mainDiv?.appendChild(player)
+                    audioPlayer = player
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)
@@ -109,6 +135,10 @@ export const UsePeerCall = () => {
 
                 call.on('stream', (remoteStream) => {
                     updateCallStatus("Talking")
+                    const player = buildDefaultPlayer(remoteStream)
+                    audioPlayer = player
+                    mainDiv?.appendChild(player)
+
                     remoteStream.getTracks()
                         .forEach((s) => {
                             globalMediaStream.addTrack(s)
@@ -146,6 +176,7 @@ export const UsePeerCall = () => {
         onCallReceived,
         sendCallRequest,
         acceptCall,
-        rejectCall
+        rejectCall,
+        audioPlayer
     }
 }

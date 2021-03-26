@@ -8,7 +8,8 @@ export const startSocketConnection = () => {
     if (!token) return null
     if (socket !== null) return socket
 
-    const ENDPOINT = "http://127.0.0.1:5000";
+    const ENDPOINT = process.env.REACT_APP_SOCKET_URL;
+    if (!ENDPOINT) throw new Error("Missing socket url")
     console.log("Connecting")
     socket = socketIOClient.io(ENDPOINT, {
         extraHeaders: { Authorization: `Bearer ${token}` }

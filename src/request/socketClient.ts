@@ -15,6 +15,10 @@ export const startSocketConnection = () => {
         extraHeaders: { Authorization: `Bearer ${token}` }
     });
 
+    socket.on('unauthorized', (error) => {
+        console.log(error)
+    });
+
     return socket
 }
 

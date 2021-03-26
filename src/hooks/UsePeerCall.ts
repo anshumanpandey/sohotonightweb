@@ -117,10 +117,8 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     }
 
     const acceptCall = ({ invitation }: { invitation: any }) => {
-        const socket = startSocketConnection()
         setCurrentVoiceChat(invitation.voiceCall)
         updateCallStatus("Waiting Connection...")
-        const peer = new Peer(invitation.receiverUuid);
 
         return request({
             url: '/invitation/accept',
@@ -128,6 +126,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
             data: { invitationId: invitation.id }
         })
         .then(() => {
+            const peer = new Peer(invitation.receiverUuid);
             peer.on('open', () => {
                 console.log('open')
             })

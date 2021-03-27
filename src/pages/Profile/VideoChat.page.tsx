@@ -18,7 +18,6 @@ import { useGlobalState, userIsLogged } from '../../state/GlobalState';
 import { UserData } from '../../types/UserData';
 import UserIsLogged from '../../utils/UserIsLogged';
 import { UsePeerVideo } from '../../hooks/UsePeerVideoChat';
-import { SohoAlert } from '../../partials/SohoAlert';
 
 function VideoChat() {
     let { id, acceptedInvitationId } = useParams<{ id: string, acceptedInvitationId?: string }>();
@@ -72,10 +71,6 @@ function VideoChat() {
 
     const isChatButtonDisabled = () => {
         return !user || !userData || user.isLogged == false || peerVideo.canStartChat === false
-    }
-
-    const getNonRejectedInvitations = (invitations: any[]) => {
-        return invitations.filter(i => i.responseFromUser == "WAITING_RESPONSE")
     }
 
     if (redirect) {

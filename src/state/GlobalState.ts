@@ -14,6 +14,7 @@ export enum GLOBAL_STATE_ACIONS {
   SET_TOWN,
   SET_VISITOR_ID,
   SET_CALL,
+  SET_VIDEO_CHAT,
   IS_BUYING_TOKENS,
   SUCCESS,
   GLOBAL_LOADING,
@@ -29,6 +30,7 @@ interface State {
   error: null | string,
   info: null | string,
   currentCall: null | string,
+  currentVideoChat: null | string,
   visitorId: string | null,
   success: null,
   selectedTown: null | string,
@@ -43,6 +45,7 @@ const initialState: State = {
   error: null,
   info: null,
   currentCall: null,
+  currentVideoChat: null,
   visitorId: null,
   success: null,
   selectedTown: !selectedTown ? null : selectedTown,
@@ -61,6 +64,7 @@ const reducer = (state: any, action: any) => {
     case GLOBAL_STATE_ACIONS.SET_VISITOR_ID: return { ...state, visitorId: action.payload }
     case GLOBAL_STATE_ACIONS.SET_CALL: return { ...state, currentCall: action.payload }
     case GLOBAL_STATE_ACIONS.IS_BUYING_TOKENS: return { ...state, buyTokenModal: action.payload }    
+    case GLOBAL_STATE_ACIONS.SET_VIDEO_CHAT: return { ...state, currentVideoChat: action.payload }    
     
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
@@ -109,6 +113,14 @@ export const setInfoAlert = (msg: string) => {
 
 export const showBuyTokensModal = (show: boolean) => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.IS_BUYING_TOKENS, payload: show })
+}
+
+export const showVideoChatModal = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_VIDEO_CHAT, payload: true })
+}
+
+export const hideVideoModal = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_VIDEO_CHAT, payload: null })
 }
 
 export const setSuccessAlert = (msg: string) => {

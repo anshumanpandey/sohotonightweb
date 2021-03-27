@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { UsePeerVideo } from '../hooks/UsePeerVideoChat';
 import { UsePeerCall } from '../hooks/UsePeerCall';
 import { startSocketConnection } from '../request/socketClient';
-import { useGlobalState } from '../state/GlobalState';
+import { showVideoChatModal, useGlobalState } from '../state/GlobalState';
 import { SohoAlert } from './SohoAlert';
 
 const isVideoChat = (i: any) => {
@@ -18,7 +18,7 @@ const VoiceCallsTracker: React.FC = () => {
     const [invitations, setInvitations] = useState<any[]>([])
     const [rejectingVideoChat, setRejectingVideoChat] = useState<boolean>(false)
     const call = UsePeerCall()
-    const peerVideo = UsePeerVideo({ parentNode: document.getElementById("video-window") as HTMLElement })
+    const peerVideo = UsePeerVideo({ })
 
     const [callTokenReq, request] = useAxios({
         method: 'GET',
@@ -67,8 +67,10 @@ const VoiceCallsTracker: React.FC = () => {
                         body={() => notificationBody}
                         onAccept={() => {
                             if (isVideoChat(i)) {
-                                Promise.resolve(history.push(`/video-chat/${userData?.id}/${i.id}`))
+                                Promise.resolve(showVideoChatModal())
+                                .then(() => peerVideo.acceptInvitation({ invitation: i }))
                                 .then(() => updateNotifications())
+                                
                             } else {
                                 call.acceptCall({ invitation: i })
                                 .then(() => updateNotifications())

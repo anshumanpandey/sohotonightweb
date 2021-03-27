@@ -42,6 +42,9 @@ import BuyTokenModal from './partials/BuyTokenModal';
 import { answerInvitation } from './request/socketClient';
 import VoiceCallsTracker from './partials/NotificationTracker';
 import SohoCallModal from './partials/CallModal';
+import SohoVideoModal from './partials/VideoModal';
+import UserIsLogged from './utils/UserIsLogged';
+import UserLoggedIsModel from './utils/UserLoggedIsModel';
 
 function App() {
   const alert = useAlert()
@@ -156,9 +159,10 @@ function App() {
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
-      <SohoCallModal />
-      <BuyTokenModal />
-      <VoiceCallsTracker />
+      {UserIsLogged() && <SohoCallModal />}
+      {UserIsLogged() && UserLoggedIsModel () && <SohoVideoModal />}
+      {UserIsLogged() && <BuyTokenModal />}
+      {UserIsLogged() && <VoiceCallsTracker />}
       <CookieConsent buttonText="Accept Cookies">
         This website uses cookies to enhance the user experience.{' '}
         <Link to="/cookiePolicy">See more</Link>

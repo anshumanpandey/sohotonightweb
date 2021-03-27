@@ -77,12 +77,15 @@ export const UsePeerVideo = ({ parentNode }: { parentNode: HTMLElement }) => {
     }
 
     const setChildNode = ({ node }: { node: any }) => {
-        if (videoNode) {
-            while (videoNode.firstChild) {
-                videoNode.removeChild(videoNode.firstChild);
+        setVideoNode(p => {
+            if (p) {
+                while (p.firstChild) {
+                    p.removeChild(p.firstChild);
+                }
+                p.appendChild(node)
             }
-            videoNode.appendChild(node)
-        }
+            return p
+        })
     }
 
     const getInvitations = () => {

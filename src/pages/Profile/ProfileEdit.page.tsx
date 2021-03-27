@@ -89,7 +89,7 @@ function ProfileEditPage() {
                 profileImageFile,
                 bannerImageFile,
                 authenticationProfilePic,
-                Services,
+                services,
                 ...fields
             } = values
 
@@ -98,8 +98,8 @@ function ProfileEditPage() {
             if (profileImageFile) data.append("profilePic", profileImageFile)
             if (bannerImageFile) data.append("bannerImage", bannerImageFile)
             if (authenticationProfilePic) data.append("authenticatePic", authenticationProfilePic)
-            if (Services.length != 0) {
-                data.append("Services", Services.map((s: any) => s.id).join(","))
+            if (services.length != 0) {
+                data.append("services", services.map((s: any) => s.id).join(","))
             }
             Object.keys(fields).forEach(k => {
                 if (values[k]) {

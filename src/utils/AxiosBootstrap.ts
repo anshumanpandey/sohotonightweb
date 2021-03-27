@@ -7,6 +7,7 @@ export const AxiosInstance = Axios.create({
 })
 AxiosInstance.interceptors.request.use((r) => {
   const token = getGlobalState().jwtToken
+  console.log(getGlobalState())
   if (token) {
     r.headers.Authorization = `Bearer ${token}`
   }

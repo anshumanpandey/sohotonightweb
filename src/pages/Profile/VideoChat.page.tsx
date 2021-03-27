@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Footer from '../../partials/Footer';
 import NavBar from '../../partials/NavBar';
 import '../../css/user_detail.css';
@@ -69,9 +69,9 @@ function VideoChat() {
             })
     }
 
-    const isChatButtonDisabled = () => {
-        return !user || !userData || user.isLogged == false || peerVideo.canStartChat === false
-    }
+    const isChatButtonDisabled = useCallback(() => {
+        return !user || !userData || user.isLogged == false || peerVideo.currentVideoChat !== undefined
+    }, [peerVideo.currentVideoChat, user, userData])
 
     if (redirect) {
         return <Redirect to="/profile-edit" />

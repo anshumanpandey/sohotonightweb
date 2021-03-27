@@ -3,12 +3,12 @@ import Peer from 'peerjs';
 import { useEffect, useState } from 'react';
 import { UseCallTracker } from './UseCallTracker';
 import { startSocketConnection } from '../request/socketClient';
-import { updateCurrentUser, useGlobalState } from '../state/GlobalState';
+import { hideVideoModal, updateCurrentUser, useGlobalState } from '../state/GlobalState';
 import { createGlobalState } from 'react-hooks-global-state';
 
-const buildDefaultPlayerMessage = () => {
+const buildDefaultPlayerMessage = (text: string = "Wait for a invitation and start a video chat") => {
     const newDiv = document.createElement("h2");
-    const newContent = document.createTextNode("Wait for a invitation and start a video chat");
+    const newContent = document.createTextNode(text);
     newDiv.style.textAlign = "center"
 
     newDiv.appendChild(newContent); //añade texto al div creado.
@@ -82,8 +82,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }
 
     const setChildNode = ({ node }: { node: any }) => {
-        console.log({ videoNode })
-
         if (videoNode) {
             while (videoNode.firstChild) {
                 videoNode.removeChild(videoNode.firstChild);
@@ -102,6 +100,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const onInvitationAccepted = (invitation: any) => {
         setCurrentVideoChat(invitation.videoChat)
         const peer = new Peer(invitation.senderUuid);
+        const msg = buildDefaultPlayerMessage("Waiting connection")
+        setChildNode({ node: msg })
 
         peer.on('connection', () => console.log('connected'))
         peer.on('error', (err) => {
@@ -138,11 +138,11 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }
 
     const sendRequest = async (params: { toUserNickname: string }) => {
-        const player = buildDefaultPlayer()
-        setChildNode({ node: player })
         return request({ url: '/video/create', method: "post", data: { toUserNickname: params.toUserNickname } })
         .then(() => setIsAwaitingResponse(true))
         .then(() => {
+            const msg = buildDefaultPlayerMessage("Waiting response")
+            setChildNode({ node: msg })
             const socket = startSocketConnection()
             socket?.once("INVITATION_DECLINED", (i: any) => {
                 console.log('invitation declined', i)
@@ -166,6 +166,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const acceptInvitation = ({ invitation }: { invitation: any }) => {
         const socket = startSocketConnection()
+        const msg = buildDefaultPlayerMessage("Waiting connection")
+        setChildNode({ node: msg })
 
         return new Promise<any>((resolve, rejected) => {
             const peer = new Peer(invitation.receiverUuid);
@@ -218,6 +220,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         const socket = startSocketConnection()
         socket?.emit("END_VIDEO_CHAT", currentChat)
         setIsOnCall(false)
+        hideVideoModal()
+        setIsAwaitingResponse(false)
         setCurrentVideoChat(undefined)
         const message = buildDefaultPlayerMessage()
         setChildNode({ node: message })
@@ -225,6 +229,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const onCallEnded = ({ peer, stream }: { peer: Peer, stream: MediaStream }) => {
         peer.disconnect()
+        setIsOnCall(() => false)
+        hideVideoModal()
+        setIsAwaitingResponse(() => false)
+        setCurrentVideoChat(undefined)
         stream.getTracks().forEach(s => s.stop())
         timeTracker.endTracker()
         const m = buildDefaultPlayerMessage()

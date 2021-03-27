@@ -11,7 +11,6 @@ const SohoVideoModal: React.FC = () => {
         <SohoModal
             size={"lg"}
             onClose={() => {
-                hideVideoModal()
                 videoPeer.endCall(videoPeer.currentVideoChat)
             }}
             show={currentVideoChat != null}

@@ -22,6 +22,8 @@ export const startSocketConnection = () => {
     return socket
 }
 
+export const disconnectSocket = () => socket?.disconnect()
+
 export const answerInvitation = () => {
     startSocketConnection()
     socket?.emit("event", { a: 55 })

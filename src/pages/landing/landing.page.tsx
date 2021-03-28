@@ -26,7 +26,6 @@ function Landing() {
                         <div className="row">
                             <div className="col-md-12 col-sm-12 col-xs-12">
                                 <div className="widget">
-                                    <div className="list_tab_link"><Link to="/register">Register/Login</Link></div>
 
                                     <div className="">
                                         <h3 style={{ color: "#d32a6b" }}>Welcome Soho Tonight</h3>

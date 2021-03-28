@@ -20,7 +20,7 @@ function LogoutPage() {
     }, [])
 
     if (!userData) {
-        return <Redirect to="/list-post" />
+        return <Redirect to="/register" />
     }
     return (<></>);
 }

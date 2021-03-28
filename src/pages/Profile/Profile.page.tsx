@@ -26,11 +26,17 @@ function ProfilePage() {
         url: `/user/public/getUser/${id}`,
     }, { manual: true });
 
-    const refetchUser = () => {
-        getUser()
+    const refetchUser = (id: string) => {
+        getUser({ url: `/user/public/getUser/${id}` })
             .then(({ data }) => setUser(data))
             .catch(() => setRedirectOnNotFound(true))
     }
+
+    useEffect(() => {
+        if (id) {
+            refetchUser(id)
+        }
+    }, [id])
     
     if (redirectOnNotFound === true) return <Redirect to={`/list-post`} />
     if (goToPayment && goToPayment.id) return <Redirect to={`/payment/video/${goToPayment.id}`} />
@@ -161,7 +167,7 @@ function ProfilePage() {
                                         <div className="col-md-12">
                                             {IsOwnProfile({ user }) && (
                                                 <div style={{ margin: 0 }} className="box profile-info n-border-top">
-                                                    <PostWidgetForm onPostCrated={() => refetchUser()} />
+                                                    <PostWidgetForm onPostCrated={() => refetchUser(id)} />
                                                 </div>
                                             )}
                                             {!loading && user?.Posts?.length == 0 && (

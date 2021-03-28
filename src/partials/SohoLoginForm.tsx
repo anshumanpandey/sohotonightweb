@@ -12,8 +12,9 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
     if (redirect && userData) {
-        if (userData.role == "MODEL") return <Redirect to="/profile-edit" />
-        if (userData.role == "USER") return <Redirect to="/payment" />
+        if (userData.role == "MODEL") return <Redirect to={`/profile/${userData.id}`} />
+        if (userData.role == "USER" && userData.tokensBalance == 0) return <Redirect to="/payment" />
+        if (userData.role == "USER" && userData.tokensBalance != 0) return <Redirect to="/list-post" />
     }
 
     return (

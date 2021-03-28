@@ -32,7 +32,7 @@ function NavBar() {
                         <span className="icon-bar"></span>
                     </button>
                     <div style={{ width: '100%',display: 'flex', flexDirection: isMobile ? 'column': "row", justifyContent: isLess1200 ? "center": "space-between" }}>
-                    <Link className="navbar-brand" to={goTo}>
+                    <Link className="navbar-brand" to={'/'}>
                         <img src={logo} alt="" className="profile-img img-responsive center-block show-in-modal" style={{ width: isMobile ? "35%": "60%" ,display: 'block', marginRight: 'auto', marginLeft: isMobile ? "auto":'unset', float: 'none'}} />
                     </Link>
                     <p style={{ textAlign: isMobile ? 'center': 'left',marginTop: "auto", marginBottom: "auto", fontSize: "38px", color: '#cd2b6b', fontFamily: 'Aerolite' }}>
@@ -45,13 +45,18 @@ function NavBar() {
                         <li><Link to={goTo}>Home</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
+                        {!UserLoggedIsModel() && UserIsLogged() && !UserLoggedIsModel() && (
+                            <li>
+                                <SohoLink onClick={() => showBuyTokensModal(true)} disabled={true}>
+                                    <i className="fa fa-diamond"></i>
+                                    {userData?.tokensBalance}
+                                </SohoLink>
+                            </li>
+                        )}
                         {UserIsLogged() && (
                             <>
                             <li><Link to="/logout">Logout</Link></li>
                             </>
-                        )}
-                        {!UserLoggedIsModel() && UserIsLogged() && !UserLoggedIsModel() && (
-                            <li><SohoLink onClick={() => showBuyTokensModal(true)} disabled={true}>Tokens {userData?.tokensBalance}</SohoLink></li>
                         )}
                     </ul>
                 </div>

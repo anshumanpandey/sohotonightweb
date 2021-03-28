@@ -7,7 +7,6 @@ export const AxiosInstance = Axios.create({
 })
 AxiosInstance.interceptors.request.use((r) => {
   const token = getGlobalState().jwtToken
-  console.log(getGlobalState())
   if (token) {
     r.headers.Authorization = `Bearer ${token}`
   }
@@ -36,7 +35,7 @@ AxiosInstance.interceptors.response.use(function (response) {
   } else {
     // Something happened in setting up the request that triggered an Error
     dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.ERROR, payload: error.message})
-    console.log('Error', error.message);
+    console.log('Error', error);
   }
   return Promise.reject(error);
 });

@@ -260,7 +260,7 @@ function LoginPage() {
                                                                                 >
                                                                                     <option>Select a role</option>
                                                                                     {[
-                                                                                        { label: "Values Offering Services", val: "Model"},
+                                                                                        { label: "Offering Services", val: "Model"},
                                                                                         { label: "Seeking Services", val: "User"},
                                                                                     ].map((role, idx) => {
                                                                                         return <option key={idx.toString() + "-item"} value={role.val}>{role.label}</option>

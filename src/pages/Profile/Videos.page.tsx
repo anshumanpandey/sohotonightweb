@@ -6,6 +6,7 @@ import '../../css/profile2.css';
 import '../../css/friends.css';
 import '../../css/PictureUpload.css';
 import { useAlert } from 'react-alert'
+import Loader from "react-loader-spinner";
 import SohoModal from '../../partials/SohoModal';
 import { Formik, useFormik } from 'formik';
 import useAxios from 'axios-hooks'
@@ -15,6 +16,7 @@ import { Line } from 'rc-progress';
 import SohoButton from '../../partials/SohoButton';
 import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 import IsOwnProfile from '../../utils/IsOwnProfile';
+import { BrandColor } from '../../utils/Colors';
 
 function VideoUpload() {
     let { id } = useParams<{ id: string }>();
@@ -31,10 +33,6 @@ function VideoUpload() {
     const [{ data, loading, error }, sendFile] = useAxios({
         url: '/user/addVideo',
         method: 'POST',
-        onUploadProgress: function (progressEvent) {
-            var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            setPercentageCompleted(percentCompleted)
-        }
     }, { manual: true });
 
     const [getUserReq, getUser] = useAxios({
@@ -270,9 +268,13 @@ function VideoUpload() {
                                 )}
                             </div>
                             {loading && (
-                                <div>
-                                    <p style={{ textAlign: 'center' }}>Completed {percentageCompleted}%</p>
-                                    <Line percent={percentageCompleted} strokeWidth={4} strokeColor="#d32a6b" />
+                                <div style={{ display: 'flex', justifyContent: 'center'}}>
+                                    <Loader
+                                        type="ThreeDots"
+                                        color={BrandColor}
+                                        height={80}
+                                        width={80}
+                                    />
                                 </div>
                             )}
                         </div>

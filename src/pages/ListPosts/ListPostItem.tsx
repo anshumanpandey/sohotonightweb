@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { UsePeerCall } from '../../hooks/UsePeerCall';
 import { UsePeerVideo } from '../../hooks/UsePeerVideoChat';
 import SohoLink from '../../partials/SohoLink';
-import { callStarted, updateCallStatus, useGlobalState } from '../../state/GlobalState';
+import { callStarted, updateCallStatus, useGlobalState, userIsLogged } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
 
@@ -57,6 +57,10 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }}>
                             <SohoLink
                                 onClick={() => {
+                                    if (!userIsLogged()) {
+                                        history.push('/register')
+                                        return
+                                    }
                                     callStarted()
                                     call.sendCallRequest({ toNickname: g.nickname })
                                 }}
@@ -66,6 +70,10 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
                             </SohoLink>
                             <SohoLink
                                 onClick={() => {
+                                    if (!userIsLogged()) {
+                                        history.push('/register')
+                                        return
+                                    }
                                     peerVideo.sendRequest({ toUserNickname: g.nickname })
                                     .then(() => history.push(`/video-chat/${g.id}`))
                                 }}

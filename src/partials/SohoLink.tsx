@@ -9,7 +9,7 @@ const SohoLink: React.FC<{ style?: React.CSSProperties, disabled?: boolean, onCl
         cursor = "default"
     }
     return (
-        <a onClick={() => disabled == false && onClick() } style={{ cursor: cursor,marginBottom: '10px', fontSize: 15, display: 'inline-block', fontWeight: 'bold', width: '100%', ...style, color: color, }} >
+        <a onClick={() => disabled == false && onClick() } style={{ cursor: cursor, marginBottom: '10px', fontSize: 15, display: 'inline-block', fontWeight: 'bold', width: '100%', ...style, color: color, }} >
             {children}
         </a>
     );

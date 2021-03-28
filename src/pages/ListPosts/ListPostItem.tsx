@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { UsePeerCall } from '../../hooks/UsePeerCall';
 import { UsePeerVideo } from '../../hooks/UsePeerVideoChat';
+import { CallIcons } from '../../partials/CallIcons';
 import SohoLink from '../../partials/SohoLink';
 import { callStarted, showVideoChatModal, updateCallStatus, useGlobalState, userIsLogged } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
 
 const ListPostItem = ({ girl: g }: { girl: any }) => {
-    const peerVideo = UsePeerVideo({ })
     let history = useHistory();
 
     const isMobile = UseIsMobile();
+    const peerVideo = UsePeerVideo({ })
     const call = UsePeerCall()
     const [userData] = useGlobalState("userData");
 
@@ -54,33 +55,8 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
                 <div style={{ width: '100%' }}>
                     <div>
                         <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: isMobile ? "start":"end" }}>Call me now for one to one live chat: </p>
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }}>
-                            <SohoLink
-                                onClick={() => {
-                                    if (!userIsLogged()) {
-                                        history.push('/register')
-                                        return
-                                    }
-                                    callStarted()
-                                    call.sendCallRequest({ toNickname: g.nickname })
-                                }}
-                                disabled={callIsDisabled()}
-                                style={{ textAlign: 'end', width: '20%' }}>
-                                <i style={{ fontSize: '2.5rem' }} className="fa fa-phone" aria-hidden="true"></i>
-                            </SohoLink>
-                            <SohoLink
-                                onClick={() => {
-                                    if (!userIsLogged()) {
-                                        history.push('/register')
-                                        return
-                                    }
-                                    peerVideo.sendRequest({ toUserNickname: g.nickname })
-                                    .then(() => showVideoChatModal())
-                                }}
-                                disabled={callIsDisabled()}
-                                style={{ textAlign: 'end', width: '20%' }}>
-                                <i style={{ fontSize: '2.5rem' }} className="fa fa-video-camera" aria-hidden="true"></i>
-                            </SohoLink>
+                        <div style={{ display: 'flex', justifyContent: 'end', marginRight: '2rem'}}>
+                            <CallIcons disabled={callIsDisabled()} model={g} />
                         </div>
                     </div>
                 </div>

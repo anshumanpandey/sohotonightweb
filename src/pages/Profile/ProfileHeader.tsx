@@ -8,6 +8,7 @@ import IsOwnProfile from '../../utils/IsOwnProfile';
 import UseIsMobile from '../../utils/UseIsMobile';
 import UserIsLogged from '../../utils/UserIsLogged';
 import UserLoggedIsModel from '../../utils/UserLoggedIsModel';
+import { CallIcons } from '../../partials/CallIcons';
 
 function ProfileHeader({ user = {}, extraContent }: any) {
     let { id } = useParams<{ id: string }>();
@@ -57,6 +58,9 @@ function ProfileHeader({ user = {}, extraContent }: any) {
                         </ul>
                         {!IsOwnProfile({ user }) && (
                             <div style={{ marginLeft: isMobile ? 'unset' : 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: isMobile ? "unset" : "flex-end", paddingRight: '2%' }}>
+                                <div style={{ width: '25%', marginRight: '2rem'}}>
+                                    <CallIcons disabled={!user || !user.id || user.isLogged === false} model={user} />
+                                </div>
                                 {user?.isLogged ? (
                                     <>
                                         <i style={{ paddingLeft: isMobile ? "15px" : 'unset', color: 'green', marginRight: '0.5%' }} className="fa fa-circle" aria-hidden="true"></i>

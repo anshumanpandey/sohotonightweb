@@ -54,14 +54,6 @@ function ProfileHeader({ user = {}, extraContent }: any) {
                                             </Link>
                             </li>
 
-                            {UserIsLogged() && (
-                                <li className={`${location.pathname.includes("/video-chat") && "active"}`}>
-                                <Link to={userData && userData.role === "USER" && userData.tokensBalance === 0 ? `/payment`: `/video-chat/${id}`}>
-                                        <i className="fa fa-video-camera"></i> VideoChat
-                                    </Link>
-                                </li>
-                            )}
-
                         </ul>
                         {!IsOwnProfile({ user }) && (
                             <div style={{ marginLeft: isMobile ? 'unset' : 'auto', alignItems: "center", flex: 1, display: "flex", justifyContent: isMobile ? "unset" : "flex-end", paddingRight: '2%' }}>

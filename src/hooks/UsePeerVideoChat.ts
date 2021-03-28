@@ -27,7 +27,7 @@ const buildDefaultPlayer = () => {
     return videoPlayer
 }
 
-const {
+export const {
     useGlobalState: useVideoState,
 } = createGlobalState<{ currentVideoChat: any }>({ currentVideoChat: undefined });
 

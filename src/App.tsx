@@ -160,7 +160,7 @@ function App() {
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
       {UserIsLogged() && <SohoCallModal />}
-      {UserIsLogged() && UserLoggedIsModel () && <SohoVideoModal />}
+      {UserIsLogged() && <SohoVideoModal />}
       {UserIsLogged() && <BuyTokenModal />}
       {UserIsLogged() && <VoiceCallsTracker />}
       <CookieConsent buttonText="Accept Cookies">

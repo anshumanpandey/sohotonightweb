@@ -5,6 +5,7 @@ import { UseCallTracker } from './UseCallTracker';
 import { startSocketConnection } from '../request/socketClient';
 import { hideVideoModal, updateCurrentUser, useGlobalState } from '../state/GlobalState';
 import { createGlobalState } from 'react-hooks-global-state';
+import { buildPeerClient } from '../utils/PeerClient';
 
 const buildDefaultPlayerMessage = (text: string = "Wait for a invitation and start a video chat") => {
     const newDiv = document.createElement("h2");
@@ -117,9 +118,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const onInvitationAccepted = (invitation: any) => {
         setCurrentVideoChat(invitation.videoChat)
-        const peer = new SimplePeer({ });
+        const peer = buildPeerClient();
         const msg = buildDefaultPlayerMessage("Waiting connection")
         setChildNode({ node: msg })
+        const player = attachVideoPlayer({ parentNode: videoNode })
 
         const socket = startSocketConnection()
         socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
@@ -131,32 +133,31 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             console.log(err)
         })
 
-        const player = attachVideoPlayer({ parentNode: videoNode })
         peer.on('stream', stream => {
             const globalMediaStream = new MediaStream();
             player.addRemoteStream(globalMediaStream)
 
             stream.getTracks().forEach((t: any) => globalMediaStream.addTrack(t))
 
-            const socket = startSocketConnection()
-            socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream, peer }))
             timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
             setIsOnCall(true)
         })
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then((s) => {
-            player.addLocalStream(s)
-            peer.addStream(s)
-        })
+            .then((s) => {
+                player.addLocalStream(s)
+                peer.addStream(s)
+                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: s, peer }))
+            })
     }
 
     const sendRequest = async (params: { toUserNickname: string }) => {
         return request({ url: '/video/create', method: "post", data: { toUserNickname: params.toUserNickname } })
-            .then(() => setIsAwaitingResponse(true))
-            .then(() => {
+            .then(({ data }) => {
+                setIsAwaitingResponse(true)
                 const msg = buildDefaultPlayerMessage("Waiting response")
                 setChildNode({ node: msg })
+                setCurrentVideoChat(data)
                 const socket = startSocketConnection()
                 socket?.once("INVITATION_ACCEPTED", (i: any) => {
                     if (i.videoChat) {
@@ -194,24 +195,24 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             method: 'post',
             data: { invitationId: invitation.id }
         })
-        .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
-        .then((localStream) => {
-            const player = attachVideoPlayer({ parentNode: videoNode })
-            player.addLocalStream(localStream)
+            .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
+            .then((localStream) => {
+                const player = attachVideoPlayer({ parentNode: videoNode })
+                player.addLocalStream(localStream)
 
-            const peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
-            socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
-            peer2.on('signal', data => {
-                socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+                const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: false })
+                socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
+                peer2.on('signal', data => {
+                    socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+                })
+                peer2.on('stream', stream => {
+                    const globalMediaStream = new MediaStream();
+                    player.addRemoteStream(globalMediaStream)
+                    stream.getTracks()
+                        .forEach((t: any) => globalMediaStream.addTrack(t))
+                    socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
+                })
             })
-            peer2.on('stream', stream => {
-                const globalMediaStream = new MediaStream();
-                player.addRemoteStream(globalMediaStream)
-                stream.getTracks()
-                .forEach((t: any) => globalMediaStream.addTrack(t))
-                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
-            })
-        })
     }
 
     const onInvitationReceived = (cb: InvitationCb) => {

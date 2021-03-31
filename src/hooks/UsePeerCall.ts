@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { startSocketConnection } from "../request/socketClient"
 import { callEnded, updateCallStatus, useGlobalState } from "../state/GlobalState"
 import { UseCallTracker } from "./UseCallTracker"
+import { buildPeerClient } from "../utils/PeerClient";
 
 type CallReceivedCb = (i: any) => void
 
@@ -60,7 +61,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     }
 
     const onCallAccepted = (invitation: any) => {
-        const peer = new SimplePeer();
+        const peer = buildPeerClient();
         const socket = startSocketConnection()
         setCurrentVoiceChat(invitation.voiceCall)
 
@@ -130,7 +131,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
         })
             .then(() => navigator.mediaDevices.getUserMedia({ audio: true }))
             .then((localStream) => {
-                const peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
+                const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: false })
                 peer2.on('error', (err) => {
                     console.log(err)
                 })

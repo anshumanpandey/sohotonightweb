@@ -1,5 +1,5 @@
 import useAxios from 'axios-hooks';
-import Peer from 'peerjs';
+import SimplePeer from 'simple-peer';
 import { useEffect, useState } from 'react';
 import { UseCallTracker } from './UseCallTracker';
 import { startSocketConnection } from '../request/socketClient';
@@ -75,7 +75,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         console.log('listening INVITATION_ACCEPTED')
         setIsListening(true)
         socket?.on("INVITATION_ACCEPTED", (i: any) => {
-            if (i.videoChat) { 
+            if (i.videoChat) {
                 onInvitationAccepted(i)
             }
         })
@@ -99,61 +99,54 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const onInvitationAccepted = (invitation: any) => {
         setCurrentVideoChat(invitation.videoChat)
-        const peer = new Peer(invitation.senderUuid);
+        const peer = new SimplePeer({ });
         const msg = buildDefaultPlayerMessage("Waiting connection")
         setChildNode({ node: msg })
 
-        peer.on('connection', () => console.log('connected'))
+        const socket = startSocketConnection()
+        socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
+
+        peer.on('signal', data => {
+            socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+        })
         peer.on('error', (err) => {
             console.log(err)
         })
 
-        peer.on('open', () => {
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((stream) => {
-                let call = peer.call(invitation.receiverUuid, stream);
-                const globalMediaStream = new MediaStream();
-                const player = buildDefaultPlayer()
-                player.srcObject = globalMediaStream
-                setChildNode({ node: player })
+        peer.on('stream', stream => {
+            const globalMediaStream = new MediaStream();
+            const player = buildDefaultPlayer()
+            player.srcObject = globalMediaStream
+            setChildNode({ node: player })
 
-                const socket = startSocketConnection()
-                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream, peer }))
+            const socket = startSocketConnection()
+            socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream, peer }))
+            timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
+            setIsOnCall(true)
+        })
 
-
-                call.on('error', () => {
-                    console.log('could not connect')
-                })
-
-                call.on('stream', (remoteStream) => {
-                    remoteStream.getTracks()
-                        .forEach((s) => {
-                            globalMediaStream.addTrack(s)
-                        })
-                        setIsOnCall(true)
-                        timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
-                });
-            })
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then((s) => {
+            peer.addStream(s)
         })
     }
 
     const sendRequest = async (params: { toUserNickname: string }) => {
         return request({ url: '/video/create', method: "post", data: { toUserNickname: params.toUserNickname } })
-        .then(() => setIsAwaitingResponse(true))
-        .then(() => {
-            const msg = buildDefaultPlayerMessage("Waiting response")
-            setChildNode({ node: msg })
-            const socket = startSocketConnection()
-            socket?.once("INVITATION_DECLINED", (i: any) => {
-                console.log('invitation declined', i)
-                if (i.videoChat) {
-                    setIsAwaitingResponse(false)
-                    setCurrentVideoChat(undefined)
-                    const message = buildDefaultPlayerMessage()
-                    setChildNode({ node: message })
-                }
+            .then(() => setIsAwaitingResponse(true))
+            .then(() => {
+                const msg = buildDefaultPlayerMessage("Waiting response")
+                setChildNode({ node: msg })
+                const socket = startSocketConnection()
+                socket?.once("INVITATION_DECLINED", (i: any) => {
+                    if (i.videoChat) {
+                        setIsAwaitingResponse(false)
+                        setCurrentVideoChat(undefined)
+                        const message = buildDefaultPlayerMessage()
+                        setChildNode({ node: message })
+                    }
+                })
             })
-        })
     }
 
     const rejectInvitation = ({ invitationId }: { invitationId: string }) => {
@@ -166,48 +159,32 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const acceptInvitation = ({ invitation }: { invitation: any }) => {
         const socket = startSocketConnection()
+        setCurrentVideoChat(invitation.videoChat)
+        setIsAwaitingResponse(false)
         const msg = buildDefaultPlayerMessage("Waiting connection")
         setChildNode({ node: msg })
 
-        return new Promise<any>((resolve, rejected) => {
-            const peer = new Peer(invitation.receiverUuid);
-            setCurrentVideoChat(invitation.videoChat)
-            setIsAwaitingResponse(false)
-
-            peer.on('open', () => {
-                console.log('open')
-                request({
-                    url: '/invitation/accept',
-                    method: 'post',
-                    data: { invitationId: invitation.id }
-                })
-                .then((res) => resolve(res))
-                .catch((err) => resolve(err))
+        return request({
+            url: '/invitation/accept',
+            method: 'post',
+            data: { invitationId: invitation.id }
+        })
+        .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
+        .then((localStream) => {
+            var peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
+            socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
+            peer2.on('signal', data => {
+                socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
             })
-            peer.on('error', (err) => {
-                console.log(err)
-                rejected(err)
-            })
-
-            peer.on('call', (call) => {
+            peer2.on('stream', stream => {
                 const player = buildDefaultPlayer()
                 const globalMediaStream = new MediaStream();
                 player.srcObject = globalMediaStream
                 setChildNode({ node: player })
-
-                call.on('stream', (remoteStream) => {
-                    remoteStream.getTracks()
-                        .forEach((s) => {
-                            globalMediaStream.addTrack(s)
-                        })
-                });
-
-                navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-                    .then((localStream) => {
-                        call.answer(localStream); // Answer the call with an A/V stream.
-                        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer }))
-                    })
-            });
+                stream.getTracks()
+                .forEach((t: any) => globalMediaStream.addTrack(t))
+                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
+            })
         })
     }
 
@@ -227,8 +204,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         setChildNode({ node: message })
     }
 
-    const onCallEnded = ({ peer, stream }: { peer: Peer, stream: MediaStream }) => {
-        peer.disconnect()
+    const onCallEnded = ({ peer, stream }: { peer: SimplePeer.Instance, stream: MediaStream }) => {
+        peer.destroy()
         setIsOnCall(() => false)
         hideVideoModal()
         setIsAwaitingResponse(() => false)

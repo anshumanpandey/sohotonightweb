@@ -70,15 +70,11 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }, [params?.parentNode])
 
     const listenInvitations = () => {
+        console.log({ isListening })
         if (isListening) return
         const socket = startSocketConnection()
         console.log('listening INVITATION_ACCEPTED')
         setIsListening(true)
-        socket?.on("INVITATION_ACCEPTED", (i: any) => {
-            if (i.videoChat) {
-                onInvitationAccepted(i)
-            }
-        })
     }
 
     const setChildNode = ({ node }: { node: any }) => {
@@ -107,7 +103,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
 
         peer.on('signal', data => {
-            console.log({ signalTwo: data})
             socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
         })
         peer.on('error', (err) => {
@@ -139,6 +134,11 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 const msg = buildDefaultPlayerMessage("Waiting response")
                 setChildNode({ node: msg })
                 const socket = startSocketConnection()
+                socket?.once("INVITATION_ACCEPTED", (i: any) => {
+                    if (i.videoChat) {
+                        onInvitationAccepted(i)
+                    }
+                })
                 socket?.once("INVITATION_DECLINED", (i: any) => {
                     if (i.videoChat) {
                         setIsAwaitingResponse(false)
@@ -172,10 +172,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         })
         .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
         .then((localStream) => {
-            var peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
+            const peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
             socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
             peer2.on('signal', data => {
-                console.log({ signal: data})
                 socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
             })
             peer2.on('stream', stream => {
@@ -198,6 +197,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         if (!currentChat) return
         const socket = startSocketConnection()
         socket?.emit("END_VIDEO_CHAT", currentChat)
+        socket?.off("INVITATION_ACCEPTED")
+        setIsListening(false)
         setIsOnCall(false)
         hideVideoModal()
         setIsAwaitingResponse(false)
@@ -208,6 +209,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const onCallEnded = ({ peer, stream }: { peer: SimplePeer.Instance, stream: MediaStream }) => {
         peer.destroy()
+        const socket = startSocketConnection()
+        socket?.off("INVITATION_HANDSHAKE")
+        socket?.off("INVITATION_ACCEPTED")
+        setIsListening(false)
         setIsOnCall(() => false)
         hideVideoModal()
         setIsAwaitingResponse(() => false)

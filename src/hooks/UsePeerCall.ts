@@ -1,5 +1,5 @@
 import useAxios from "axios-hooks"
-import Peer from "peerjs"
+import SimplePeer from 'simple-peer';
 import { useEffect, useState } from "react"
 import { startSocketConnection } from "../request/socketClient"
 import { callEnded, updateCallStatus, useGlobalState } from "../state/GlobalState"
@@ -60,46 +60,41 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     }
 
     const onCallAccepted = (invitation: any) => {
-        const peer = new Peer(invitation.senderUuid);
+        const peer = new SimplePeer();
+        const socket = startSocketConnection()
         setCurrentVoiceChat(invitation.voiceCall)
 
-        peer.on('connection', () => console.log('connected'))
         peer.on('error', (err) => {
             console.log(err)
         })
 
-        return new Promise((resolve, rejected) => {
-            peer.on('open', () => {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                .then((stream) => {
-                    let call = peer.call(invitation.receiverUuid, stream);
-                    const globalMediaStream = new MediaStream();
-    
-                    const socket = startSocketConnection()
-                    socket?.on("VOICE_CALL_ENDED", (i: any) => {
-                        stream.getTracks().forEach(t => t.stop())
-                        callEnded()
-                    })
-    
-                    call.on('error', (err) => {
-                        console.log('could not connect')
-                        rejected(err)
-                    })
-    
-                    call.on('stream', (remoteStream) => {
-                        updateCallStatus("Talking")
-                        const player = buildDefaultPlayer(remoteStream)
-                        mainDiv?.appendChild(player)
-                        audioPlayer = player
-                        timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
-                        remoteStream.getTracks()
-                            .forEach((s) => {
-                                globalMediaStream.addTrack(s)
-                            })
-                    });
+        socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
+        peer.on('signal', data => {
+            socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+        })
 
-                    resolve(undefined)
+        peer.on('stream', (remoteStream) => {
+            const globalMediaStream = new MediaStream();
+
+            updateCallStatus("Talking")
+            const player = buildDefaultPlayer(remoteStream)
+            mainDiv?.appendChild(player)
+            audioPlayer = player
+            timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
+            remoteStream.getTracks()
+                .forEach((s: any) => {
+                    globalMediaStream.addTrack(s)
                 })
+        })
+
+        return navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then((localStream) => {
+            peer.addStream(localStream)
+            socket?.on("VOICE_CALL_ENDED", (i: any) => {
+                localStream.getTracks().forEach(t => t.stop())
+                peer.destroy()
+                callEnded()
+                socket.off("INVITATION_HANDSHAKE")
             })
         })
     }
@@ -126,52 +121,49 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     const acceptCall = ({ invitation }: { invitation: any }) => {
         setCurrentVoiceChat(invitation.voiceCall)
         updateCallStatus("Waiting Connection...")
+        const socket = startSocketConnection()
 
-        const peer = new Peer(invitation.receiverUuid);
-        peer.on('error', (err) => {
-            console.log(err)
+        return request({
+            url: '/invitation/accept',
+            method: 'post',
+            data: { invitationId: invitation.id }
         })
+            .then(() => navigator.mediaDevices.getUserMedia({ audio: true }))
+            .then((localStream) => {
+                const peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
+                peer2.on('error', (err) => {
+                    console.log(err)
+                })
 
-        peer.on('call', (call) => {
-            console.log('call request receivec', call)
-            const globalMediaStream = new MediaStream();
+                socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
+                peer2.on('signal', data => {
+                    socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+                })
 
-            call.on('stream', (remoteStream) => {
-                updateCallStatus("Talking")
-                const player = buildDefaultPlayer(remoteStream)
-                audioPlayer = player
-                mainDiv?.appendChild(player)
+                peer2.on('stream', (remoteStream) => {
+                    console.log({ remoteStream })
+                    updateCallStatus("Talking")
+                    const globalMediaStream = new MediaStream();
 
-                remoteStream.getTracks()
-                    .forEach((s) => {
-                        globalMediaStream.addTrack(s)
-                    })
-            });
+                    updateCallStatus("Talking")
+                    const player = buildDefaultPlayer(remoteStream)
+                    audioPlayer = player
+                    mainDiv?.appendChild(player)
 
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then((localStream) => {
-                    call.answer(localStream); // Answer the call with an A/V stream.
+                    remoteStream.getTracks()
+                        .forEach((s: any) => {
+                            globalMediaStream.addTrack(s)
+                        })
+
                     const socket = startSocketConnection()
                     socket?.on("VOICE_CALL_ENDED", (i: any) => {
                         localStream.getTracks().forEach(t => t.stop())
+                        peer2.destroy()
+                        callEnded()
+                        socket.off("INVITATION_HANDSHAKE")
                     })
                 })
-        });
-
-        return new Promise((resolve, rejected) => {
-            peer.on('open', () => {
-                console.log('open')
-
-                request({
-                    url: '/invitation/accept',
-                    method: 'post',
-                    data: { invitationId: invitation.id }
-                })
-                .then((res) => resolve(res))
-                .catch((err) => resolve(err))
             })
-        })
-
     }
 
     const endPeerCall = () => {

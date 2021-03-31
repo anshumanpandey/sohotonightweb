@@ -244,7 +244,6 @@ function ProfilePage() {
                     <video style={{ maxHeight: "350px" }} controls autoPlay src={showVideoModal.videoUrl} />
                 </div>
             </SohoModal>
-            <SohoCallModal />
             <Footer />
         </>
     );

@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 
-type Props = { title: string, show: boolean, onClose: () => void, footer: (close: () => void) => any, size?: "lg" }
-const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, children, footer, size }) => {
+type Props = { title: string, show: boolean, onClose: () => void, closeOnBackdropClik?: boolean, footer: (close: () => void) => any, size?: "lg" }
+const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, closeOnBackdropClik = true, children, footer, size }) => {
     let htmlId = Math.random().toString(36).substring(7);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, chi
     }, [show])
 
     return (
-        <div className="modal fade" id={htmlId} tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
+        <div className="modal fade" data-backdrop={closeOnBackdropClik == true ? "true": "static"} id={htmlId} tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
             <div className={`modal-dialog ${size ? 'modal-lg': undefined}`} role="document">
                 <div className="modal-content">
                     <div className="modal-header">

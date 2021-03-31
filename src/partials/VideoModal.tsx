@@ -10,6 +10,7 @@ const SohoVideoModal: React.FC = () => {
 
     return (
         <SohoModal
+            closeOnBackdropClik={false}
             size={"lg"}
             onClose={() => {
                 console.log('endCall')

@@ -12,6 +12,7 @@ const SohoCallModal: React.FC = () => {
 
     return (
         <SohoModal
+            closeOnBackdropClik={false}
             onClose={() => callEnded()}
             show={currentCall != null && !(currentCall == "Ending...")}
             title="Calling..."

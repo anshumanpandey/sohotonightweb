@@ -16,15 +16,37 @@ const buildDefaultPlayerMessage = (text: string = "Wait for a invitation and sta
     return newDiv
 }
 
-const buildDefaultPlayer = () => {
-    const videoPlayer = document.createElement("video");
-    videoPlayer.controls = true
-    videoPlayer.autoplay = true
-    videoPlayer.style.width = "100%"
-    const text = document.createTextNode("Your browser does not support HTML5 video.");
-    videoPlayer.appendChild(text)
+const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
+    const mainVideoPlayer = document.createElement("video");
+    mainVideoPlayer.controls = true
+    mainVideoPlayer.autoplay = true
+    mainVideoPlayer.style.width = "100%"
 
-    return videoPlayer
+    const previewVideoPlayer = document.createElement("video");
+    previewVideoPlayer.controls = false
+    previewVideoPlayer.autoplay = true
+    previewVideoPlayer.style.width = "30%"
+    previewVideoPlayer.style.height = "30%"
+    previewVideoPlayer.style.position = "absolute"
+    previewVideoPlayer.style.right = "0"
+    previewVideoPlayer.style.bottom = "0"
+    previewVideoPlayer.style.marginBottom = "3rem"
+    previewVideoPlayer.style.marginRight = "2rem"
+
+
+    const text = document.createTextNode("Your browser does not support HTML5 video.");
+    mainVideoPlayer.appendChild(text)
+    previewVideoPlayer.appendChild(text)
+
+    while (parentNode.firstChild) {
+        parentNode.removeChild(parentNode.firstChild);
+    }
+    parentNode.appendChild(mainVideoPlayer)
+    parentNode.appendChild(previewVideoPlayer)
+    return {
+        addRemoteStream: (s: MediaStream) => mainVideoPlayer.srcObject = s,
+        addLocalStream: (s: MediaStream) => previewVideoPlayer.srcObject = s,
+    }
 }
 
 export const {
@@ -109,11 +131,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             console.log(err)
         })
 
+        const player = attachVideoPlayer({ parentNode: videoNode })
         peer.on('stream', stream => {
             const globalMediaStream = new MediaStream();
-            const player = buildDefaultPlayer()
-            player.srcObject = globalMediaStream
-            setChildNode({ node: player })
+            player.addRemoteStream(globalMediaStream)
 
             stream.getTracks().forEach((t: any) => globalMediaStream.addTrack(t))
 
@@ -125,6 +146,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then((s) => {
+            player.addLocalStream(s)
             peer.addStream(s)
         })
     }
@@ -174,16 +196,17 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         })
         .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
         .then((localStream) => {
+            const player = attachVideoPlayer({ parentNode: videoNode })
+            player.addLocalStream(localStream)
+
             const peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
             socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
             peer2.on('signal', data => {
                 socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
             })
             peer2.on('stream', stream => {
-                const player = buildDefaultPlayer()
                 const globalMediaStream = new MediaStream();
-                player.srcObject = globalMediaStream
-                setChildNode({ node: player })
+                player.addRemoteStream(globalMediaStream)
                 stream.getTracks()
                 .forEach((t: any) => globalMediaStream.addTrack(t))
                 socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))

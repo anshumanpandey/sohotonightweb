@@ -59,7 +59,7 @@ const VoiceCallsTracker: React.FC = () => {
                 } else {
                     notificationBody = `${(i.voiceCall).createdBy.nickname} is calling you`
                 }
-                return <div key={i.id} style={{ zIndex: 200, position: "fixed", left: '50%', transform: 'translateX(-50%)', width: '25%', top: `${15 + (idx * 15)}vh` }}>
+                return <div key={i.id} style={{ zIndex: 200, position: "fixed", left: '50%', transform: 'translateX(-50%)', minWidth: '25%', maxWidth: '50vw', top: `${15 + (idx * 15)}vh` }}>
                     <SohoAlert
                         autoCloseOnSeconds={15}
                         busy={notificationIsBusy()}

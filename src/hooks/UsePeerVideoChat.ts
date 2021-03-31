@@ -115,6 +115,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             player.srcObject = globalMediaStream
             setChildNode({ node: player })
 
+            stream.getTracks().forEach((t: any) => globalMediaStream.addTrack(t))
+
             const socket = startSocketConnection()
             socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream, peer }))
             timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })

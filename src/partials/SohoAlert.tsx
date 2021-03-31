@@ -45,7 +45,7 @@ export const SohoAlert = ({ onAccept, onClose, body, disable = false, busy = fal
   const isDisabled = () => disable === true || busy === true
 
   return (
-    <div style={{ border: `1px solid ${BrandColor}`, borderRadius: '25px', marginBottom: '0.5rem', position: 'relative' }}>
+    <div style={{ border: `1px solid ${BrandColor}`, backgroundColor: 'white',borderRadius: '25px', marginBottom: '0.5rem', position: 'relative' }}>
       {busy === true && (<div style={{ pointerEvents: "none", position: 'absolute', backgroundColor: '#ffffff50', display: 'flex', justifyContent: 'center', width: '100%', height: '100%' }}>
         <Loader
           type="ThreeDots"

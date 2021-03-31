@@ -107,6 +107,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
 
         peer.on('signal', data => {
+            console.log({ signalTwo: data})
             socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
         })
         peer.on('error', (err) => {
@@ -174,6 +175,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             var peer2 = new SimplePeer({ stream: localStream, initiator: true, trickle: false })
             socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
             peer2.on('signal', data => {
+                console.log({ signal: data})
                 socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
             })
             peer2.on('stream', stream => {

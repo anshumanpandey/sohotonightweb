@@ -46,7 +46,11 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     parentNode.appendChild(previewVideoPlayer)
     return {
         addRemoteStream: (s: MediaStream) => mainVideoPlayer.srcObject = s,
-        addLocalStream: (s: MediaStream) => previewVideoPlayer.srcObject = s,
+        addLocalStream: (s: MediaStreamTrack) => {
+            const stream = new MediaStream()
+            stream.addTrack(s)
+            previewVideoPlayer.srcObject = stream
+        },
     }
 }
 
@@ -145,7 +149,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then((s) => {
-                player.addLocalStream(s)
+                player.addLocalStream(s.getVideoTracks()[0])
                 peer.addStream(s)
                 socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: s, peer }))
             })
@@ -198,7 +202,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
             .then((localStream) => {
                 const player = attachVideoPlayer({ parentNode: videoNode })
-                player.addLocalStream(localStream)
+                player.addLocalStream(localStream.getVideoTracks()[0])
 
                 const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: false })
                 socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))

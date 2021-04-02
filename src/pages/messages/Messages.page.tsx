@@ -151,7 +151,7 @@ function MessagesPage() {
                                                         <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }} src={c.createdByUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                                         <div style={{ marginLeft: '1rem',width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                             <p style={{ fontSize: 14 }}>{c.createdByUser.nickname}</p>
-                                                            <p style={{ color: 'gray', fontSize: 10 }}>{c.messages[0]?.createdAt ? formatRelative(parseISO(c.messages[0]?.createdAt), new Date()) : ""}</p>
+                                                            <p style={{ color: 'gray', fontSize: 10 }}>{c.messages[0]?.createdAt ? formatRelative(parseISO(c.messages[0]?.createdAt), new Date()) : "No messages"}</p>
                                                         </div>
                                                     </div>
                                                 </SohoLink>

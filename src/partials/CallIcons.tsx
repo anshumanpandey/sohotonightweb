@@ -36,8 +36,20 @@ export const CallIcons = ({ disabled, model }: { disabled: boolean, model: any }
                     .then(() => showVideoChatModal())
             }}
             disabled={disabled}
-            style={{ textAlign: 'end', width: '20%', marginBottom: 0 }}>
+            style={{ textAlign: 'end', width: '20%', marginBottom: 0,  marginRight: '2rem' }}>
             <i style={{ fontSize: '2.5rem' }} className="fa fa-video-camera" aria-hidden="true"></i>
+        </SohoLink>
+        <SohoLink
+            onClick={() => {
+                if (!userIsLogged()) {
+                    history.push('/register')
+                    return
+                }
+                history.push(`/messages?startWith=${model.id}`)
+            }}
+            disabled={disabled}
+            style={{ textAlign: 'end', width: '20%', marginBottom: 0 }}>
+            <i style={{ fontSize: '2.5rem' }} className="fa fa-comments" aria-hidden="true"></i>
         </SohoLink>
     </div>)
 }

@@ -45,6 +45,7 @@ import SohoCallModal from './partials/CallModal';
 import SohoVideoModal from './partials/VideoModal';
 import UserIsLogged from './utils/UserIsLogged';
 import UserLoggedIsModel from './utils/UserLoggedIsModel';
+import MessagesPage from './pages/messages/Messages.page';
 
 function App() {
   const alert = useAlert()
@@ -91,7 +92,7 @@ function App() {
   }
 
   return (
-    <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
+    <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', display: 'flex', flexDirection: 'column', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
       <Switch>
         <Route exact path="/">
           <Landing />
@@ -149,6 +150,9 @@ function App() {
         </Route>
         <Route path="/profile-video/:id?">
           <VideosPage />
+        </Route>
+        <Route path="/messages">
+          <MessagesPage />
         </Route>
         <Route path="/profile-pictures/:id?">
           <PicturesPage />

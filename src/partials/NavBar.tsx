@@ -45,6 +45,9 @@ function NavBar() {
                         <li><Link to={goTo}>Home</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
+                        {UserIsLogged() && (
+                            <li><Link to="/messages">Messages</Link></li>
+                        )}
                         {!UserIsLogged() && <li><Link to="/register">Register/Login</Link></li>}
                         {!UserLoggedIsModel() && UserIsLogged() && !UserLoggedIsModel() && (
                             <li>
@@ -55,9 +58,7 @@ function NavBar() {
                             </li>
                         )}
                         {UserIsLogged() && (
-                            <>
                             <li><Link to="/logout">Logout</Link></li>
-                            </>
                         )}
                     </ul>
                 </div>

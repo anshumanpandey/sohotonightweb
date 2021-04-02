@@ -147,9 +147,12 @@ function MessagesPage() {
                                         {userChats.length != 0 ? userChats.map((c: any) => {
                                             return (
                                                 <SohoLink key={c.id} onClick={() => setSelectedChat(c)}>
-                                                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                        <p style={{ fontSize: 14 }}>{c.toUser.nickname}</p>
-                                                        <p style={{ color: 'gray', fontSize: 10 }}>{c.messages[0]?.createAt ? parseISO(c.messages[0]?.createAt) : ""}</p>
+                                                    <div style={{ display: 'flex', flexDirection: 'row', borderRight: selectedChat?.id == c.id ? `2px solid ${BrandColor}` : undefined }}>
+                                                        <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }} src={c.createdByUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                                        <div style={{ marginLeft: '1rem',width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                            <p style={{ fontSize: 14 }}>{c.createdByUser.nickname}</p>
+                                                            <p style={{ color: 'gray', fontSize: 10 }}>{c.messages[0]?.createdAt ? formatRelative(parseISO(c.messages[0]?.createdAt), new Date()) : ""}</p>
+                                                        </div>
                                                     </div>
                                                 </SohoLink>
                                             )

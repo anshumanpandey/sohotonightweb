@@ -171,3 +171,16 @@ export const updateVisitorId = () => {
   })
 }
 
+export const justRegistered = () => {
+  const just = localStorage.getItem('justRegistered')
+
+  return just != null
+}
+
+export const setJustRegistered = (justRegistered: boolean) => {
+  if (justRegistered === true) {
+    localStorage.setItem('justRegistered', '1')
+  } else {
+    localStorage.removeItem('justRegistered')
+  }
+}

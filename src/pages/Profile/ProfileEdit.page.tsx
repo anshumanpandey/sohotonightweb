@@ -4,7 +4,7 @@ import NavBar from '../../partials/NavBar';
 import '../../css/ProfileEdit.css';
 import '../../css/cover.css';
 import '../../css/timeline.css';
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, justRegistered, setJustRegistered, useGlobalState } from '../../state/GlobalState';
 import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import UkCounties from "../../utils/UkCounties.json"
@@ -114,7 +114,10 @@ function ProfileEditPage() {
 
                     if (currentTab == 0) setCurrentTab(1)
                     if (currentTab == 1) setCurrentTab(2)
-                    if (currentTab == 2) setRedirect(true)
+                    if (currentTab == 2) {
+                        setRedirect(true)
+                        setJustRegistered(false)
+                    }
                 })
         },
     });
@@ -398,11 +401,11 @@ function ProfileEditPage() {
                                                     </div>
                                                 </div>
                                                 <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset" : "25%", marginLeft: isMobile ? "unset" : 'auto', justifyContent: "space-between" }}>
-                                                    <div style={{ textAlign: "right" }}>
+                                                    {justRegistered() == false && <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
-                                                    </div>
+                                                    </div>}
 
-                                                    <div style={{ textAlign: "right" }}>
+                                                    <div style={{ textAlign: "right", marginLeft: justRegistered() == false ? 'unset': 'auto' }}>
                                                         <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
                                                     </div>
                                                 </div>
@@ -573,11 +576,11 @@ function ProfileEditPage() {
                                                 </div>
 
                                                 <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset" : "25%", marginLeft: isMobile ? "unset" : 'auto', justifyContent: "space-between" }}>
-                                                    <div style={{ textAlign: "right" }}>
+                                                    {justRegistered() == false && <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
-                                                    </div>
+                                                    </div>}
 
-                                                    <div style={{ textAlign: "right" }}>
+                                                    <div style={{ textAlign: "right", marginLeft: justRegistered() == false ? 'unset': 'auto' }}>
                                                         <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
                                                     </div>
                                                 </div>
@@ -738,12 +741,12 @@ function ProfileEditPage() {
                                                 </div>
 
                                                 <div style={{ display: 'flex', flexDirection: 'row', width: isMobile ? "unset" : "25%", marginLeft: isMobile ? "unset" : 'auto', justifyContent: "space-between" }}>
-                                                    <div style={{ textAlign: "right" }}>
+                                                    {justRegistered() == false && <div style={{ textAlign: "right" }}>
                                                         <input onClick={() => setRedirect(true)} type="submit" value="Go To Profile" className="form_btn" />
-                                                    </div>
+                                                    </div>}
 
-                                                    <div style={{ textAlign: "right" }}>
-                                                        <input onClick={() => formik.handleSubmit()} type="submit" value="Save" className="form_btn" />
+                                                    <div style={{ textAlign: "right", marginLeft: justRegistered() == false ? 'unset': 'auto' }}>
+                                                        <input onClick={() => formik.handleSubmit()} type="submit" value="Save and Next" className="form_btn" />
                                                     </div>
                                                 </div>
                                             </div>

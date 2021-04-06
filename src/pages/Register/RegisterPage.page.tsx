@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
 import { Link, Redirect } from 'react-router-dom';
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, setJustRegistered, useGlobalState } from '../../state/GlobalState';
 import "../../css/login_register.css"
 import SohoButton from '../../partials/SohoButton';
 import { BrandColor } from '../../utils/Colors';
@@ -123,6 +123,7 @@ function LoginPage() {
                                                         .then(({ data }) => {
                                                             dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.JWT_TOKEN, payload: data.token })
                                                             dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.USER_DATA, payload: data })
+                                                            setJustRegistered(true)
                                                         })
                                                         .then(() => setRegistered(true))
                                                 }}

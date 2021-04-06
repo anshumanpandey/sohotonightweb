@@ -42,10 +42,6 @@ export const CallIcons = ({ disabled = false, model, hideMessageIcon = false }: 
         {hideMessageIcon === false && (
             <SohoLink
                 onClick={() => {
-                    if (!userIsLogged()) {
-                        history.push('/register')
-                        return
-                    }
                     history.push(`/messages?startWith=${model.id}`)
                 }}
                 disabled={disabled}

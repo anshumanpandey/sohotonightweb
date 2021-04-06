@@ -43,8 +43,8 @@ function NavBar() {
                 <div id="navbar" className="navbar-collapse collapse">
                     <ul style={isLess1200 ? { width: "100%", display: "flex", justifyContent: "space-between" }: undefined} className="nav navbar-nav navbar-right">
                         <li><Link to={goTo}>Home</Link></li>
-                        <li><Link to="/contact-us">Contact Us</Link></li>
-                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/contact-us">Contact</Link></li>
+                        <li><Link to="/about-us">About</Link></li>
                         {UserIsLogged() && (
                             <li><Link to="/messages">Messages</Link></li>
                         )}
@@ -58,7 +58,11 @@ function NavBar() {
                             </li>
                         )}
                         {UserIsLogged() && (
-                            <li><Link to="/logout">Logout</Link></li>
+                            <li>
+                                <Link to="/logout">
+                                    <i className="fa fa-sign-out" />
+                                </Link>
+                            </li>
                         )}
                     </ul>
                 </div>

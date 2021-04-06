@@ -6,13 +6,15 @@ import "../../css/timeline.css"
 import { useGlobalState } from '../../state/GlobalState';
 import UseIsMobile from '../../utils/UseIsMobile';
 import { UseQuery } from '../../hooks/UseQuery';
-import { formatRelative, parseISO } from 'date-fns';
+import { differenceInCalendarDays, format, formatRelative, parseISO } from 'date-fns';
 import { animateScroll } from "react-scroll";
 import SohoLink from '../../partials/SohoLink';
 import SohoButton from '../../partials/SohoButton';
 import Color from 'color';
 import { BrandColor } from '../../utils/Colors';
 import { startSocketConnection } from '../../request/socketClient';
+import { CallIcons } from '../../partials/CallIcons';
+import UserLoggedIsModel from '../../utils/UserLoggedIsModel';
 
 
 function MessagesPage() {
@@ -82,19 +84,19 @@ function MessagesPage() {
     }, [])
 
     const sendMessageFn = () => {
-        if (currentMessage == "") return 
+        if (currentMessage == "") return
         sendMessage({
             data: {
                 conversationId: selectedChat.id,
                 body: currentMessage
             }
         })
-        .then(({ data }) => {
-            selectedChat.messages.push(data)
-            setSelectedChat({ ...selectedChat })
-            setCurrentMessage("")
-            goToEndOfChat()
-        })
+            .then(({ data }) => {
+                selectedChat.messages.push(data)
+                setSelectedChat({ ...selectedChat })
+                setCurrentMessage("")
+                goToEndOfChat()
+            })
     }
 
     const onNewMessage = (m: any) => {
@@ -102,7 +104,7 @@ function MessagesPage() {
             const found = prev.find(c => c.id == m.conversationId)
             if (found) {
                 found.messages.push(m)
-                return [...prev.filter(c => c.id != found.id).concat([ found ])]
+                return [...prev.filter(c => c.id != found.id).concat([found])]
             }
             return prev
         })
@@ -131,12 +133,13 @@ function MessagesPage() {
 
     const isFetchingChats = () => loading || startChatReq.loading
 
+    const selectedChatUser = selectedChat?.createdByUser.id == userData?.id ? selectedChat?.toUser : selectedChat?.createdByUser
 
     return (
         <>
             <NavBar />
             <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'column', width: '100%' }} className="container page-content">
-                <div style={{ display: 'flex', flexGrow: 1, flexDirection: isMobile ? 'column': 'row' }}>
+                <div style={{ display: 'flex', flexGrow: 1, flexDirection: isMobile ? 'column' : 'row' }}>
                     <div style={{ display: 'flex' }} className="col-md-3 col-xs-12">
                         <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }} className="row-xs">
                             <div style={{ flexGrow: 1 }} className="main-box clearfix">
@@ -145,12 +148,13 @@ function MessagesPage() {
                                 {!isFetchingChats() && (
                                     <>
                                         {userChats.length != 0 ? userChats.map((c: any) => {
+                                            const userToShow = c.createdByUser.id == userData?.id ? c.toUser : c.createdByUser
                                             return (
                                                 <SohoLink key={c.id} onClick={() => setSelectedChat(c)}>
-                                                    <div style={{ display: 'flex', flexDirection: 'row', borderRight: selectedChat?.id == c.id ? `3px solid ${BrandColor}` : undefined }}>
-                                                        <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }} src={c.createdByUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
-                                                        <div style={{ marginLeft: '1rem',width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                            <p style={{ fontSize: 14 }}>{c.createdByUser.id == userData?.id ? c.toUser.nickname : c.createdByUser.nickname}</p>
+                                                    <div style={{ display: 'flex', borderBottom: `1px solid #00000020`, paddingBottom: '1rem',flexDirection: 'row', borderRight: selectedChat?.id == c.id ? `3px solid ${BrandColor}` : undefined }}>
+                                                        <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }} src={userToShow.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                                        <div style={{ marginLeft: '1rem', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                            <p style={{ fontSize: 14 }}>{userToShow.nickname}</p>
                                                             <p style={{ color: 'gray', fontSize: 10, marginRight: '4px' }}>{c.messages[0]?.createdAt ? formatRelative(parseISO(c.messages[0]?.createdAt), new Date()) : "No messages"}</p>
                                                         </div>
                                                     </div>
@@ -165,41 +169,62 @@ function MessagesPage() {
 
                     <div style={{ display: 'flex', flexDirection: 'column' }} className="col-md-9 col-xs-12">
                         {selectedChat === undefined ? <h4>Select a chat</h4> : (
-                            <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                                <div id={'chat-box'} ref={divRef} style={{ flexGrow: 1, maxHeight: '39vw', overflowY: 'scroll' }}>
-                                    {selectedChat.messages.map((m: any, idx: number) => {
-                                        const containerStyle = { width: '30%', marginLeft: 'auto', }
-                                        const chipStyle: React.CSSProperties = { backgroundColor: '#00000080', padding: '0.2rem', marginBottom: '0.5rem', borderRadius: '25px' }
-                                        const textStyles: React.CSSProperties = { color: '#ffffff', margin: '0.5rem' }
+                            <>
+                                <div style={{ display: 'flex', flexDirection: 'row', borderBottom: `1px solid ${BrandColor}` }}>
+                                    <img
+                                        style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }}
+                                        src={selectedChatUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} />
+                                    <h4 style={{ color: BrandColor }}>
+                                        {selectedChatUser.nickname}
+                                    </h4>
+                                    {UserLoggedIsModel() == false && (
+                                        <div style={{ marginLeft: 'auto' }}>
+                                            <CallIcons hideMessageIcon={true} model={selectedChat.toUser.role == "MODEL" ? selectedChat.toUser : selectedChat.createdByUser} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                                    <div id={'chat-box'} ref={divRef} style={{ flexGrow: 1, maxHeight: !isMobile ? '70vh': '50vh', overflowY: 'scroll' }}>
+                                        {selectedChat.messages.map((m: any, idx: number, messagesArr: any[]) => {
+                                            const containerStyle = { marginLeft: 'auto', }
+                                            const chipStyle: React.CSSProperties = { display: 'flex', flexDirection: 'row',padding: '0.2rem', marginBottom: '0.5rem' }
+                                            const textStyles: React.CSSProperties = { margin: '0.5rem' }
 
-                                        if (m.createdByUserId != userData?.id) {
-                                            containerStyle.marginLeft = 'right'
-                                            chipStyle.backgroundColor = Color(BrandColor).lighten(0.2).toString()
-                                        }
-                                        return (
-                                            <div key={`${idx}-key`} style={containerStyle}>
-                                                <div style={chipStyle}>
-                                                    <p style={textStyles} >{m.body}</p>
+                                            if (m.createdByUserId != userData?.id) {
+                                                containerStyle.marginLeft = 'right'
+                                            }
+                                            return (
+                                                <div key={`${idx}-key`} style={containerStyle}>
+                                                    {messagesArr[idx-1] && differenceInCalendarDays(parseISO(m.createdAt), parseISO(messagesArr[idx-1].createdAt)) >= 1 && (
+                                                        <p style={{ borderBottom: `1px solid ${BrandColor}`}}>{format(parseISO(m.createdAt), "iii, LLLL MM yyyy")}</p>
+                                                    )}
+                                                    <div style={chipStyle}>
+                                                        <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 35, alignSelf: 'center' }} src={m.createdByUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
+                                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                            <p style={{ fontWeight: 'bold', fontSize: 15, ...textStyles }} >{m.createdByUser.nickname}</p>
+                                                            <p style={textStyles} >{m.body}</p>
+                                                        </div>
+                                                    </div>
+                                                    <p style={{ fontSize: 10 }}>{formatRelative(parseISO(m.createdAt), new Date())}</p>
                                                 </div>
-                                                <p style={{ fontSize: 10 }}>{formatRelative(parseISO(m.createdAt), new Date())}</p>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                    <div style={{  flexGrow: 1, marginRight: '1rem' }} className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control input-sm"
-                                            placeholder="Type your Message..."
-                                            name="message"
-                                            onChange={(e) => setCurrentMessage(e.target.value)}
-                                            value={currentMessage}
-                                        />
+                                            )
+                                        })}
                                     </div>
-                                    <SohoButton disabled={sendMessageReq.loading || currentMessage == ""} onClick={() => sendMessageFn()} value={"send"} />
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }} >
+                                        <div style={{ flexGrow: 1, marginRight: '1rem' }} className="form-group">
+                                            <input
+                                                type="text"
+                                                className="form-control input-sm"
+                                                placeholder="Type your Message..."
+                                                name="message"
+                                                onChange={(e) => setCurrentMessage(e.target.value)}
+                                                value={currentMessage}
+                                            />
+                                        </div>
+                                        <SohoButton disabled={sendMessageReq.loading || currentMessage == ""} onClick={() => sendMessageFn()} value={"send"} />
+                                    </div>
                                 </div>
-                            </div>
+                            </>
                         )}
                     </div>
                 </div>

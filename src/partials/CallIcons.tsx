@@ -6,12 +6,12 @@ import { callStarted, showVideoChatModal, userIsLogged } from '../state/GlobalSt
 import SohoLink from './SohoLink';
 
 
-export const CallIcons = ({ disabled, model }: { disabled: boolean, model: any }) => {
+export const CallIcons = ({ disabled = false, model, hideMessageIcon = false }: { disabled?: boolean, model: any, hideMessageIcon?: boolean }) => {
     let history = useHistory();
 
-    const peerVideo = UsePeerVideo({ })
+    const peerVideo = UsePeerVideo({})
     const call = UsePeerCall()
-    
+
     return (<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }}>
         <SohoLink
             onClick={() => {
@@ -36,20 +36,22 @@ export const CallIcons = ({ disabled, model }: { disabled: boolean, model: any }
                     .then(() => showVideoChatModal())
             }}
             disabled={disabled}
-            style={{ textAlign: 'end', width: '20%', marginBottom: 0,  marginRight: '2rem' }}>
+            style={{ textAlign: 'end', width: '20%', marginBottom: 0, marginRight: '2rem' }}>
             <i style={{ fontSize: '2.5rem' }} className="fa fa-video-camera" aria-hidden="true"></i>
         </SohoLink>
-        <SohoLink
-            onClick={() => {
-                if (!userIsLogged()) {
-                    history.push('/register')
-                    return
-                }
-                history.push(`/messages?startWith=${model.id}`)
-            }}
-            disabled={disabled}
-            style={{ textAlign: 'end', width: '20%', marginBottom: 0 }}>
-            <i style={{ fontSize: '2.5rem' }} className="fa fa-comments" aria-hidden="true"></i>
-        </SohoLink>
+        {hideMessageIcon === false && (
+            <SohoLink
+                onClick={() => {
+                    if (!userIsLogged()) {
+                        history.push('/register')
+                        return
+                    }
+                    history.push(`/messages?startWith=${model.id}`)
+                }}
+                disabled={disabled}
+                style={{ textAlign: 'end', width: '20%', marginBottom: 0 }}>
+                <i style={{ fontSize: '2.5rem' }} className="fa fa-comments" aria-hidden="true"></i>
+            </SohoLink>
+        )}
     </div>)
 }

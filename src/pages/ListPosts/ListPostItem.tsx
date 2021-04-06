@@ -16,16 +16,6 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
     const call = UsePeerCall()
     const [userData] = useGlobalState("userData");
 
-    const callIsDisabled = () => {
-        if (!g) return true
-        if (g.isLogged === false) return true
-
-        if (!userData) return true
-        if (userData.tokensBalance === 0) return true
-
-        return false
-    }
-
     return (
         <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>
             <div style={{ flex: 1, paddingLeft: 0, paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '2rem' }}>
@@ -56,7 +46,7 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
                     <div>
                         <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: isMobile ? "start":"end" }}>Call me now for one to one live chat: </p>
                         <div style={{ display: 'flex', justifyContent: 'end', marginRight: '2rem'}}>
-                            <CallIcons disabled={callIsDisabled()} model={g} />
+                            <CallIcons disabled={false} model={g} />
                         </div>
                     </div>
                 </div>

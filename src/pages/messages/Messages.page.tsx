@@ -92,6 +92,7 @@ function MessagesPage() {
             }
         })
             .then(({ data }) => {
+                data.createdByUser = userData
                 selectedChat.messages.push(data)
                 setSelectedChat({ ...selectedChat })
                 setCurrentMessage("")

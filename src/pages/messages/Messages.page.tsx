@@ -119,7 +119,7 @@ function MessagesPage() {
     const goToEndOfChat = () => {
         if (divRef.current) {
             //divRef.current?.scrollTo({ behavior: "smooth", top: 100 * 100 * 100 });
-            animateScroll.scrollToBottom({ containerId: "chat-boz" })
+            animateScroll.scrollToBottom({ containerId: "chat-box" })
         }
     }
 
@@ -135,7 +135,7 @@ function MessagesPage() {
     return (
         <>
             <NavBar />
-            <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }} className="container page-content">
+            <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'column', width: '100%' }} className="container page-content">
                 <div style={{ display: 'flex', flexGrow: 1, flexDirection: isMobile ? 'column': 'row' }}>
                     <div style={{ display: 'flex' }} className="col-md-3 col-xs-12">
                         <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }} className="row-xs">
@@ -166,7 +166,7 @@ function MessagesPage() {
                     <div style={{ display: 'flex', flexDirection: 'column' }} className="col-md-9 col-xs-12">
                         {selectedChat === undefined ? <h4>Select a chat</h4> : (
                             <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                                <div id={'chat-boz'} ref={divRef} style={{ flexGrow: 1, maxHeight: '39vw', overflowY: 'scroll' }}>
+                                <div id={'chat-box'} ref={divRef} style={{ flexGrow: 1, maxHeight: '39vw', overflowY: 'scroll' }}>
                                     {selectedChat.messages.map((m: any, idx: number) => {
                                         const containerStyle = { width: '30%', marginLeft: 'auto', }
                                         const chipStyle: React.CSSProperties = { backgroundColor: '#00000080', padding: '0.2rem', marginBottom: '0.5rem', borderRadius: '25px' }

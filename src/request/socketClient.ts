@@ -22,7 +22,10 @@ export const startSocketConnection = () => {
     return socket
 }
 
-export const disconnectSocket = () => socket?.disconnect()
+export const disconnectSocket = () => {
+    socket?.disconnect()
+    socket = null
+}
 
 export const answerInvitation = () => {
     startSocketConnection()

@@ -15,11 +15,13 @@ import { BrandColor } from '../../utils/Colors';
 import { startSocketConnection } from '../../request/socketClient';
 import { CallIcons } from '../../partials/CallIcons';
 import UserLoggedIsModel from '../../utils/UserLoggedIsModel';
+import { useHistory } from 'react-router-dom';
 
 
 function MessagesPage() {
     const [userData] = useGlobalState("userData");
     const query = UseQuery();
+    let history = useHistory();
     const isMobile = UseIsMobile();
     const divRef = useRef<null | HTMLDivElement>(null);
 
@@ -154,9 +156,12 @@ function MessagesPage() {
                                                 <SohoLink key={c.id} onClick={() => setSelectedChat(c)}>
                                                     <div style={{ display: 'flex', borderBottom: `1px solid #00000020`, paddingBottom: '1rem',flexDirection: 'row', borderRight: selectedChat?.id == c.id ? `3px solid ${BrandColor}` : undefined }}>
                                                         <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }} src={userToShow.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
-                                                        <div style={{ marginLeft: '1rem', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                            <p style={{ fontSize: 14 }}>{userToShow.nickname}</p>
-                                                            <p style={{ color: 'gray', fontSize: 10, marginRight: '4px' }}>{c.messages[0]?.createdAt ? formatRelative(parseISO(c.messages[0]?.createdAt), new Date()) : "No messages"}</p>
+                                                        <div style={{ width: '80%' }}>
+                                                            <div style={{ marginLeft: '1rem', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                                <p style={{ fontSize: 14 }}>{userToShow.nickname}</p>
+                                                                <p style={{ color: 'gray', fontSize: 10, marginRight: '4px' }}>{c.messages[c.messages.length - 1]?.createdAt ? formatRelative(parseISO(c.messages[c.messages.length - 1]?.createdAt), new Date()) : "No messages"}</p>
+                                                            </div>
+                                                            <p style={{  marginLeft: '1rem', marginBottom: 0, overflow: 'hidden', textOverflow: 'ellipsis', color: 'gray', fontSize: 10, marginRight: '4px' }}>{c.messages[c.messages.length - 1]?.createdAt ? c.messages[c.messages.length - 1].body.slice(0, 10) : ""}</p>
                                                         </div>
                                                     </div>
                                                 </SohoLink>
@@ -175,7 +180,7 @@ function MessagesPage() {
                                     <img
                                         style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }}
                                         src={selectedChatUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} />
-                                    <h4 style={{ color: BrandColor }}>
+                                    <h4 onClick={() => userData?.role == "USER" && history.push(`/profile/${userData?.role == "USER" && userData?.id}`)} style={{ color: BrandColor, cursor: userData?.role == "USER" ? 'pointer': 'unset' }}>
                                         {selectedChatUser.nickname}
                                     </h4>
                                     {UserLoggedIsModel() == false && (
@@ -196,17 +201,22 @@ function MessagesPage() {
                                             }
                                             return (
                                                 <div key={`${idx}-key`} style={containerStyle}>
+                                                    {idx == 0 && (
+                                                        <p style={{ borderBottom: `1px solid ${BrandColor}`}}>{format(parseISO(m.createdAt), "iii, LLLL dd yyyy")}</p>
+                                                    )}
                                                     {messagesArr[idx-1] && differenceInCalendarDays(parseISO(m.createdAt), parseISO(messagesArr[idx-1].createdAt)) >= 1 && (
-                                                        <p style={{ borderBottom: `1px solid ${BrandColor}`}}>{format(parseISO(m.createdAt), "iii, LLLL MM yyyy")}</p>
+                                                        <p style={{ borderBottom: `1px solid ${BrandColor}`}}>{format(parseISO(m.createdAt), "iii, LLLL dd yyyy")}</p>
                                                     )}
                                                     <div style={chipStyle}>
                                                         <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 35, alignSelf: 'center' }} src={m.createdByUser.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
-                                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                            <p style={{ fontWeight: 'bold', fontSize: 15, ...textStyles }} >{m.createdByUser.nickname}</p>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%' }}>
+                                                                <p style={{ fontWeight: 'bold', fontSize: 15, ...textStyles }} >{m.createdByUser.nickname}</p>
+                                                                <p style={{ fontSize: 10 }}>{format(parseISO(m.createdAt), 'hh: mm a')}</p>
+                                                            </div>
                                                             <p style={textStyles} >{m.body}</p>
                                                         </div>
                                                     </div>
-                                                    <p style={{ fontSize: 10 }}>{formatRelative(parseISO(m.createdAt), new Date())}</p>
                                                 </div>
                                             )
                                         })}
@@ -222,7 +232,7 @@ function MessagesPage() {
                                                 value={currentMessage}
                                             />
                                         </div>
-                                        <SohoButton disabled={sendMessageReq.loading || currentMessage == ""} onClick={() => sendMessageFn()} value={"send"} />
+                                        <SohoButton style={{ width: '10%'}} size="lg" disabled={sendMessageReq.loading || currentMessage == ""} onClick={() => sendMessageFn()} value={"send"} />
                                     </div>
                                 </div>
                             </>

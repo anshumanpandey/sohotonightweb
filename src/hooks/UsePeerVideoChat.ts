@@ -30,8 +30,8 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     previewVideoPlayer.style.height = "30%"
     previewVideoPlayer.style.position = "absolute"
     previewVideoPlayer.style.right = "0"
-    previewVideoPlayer.style.bottom = "0"
-    previewVideoPlayer.style.marginBottom = "3rem"
+    previewVideoPlayer.style.top = "0"
+    previewVideoPlayer.style.marginTop = "3rem"
     previewVideoPlayer.style.marginRight = "2rem"
 
 

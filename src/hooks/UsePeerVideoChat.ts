@@ -235,6 +235,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         setCurrentVideoChat(undefined)
         const message = buildDefaultPlayerMessage()
         setChildNode({ node: message })
+        window.location.reload()
     }
 
     const onCallEnded = ({ peer, stream }: { peer: SimplePeer.Instance, stream: MediaStream }) => {
@@ -251,6 +252,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         timeTracker.endTracker()
         const m = buildDefaultPlayerMessage()
         setChildNode({ node: m })
+        window.location.reload()
     }
 
     return {

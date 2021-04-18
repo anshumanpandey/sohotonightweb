@@ -19,6 +19,7 @@ import { useFormik } from 'formik';
 import ErrorLabel from '../../../partials/ErrorLabel';
 import SohoButton from '../../../partials/SohoButton';
 import IsOwnProfile from '../../../utils/IsOwnProfile';
+import { showConfirmBuyingAsset } from '../../../state/GlobalState';
 
 function PicturesPage() {
     let { id } = useParams<{ id: string }>();
@@ -144,12 +145,12 @@ function PicturesPage() {
                                                     },
                                                     nonAuthenticated: () => {
                                                         return (
-                                                            <div className="mix col-sm-4 page1 page4 margin30">
+                                                            <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                                     <PictureItem
                                                                         isFree={p.isFree}
-                                                                        image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}} key={p.id.toString() + "-item"}
+                                                                        image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}}
                                                                         onClick={() => {
-                                                                            setGoToPayment(p)
+                                                                            showConfirmBuyingAsset({ ...p, type: 'PICTURE' })
                                                                         }}
                                                                     />
                                                             </div>
@@ -173,7 +174,7 @@ function PicturesPage() {
                                     </a>
                                 </li>
                                 {Array(Math.floor((getPictures().length || 1) / 10) + 1).fill(1).map((_, idx) => {
-                                    return <li className={currentIndex == (idx + 1) ? "active" : undefined}>
+                                    return <li key={`${idx}-item`} className={currentIndex == (idx + 1) ? "active" : undefined}>
                                         <a onClick={() => setCurrentIndex(idx + 1)} href="#">{idx + 1}</a>
                                     </li>
                                 })}

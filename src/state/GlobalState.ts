@@ -11,6 +11,7 @@ export enum GLOBAL_STATE_ACIONS {
   LOGOUT,
   ERROR,
   INFO,
+  SET_SHOW_BUY_MODAL,
   SET_TOWN,
   SET_VISITOR_ID,
   SET_CALL,
@@ -23,7 +24,6 @@ export enum GLOBAL_STATE_ACIONS {
 const token = localStorage.getItem("jwtToken")
 const userData = localStorage.getItem("userData")
 const selectedTown = localStorage.getItem("selectedTown")
-const callToken = localStorage.getItem("callToken") || undefined
 
 interface State {
   globalLoading: boolean,
@@ -32,6 +32,7 @@ interface State {
   currentCall: null | string,
   currentVideoChat: null | string,
   visitorId: string | null,
+  currentBuyingAsset: null | any,
   success: null,
   selectedTown: null | string,
   jwtToken: null | string,
@@ -44,6 +45,7 @@ const initialState: State = {
   globalLoading: false,
   error: null,
   info: null,
+  currentBuyingAsset: null,
   currentCall: null,
   currentVideoChat: null,
   visitorId: null,
@@ -65,6 +67,7 @@ const reducer = (state: any, action: any) => {
     case GLOBAL_STATE_ACIONS.SET_CALL: return { ...state, currentCall: action.payload }
     case GLOBAL_STATE_ACIONS.IS_BUYING_TOKENS: return { ...state, buyTokenModal: action.payload }    
     case GLOBAL_STATE_ACIONS.SET_VIDEO_CHAT: return { ...state, currentVideoChat: action.payload }    
+    case GLOBAL_STATE_ACIONS.SET_SHOW_BUY_MODAL: return { ...state, currentBuyingAsset: action.payload }    
     
     case GLOBAL_STATE_ACIONS.JWT_TOKEN: {
       localStorage.setItem("jwtToken", JSON.stringify(action.payload))
@@ -183,4 +186,12 @@ export const setJustRegistered = (justRegistered: boolean) => {
   } else {
     localStorage.removeItem('justRegistered')
   }
+}
+
+export const showConfirmBuyingAsset = (asset: any) => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_SHOW_BUY_MODAL, payload: asset })
+}
+
+export const hideConfirmBuyingAsset = () => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_SHOW_BUY_MODAL, payload: null })
 }

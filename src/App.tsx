@@ -46,6 +46,7 @@ import SohoVideoModal from './partials/VideoModal';
 import UserIsLogged from './utils/UserIsLogged';
 import UserLoggedIsModel from './utils/UserLoggedIsModel';
 import MessagesPage from './pages/messages/Messages.page';
+import BuyConfirmModal from './partials/BuyConfirmModal';
 
 function App() {
   const alert = useAlert()
@@ -163,10 +164,12 @@ function App() {
         <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
         <ProtectedRoute path="/logout" component={LogoutPage} />
       </Switch>
+      {UserIsLogged() && <BuyConfirmModal />}
       {UserIsLogged() && <SohoCallModal />}
       {UserIsLogged() && <SohoVideoModal />}
       {UserIsLogged() && <BuyTokenModal />}
       {UserIsLogged() && <VoiceCallsTracker />}
+      
       <CookieConsent buttonText="Accept Cookies">
         This website uses cookies to enhance the user experience.{' '}
         <Link to="/cookiePolicy">See more</Link>

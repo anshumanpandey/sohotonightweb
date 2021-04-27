@@ -8,7 +8,7 @@ import '../../../css/Profile.css';
 import '../../../css/photos1.css';
 import '../../../css/photos2.css';
 import ProfileHeader from '../ProfileHeader';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import useAxios from 'axios-hooks'
 import AuthenticatedFactory from '../../../utils/AuthenticatedFactory';
 import { PictureUploadItem } from './PictureUploadItem';
@@ -20,9 +20,12 @@ import ErrorLabel from '../../../partials/ErrorLabel';
 import SohoButton from '../../../partials/SohoButton';
 import IsOwnProfile from '../../../utils/IsOwnProfile';
 import { showConfirmBuyingAsset } from '../../../state/GlobalState';
+import UserIsLogged from '../../../utils/UserIsLogged';
 
 function PicturesPage() {
     let { id } = useParams<{ id: string }>();
+    let history = useHistory();
+
     const alert = useAlert()
     const [currentIndex, setCurrentIndex] = useState(1);
     const itemsPerPage = 10
@@ -127,36 +130,43 @@ function PicturesPage() {
                                     {getUserReq.loading ? <p>Loading...</p> : getPictures()?.slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                         return (
                                             <>
-                                                {AuthenticatedFactory({
-                                                    user: user,
-                                                    authenticated: () => {
-                                                        return <PictureUploadItem
-                                                            key={p.id.toString() + "-item"}
-                                                            onClick={() => setShowPreviewModal(p)}
-                                                            src={p.imageName}
-                                                            onDeleteClick={() => {
-                                                                deletePicture({ data: { imageId: p.id } })
-                                                                    .then(() => {
-                                                                        alert.show('Image deleted!')
-                                                                        getUser()
-                                                                    })
+                                                {IsOwnProfile({ user}) && (
+                                                    <PictureUploadItem
+                                                        key={p.id.toString() + "-item"}
+                                                        onClick={() => setShowPreviewModal(p)}
+                                                        src={p.imageName}
+                                                        onDeleteClick={() => {
+                                                            deletePicture({ data: { imageId: p.id } })
+                                                                .then(() => {
+                                                                    alert.show('Image deleted!')
+                                                                    getUser()
+                                                                })
+                                                        }}
+                                                    />
+                                                )}
+                                                {UserIsLogged() && !IsOwnProfile({ user }) && (
+                                                    <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                        <PictureItem
+                                                            isFree={p.isFree}
+                                                            image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}}
+                                                            onClick={() => {
+                                                                showConfirmBuyingAsset({ ...p, type: 'PICTURE' })
                                                             }}
                                                         />
-                                                    },
-                                                    nonAuthenticated: () => {
-                                                        return (
-                                                            <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
-                                                                    <PictureItem
-                                                                        isFree={p.isFree}
-                                                                        image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}}
-                                                                        onClick={() => {
-                                                                            showConfirmBuyingAsset({ ...p, type: 'PICTURE' })
-                                                                        }}
-                                                                    />
-                                                            </div>
-                                                        )
-                                                    }
-                                                })}
+                                                    </div>
+                                                )}
+                                                {!UserIsLogged() && !IsOwnProfile({ user }) && (
+                                                    <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                        <PictureItem
+                                                            isFree={p.isFree}
+                                                            innerText="Click to login and buy"
+                                                            image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}}
+                                                            onClick={() => {
+                                                                history.push("/register")
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
                                             </>
                                         );
                                     })}

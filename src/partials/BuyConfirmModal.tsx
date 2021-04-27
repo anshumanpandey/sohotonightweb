@@ -2,7 +2,7 @@ import useAxios from 'axios-hooks';
 import React from 'react';
 import Loader from 'react-loader-spinner';
 //@ts-ignore
-import { useGlobalState } from '../state/GlobalState';
+import { hideConfirmBuyingAsset, setSuccessAlert, updateCurrentUser, useGlobalState } from '../state/GlobalState';
 import { BrandColor } from '../utils/Colors';
 import SohoButton from './SohoButton';
 import SohoModal from './SohoModal';
@@ -19,12 +19,17 @@ const BuyConfirmModal: React.FC = () => {
                 "assetType": currentBuyingAsset.type
             }
         })
+        .then(() => updateCurrentUser())
+        .then(() => {
+            setSuccessAlert("Item bought successfully")
+            hideConfirmBuyingAsset()
+        })
     }
 
     return (
         <SohoModal
             closeOnBackdropClik={false}
-            onClose={() => { }}
+            onClose={() => hideConfirmBuyingAsset()}
             show={currentBuyingAsset != null}
             title="Do you want to buy this asset?"
             footer={(close) => {
@@ -36,7 +41,7 @@ const BuyConfirmModal: React.FC = () => {
                 )
             }}
         >
-            {(<div style={{ pointerEvents: "none", position: 'absolute', backgroundColor: '#ffffff50', display: 'flex', justifyContent: 'center', width: '100%', height: '100%' }}>
+            {loading && (<div style={{ pointerEvents: "none", position: 'absolute', backgroundColor: '#ffffff50', display: 'flex', justifyContent: 'center', width: '100%', height: '100%' }}>
                 <Loader
                     type="ThreeDots"
                     color={BrandColor}

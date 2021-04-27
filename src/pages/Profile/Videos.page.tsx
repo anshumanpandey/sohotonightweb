@@ -8,19 +8,24 @@ import '../../css/PictureUpload.css';
 import { useAlert } from 'react-alert'
 import Loader from "react-loader-spinner";
 import SohoModal from '../../partials/SohoModal';
-import { Formik, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../partials/ErrorLabel';
-import { Redirect, useParams } from 'react-router-dom';
-import { Line } from 'rc-progress';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import SohoButton from '../../partials/SohoButton';
-import AuthenticatedFactory from '../../utils/AuthenticatedFactory';
 import IsOwnProfile from '../../utils/IsOwnProfile';
 import { BrandColor } from '../../utils/Colors';
+import { showConfirmBuyingAsset, useGlobalState } from '../../state/GlobalState';
+import UserIsLogged from '../../utils/UserIsLogged';
+import UserBoughtAsset from '../../utils/UserBoughtAsset';
+import DownloadFileByUrl from '../../utils/DownloadFileByUrl';
 
 function VideoUpload() {
     let { id } = useParams<{ id: string }>();
     const alert = useAlert()
+    let history = useHistory();
+    
+    const [userData] = useGlobalState("userData");
     const [user, setUser] = useState<any>({});
     const [currentTab, setCurrentTab] = useState(0)
     const [goToPayment, setGoToPayment] = useState<boolean>(false);
@@ -39,6 +44,11 @@ function VideoUpload() {
         url: `/user/public/getUser/${id}`,
     }, { manual: true });
 
+    const [generateUrlReq, generateUrl] = useAxios({
+        url: `/assets/generateUrl`,
+        method: 'POST'
+    }, { manual: true });
+
     useEffect(() => {
         getUser()
             .then(({ data }) => setUser(data))
@@ -51,7 +61,7 @@ function VideoUpload() {
 
     const getVideos = () => {
         return getUserReq?.data?.Videos?.filter((c: any) => {
-            if (currentTab == 0){
+            if (currentTab == 0) {
                 return c.isFree
             }
             return !c.isFree
@@ -132,56 +142,82 @@ function VideoUpload() {
                                     {getUserReq.loading ? <p style={{ fontSize: 22, textAlign: 'center', color: "#d32a6b" }}>Loading...</p> : getVideos().slice((currentIndex - 1), itemsPerPage * currentIndex).map((p: any) => {
                                         return (
                                             <>
-                                                {AuthenticatedFactory({
-                                                    user,
-                                                    authenticated: () => {
-                                                        return (
-                                                            <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
-                                                                <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                    <a href="#" onClick={(e) => {
-                                                                        e.preventDefault()
-                                                                        deletePicture()
-                                                                    }} className="show-image">
-                                                                        <span style={{ color: "white", fontSize: "18px", right: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
-                                                                            <i className="fa fa-times" aria-hidden="true"></i>
+                                                {IsOwnProfile({ user }) && (
+                                                    <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                        <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                            <a href="#" onClick={(e) => {
+                                                                e.preventDefault()
+                                                                deletePicture()
+                                                            }} className="show-image">
+                                                                <span style={{ color: "white", fontSize: "18px", right: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
+                                                                    <i className="fa fa-times" aria-hidden="true"></i>
                                                             Delete
                                                         </span>
-                                                                    </a>
-                                                                    <video style={{ height: 250 }} controls src={p.videoUrl} />
-                                                                </div>
+                                                            </a>
+                                                            <video style={{ height: 250 }} controls src={p.videoUrl} />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {UserIsLogged() && !IsOwnProfile({ user }) && (
+                                                    <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                        {p.isFree ? (
+                                                            <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                <video style={{ height: 300 }} controls src={p.videoUrl} />
                                                             </div>
-                                                        );
-                                                    },
-                                                    nonAuthenticated: () => {
-                                                        return (
-                                                            <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
-                                                                {p.isFree ? (
-                                                                    <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                        <video style={{ height: 300 }} controls src={p.videoUrl} />
-                                                                    </div>
-                                                                ): (
-                                                                    <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                        <a
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault()
-                                                                                setBuyingVideo(p)
-                                                                                setGoToPayment(true)
-                                                                            }}
-                                                                            href="#"
-                                                                            className="show-image"
-                                                                        >
-                                                                            <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
-                                                                                <i className="fa fa-shopping-cart" aria-hidden="true"></i>
-                                                                    Buy Now <br /> £{p.price}
-                                                                            </span>
-                                                                        </a>
-                                                                        <img src={require("../../img/soho-watchme.png")} />
-                                                                    </div>
-                                                                )}
+                                                        ) : (
+                                                            <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                <a
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        if (UserBoughtAsset({ user: userData, asset: p, type: "VIDEO" })) {
+                                                                            generateUrl({ data: { assetId: p.id, assetType: "VIDEO"} })
+                                                                            .then(({ data }) => {
+                                                                                DownloadFileByUrl(data.url)
+                                                                            })
+                                                                        } else {
+                                                                            showConfirmBuyingAsset({ ...p, type: 'VIDEO' })
+                                                                        }
+                                                                    }}
+                                                                    href="#"
+                                                                    className="show-image"
+                                                                >
+                                                                    <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
+                                                                        {!UserBoughtAsset({ user: userData, asset: p, type: "VIDEO" }) ? (<><i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                                    Buy Now <br /> {p.price}</>): "Download"}
+                                                                    </span>
+                                                                </a>
+                                                                <img src={require("../../img/soho-watchme.png")} />
                                                             </div>
-                                                        );
-                                                    }
-                                                })}
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {!UserIsLogged() && (
+                                                    <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
+                                                        {p.isFree ? (
+                                                            <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                            </div>
+                                                        ) : (
+                                                            <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
+                                                                <a
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault()
+                                                                        history.push("/login")
+                                                                    }}
+                                                                    href="#"
+                                                                    className="show-image"
+                                                                >
+                                                                    <span style={{ color: "white", fontSize: "18px", right: 0, bottom: 0, backgroundColor: '#d32a6b80', padding: '0.5rem', borderRadius: "0.25rem" }} className="item-img_text">
+                                                                        <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                                    Login to buy
+                                                                    </span>
+                                                                </a>
+                                                                <img src={require("../../img/soho-watchme.png")} />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+
                                             </>
                                         );
                                     })}
@@ -268,7 +304,7 @@ function VideoUpload() {
                                 )}
                             </div>
                             {loading && (
-                                <div style={{ display: 'flex', justifyContent: 'center'}}>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     <Loader
                                         type="ThreeDots"
                                         color={BrandColor}

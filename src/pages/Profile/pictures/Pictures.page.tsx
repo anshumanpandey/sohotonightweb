@@ -134,7 +134,7 @@ function PicturesPage() {
                                                     <PictureUploadItem
                                                         key={p.id.toString() + "-item"}
                                                         onClick={() => setShowPreviewModal(p)}
-                                                        src={p.imageName}
+                                                        src={p.assetUrl}
                                                         onDeleteClick={() => {
                                                             deletePicture({ data: { imageId: p.id } })
                                                                 .then(() => {
@@ -148,7 +148,7 @@ function PicturesPage() {
                                                     <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                         <PictureItem
                                                             isFree={p.isFree}
-                                                            image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}}
+                                                            image={p.isFree ? p : { ...p, assetUrl: require("../../../img/soho-watchme.png")}}
                                                             onClick={() => {
                                                                 showConfirmBuyingAsset({ ...p, type: 'PICTURE' })
                                                             }}
@@ -160,7 +160,7 @@ function PicturesPage() {
                                                         <PictureItem
                                                             isFree={p.isFree}
                                                             innerText="Click to login and buy"
-                                                            image={p.isFree ? p : { ...p, imageName: require("../../../img/soho-watchme.png")}}
+                                                            image={p.isFree ? p : { ...p, assetUrl: require("../../../img/soho-watchme.png")}}
                                                             onClick={() => {
                                                                 history.push("/register")
                                                             }}

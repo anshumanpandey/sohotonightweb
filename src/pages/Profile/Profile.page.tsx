@@ -69,9 +69,9 @@ function ProfilePage() {
                                                 {user?.Pictures?.filter((v: any) => v.isFree)?.length == 0 && <p>No images</p>}
                                                 {user?.Pictures?.length != 0 && user?.Pictures?.filter((v: any) => v.isFree)?.map((p: any) => {
                                                     return (
-                                                        <li onClick={() => setShowPreviewModal(p)} key={p.imageName}>
+                                                        <li onClick={() => setShowPreviewModal(p)} key={p.assetUrl}>
                                                             <a href="#">
-                                                                <img src={p.imageName} alt="image" />
+                                                                <img src={p.assetUrl} alt="image" />
                                                             </a>
                                                         </li>
                                                     );
@@ -194,7 +194,7 @@ function ProfilePage() {
                 }} type="button" className="btn btn-default">Close</button>}
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <img style={{ maxHeight: "350px" }} src={showPreviewModal.imageName} />
+                    <img style={{ maxHeight: "350px" }} src={showPreviewModal.assetUrl} />
                 </div>
             </SohoModal>
 

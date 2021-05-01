@@ -11,8 +11,6 @@ import PostWidgetForm from '../../partials/PostWidgetForm';
 import PostItem from '../../partials/PostItem';
 import SohoModal from '../../partials/SohoModal';
 import IsOwnProfile from '../../utils/IsOwnProfile';
-import { callStarted, useGlobalState } from '../../state/GlobalState';
-import SohoCallModal from '../../partials/CallModal';
 
 function ProfilePage() {
     let { id } = useParams<{ id: string }>();

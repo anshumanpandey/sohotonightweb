@@ -154,7 +154,7 @@ function VideoUpload() {
                                                             Delete
                                                         </span>
                                                             </a>
-                                                            <video style={{ height: 250 }} controls src={p.videoUrl} />
+                                                            <video style={{ height: 250 }} controls src={p.assetUrl} />
                                                         </div>
                                                     </div>
                                                 )}
@@ -162,7 +162,7 @@ function VideoUpload() {
                                                     <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                         {p.isFree ? (
                                                             <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                                <video style={{ height: 300 }} controls src={p.assetUrl} />
                                                             </div>
                                                         ) : (
                                                             <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
@@ -195,7 +195,7 @@ function VideoUpload() {
                                                     <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                         {p.isFree ? (
                                                             <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">
-                                                                <video style={{ height: 300 }} controls src={p.videoUrl} />
+                                                                <video style={{ height: 300 }} controls src={p.assetUrl} />
                                                             </div>
                                                         ) : (
                                                             <div style={{ backgroundColor: 'black' }} className="item-img-wrap ">

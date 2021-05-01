@@ -18,7 +18,7 @@ const SohoCallModal: React.FC = () => {
             title="Calling..."
             footer={(close) => <button onClick={() => {
                 close()
-            }} type="button" className="btn btn-default">Disconect</button>}
+            }} type="button" className="btn btn-default">Hang Up</button>}
         >
             <p style={{ fontSize: 20, color: BrandColor, textAlign: 'center' }}>{currentCall}</p>
             <div id="call-div"></div>

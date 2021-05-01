@@ -2,12 +2,13 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { UsePeerCall } from '../hooks/UsePeerCall';
 import { UsePeerVideo } from '../hooks/UsePeerVideoChat';
-import { callStarted, showVideoChatModal, userIsLogged } from '../state/GlobalState';
+import { callStarted, showVideoChatModal, useGlobalState, userIsLogged } from '../state/GlobalState';
 import SohoLink from './SohoLink';
 
 
 export const CallIcons = ({ disabled = false, model, hideMessageIcon = false }: { disabled?: boolean, model: any, hideMessageIcon?: boolean }) => {
     let history = useHistory();
+    let [userData] = useGlobalState('userData');
 
     const peerVideo = UsePeerVideo({})
     const call = UsePeerCall()
@@ -19,7 +20,12 @@ export const CallIcons = ({ disabled = false, model, hideMessageIcon = false }: 
                     history.push('/register')
                     return
                 }
-                callStarted()
+                if (userData?.tokensBalance == 0) {
+                    history.push('/payment')
+                    return
+                }
+
+                callStarted({ toModel: model })
                 call.sendCallRequest({ toNickname: model.nickname })
             }}
             disabled={disabled}
@@ -30,6 +36,10 @@ export const CallIcons = ({ disabled = false, model, hideMessageIcon = false }: 
             onClick={() => {
                 if (!userIsLogged()) {
                     history.push('/register')
+                    return
+                }
+                if (userData?.tokensBalance == 0) {
+                    history.push('/payment')
                     return
                 }
                 peerVideo.sendRequest({ toUserNickname: model.nickname })

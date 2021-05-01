@@ -134,9 +134,8 @@ export const setSelectedTown = (msg: string) => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_TOWN, payload: msg })
 }
 
-export const callStarted = () => {
-  const s = getGlobalState()
-  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: "Ringing" })
+export const callStarted = ({ toModel }: { toModel: any }) => {
+  dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: `Waiting for ${toModel.nickname} to respond` })
 }
 export const callEnded = () => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_CALL, payload: "Ending..." })

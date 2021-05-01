@@ -242,7 +242,7 @@ function PicturesPage() {
                 }}
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <img style={{ maxHeight: "350px" }} src={showPreviewModal.imageName} />
+                    <img style={{ maxHeight: "350px" }} src={showPreviewModal.assetUrl} />
                 </div>
             </SohoModal>
 

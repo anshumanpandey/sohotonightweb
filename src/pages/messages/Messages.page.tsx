@@ -47,10 +47,27 @@ function MessagesPage() {
         const socket = startSocketConnection()
         socket?.on("NEW_MESSAGE", (m) => onNewMessage(m))
 
+        const forCreateWithId = query.get('startWith')
+        if (forCreateWithId) {
+            startChat({ data: { toUserId: forCreateWithId } })
+                .then(() => updateUserChats())
+                .catch(() => updateUserChats())
+        } else {
+            updateUserChats()
+        }
+
         return () => {
             socket?.off("NEW_MESSAGE")
         }
     }, [])
+
+    useEffect(() => {
+        const forCreateWithId = query.get('startWith')
+        if (forCreateWithId) {
+            const found = userChats.find(c => c.toUserId == forCreateWithId)
+            if (found) setSelectedChat(found)
+        }
+    }, [userChats])
 
     useEffect(() => {
         goToEndOfChat()
@@ -73,17 +90,6 @@ function MessagesPage() {
             document.removeEventListener("keydown", listener);
         }
     }, [currentMessage])
-
-    useEffect(() => {
-        const forCreateWithId = query.get('startWith')
-        if (forCreateWithId) {
-            startChat({ data: { toUserId: forCreateWithId } })
-                .then(() => updateUserChats())
-                .catch(() => updateUserChats())
-        } else {
-            updateUserChats()
-        }
-    }, [])
 
     const sendMessageFn = () => {
         if (currentMessage == "") return

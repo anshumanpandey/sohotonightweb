@@ -11,9 +11,6 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
     let history = useHistory();
 
     const isMobile = UseIsMobile();
-    const peerVideo = UsePeerVideo({ })
-    const call = UsePeerCall()
-    const [userData] = useGlobalState("userData");
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', borderBottom: "1px solid #d8d8d8" }}>

@@ -8,7 +8,7 @@ import '../../../css/Profile.css';
 import '../../../css/photos1.css';
 import '../../../css/photos2.css';
 import ProfileHeader from '../ProfileHeader';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams, useLocation } from 'react-router-dom';
 import useAxios from 'axios-hooks'
 import AuthenticatedFactory from '../../../utils/AuthenticatedFactory';
 import { PictureUploadItem } from './PictureUploadItem';
@@ -19,12 +19,18 @@ import { useFormik } from 'formik';
 import ErrorLabel from '../../../partials/ErrorLabel';
 import SohoButton from '../../../partials/SohoButton';
 import IsOwnProfile from '../../../utils/IsOwnProfile';
-import { showConfirmBuyingAsset } from '../../../state/GlobalState';
+import { showConfirmBuyingAsset, useGlobalState } from '../../../state/GlobalState';
 import UserIsLogged from '../../../utils/UserIsLogged';
+import UserBoughtAsset from '../../../utils/UserBoughtAsset';
+import DownloadFileByUrl from '../../../utils/DownloadFileByUrl';
+import { useTabTracker } from '../../../utils/TabTracker';
 
 function PicturesPage() {
     let { id } = useParams<{ id: string }>();
     let history = useHistory();
+    let [userData] = useGlobalState("userData");
+
+    const tabTracker = useTabTracker()
 
     const alert = useAlert()
     const [currentIndex, setCurrentIndex] = useState(1);
@@ -49,7 +55,13 @@ function PicturesPage() {
         method: 'DELETE'
     }, { manual: true });
 
+    const [generateUrlReq, generateUrl] = useAxios({
+        url: `/assets/generateUrl`,
+        method: 'POST'
+    }, { manual: true });
+
     useEffect(() => {
+        tabTracker.setOnTabChangeCb(() => (idx: number) => { setCurrentTab(idx); console.log({ idx })})
         getUser()
             .then(({ data }) => setUser(data))
     }, [id])
@@ -108,7 +120,7 @@ function PicturesPage() {
                         user={user}
                         extraContent={
                             <>
-                                {IsOwnProfile({ user }) && <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
+                                {IsOwnProfile({ user }) && <div style={{ marginTop: '0.8vh', marginLeft: '0.8vh', position: 'absolute', right: 0, height: '100%' }}>
                                     <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Picture" />
                                 </div>}
                             </>
@@ -147,10 +159,18 @@ function PicturesPage() {
                                                 {UserIsLogged() && !IsOwnProfile({ user }) && (
                                                     <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                         <PictureItem
+                                                            isBought={UserBoughtAsset({ user: userData, asset: p, type: "PICTURE" })}
                                                             isFree={p.isFree}
-                                                            image={p.isFree ? p : { ...p, assetUrl: require("../../../img/soho-watchme.png")}}
+                                                            image={p}
                                                             onClick={() => {
-                                                                showConfirmBuyingAsset({ ...p, type: 'PICTURE' })
+                                                                if (UserBoughtAsset({ user: userData, asset: p, type: "PICTURE" })) {
+                                                                    generateUrl({ data: { assetId: p.id, assetType: "PICTURE"} })
+                                                                        .then(({ data }) => {
+                                                                            DownloadFileByUrl(data.url)
+                                                                        })
+                                                                } else {
+                                                                    showConfirmBuyingAsset({ ...p, type: 'PICTURE' })
+                                                                }
                                                             }}
                                                         />
                                                     </div>
@@ -158,9 +178,10 @@ function PicturesPage() {
                                                 {!UserIsLogged() && !IsOwnProfile({ user }) && (
                                                     <div key={p.id.toString() + "-item"} className="mix col-sm-4 page1 page4 margin30">
                                                         <PictureItem
+                                                            isBought={UserBoughtAsset({ user: userData, asset: p, type: "PICTURE" })}
                                                             isFree={p.isFree}
                                                             innerText="Click to login and buy"
-                                                            image={p.isFree ? p : { ...p, assetUrl: require("../../../img/soho-watchme.png")}}
+                                                            image={p}
                                                             onClick={() => {
                                                                 history.push("/register")
                                                             }}

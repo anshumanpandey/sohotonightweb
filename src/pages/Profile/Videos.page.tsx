@@ -19,11 +19,13 @@ import { showConfirmBuyingAsset, useGlobalState } from '../../state/GlobalState'
 import UserIsLogged from '../../utils/UserIsLogged';
 import UserBoughtAsset from '../../utils/UserBoughtAsset';
 import DownloadFileByUrl from '../../utils/DownloadFileByUrl';
+import { useTabTracker } from '../../utils/TabTracker';
 
 function VideoUpload() {
     let { id } = useParams<{ id: string }>();
     const alert = useAlert()
     let history = useHistory();
+    const tabTracker = useTabTracker()
     
     const [userData] = useGlobalState("userData");
     const [user, setUser] = useState<any>({});
@@ -50,6 +52,7 @@ function VideoUpload() {
     }, { manual: true });
 
     useEffect(() => {
+        tabTracker.setOnTabChangeCb(() => (idx: number) => { setCurrentTab(idx); console.log({ idx })})
         getUser()
             .then(({ data }) => setUser(data))
     }, [id])
@@ -118,7 +121,7 @@ function VideoUpload() {
                         extraContent={
                             <>
                                 {IsOwnProfile({ user }) && (
-                                    <div style={{ display: 'flex', position: 'absolute', right: 0, height: '100%' }}>
+                                    <div style={{ marginTop: '0.8vh', marginLeft: '0.8vh', position: 'absolute', right: 0, height: '100%' }}>
                                         <SohoButton style={{ display: 'flex', justifySelf: 'center' }} onClick={() => setShowUploadModel(true)} value="+ Add Video" />
                                     </div>
                                 )}

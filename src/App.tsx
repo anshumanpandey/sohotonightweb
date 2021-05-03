@@ -25,7 +25,7 @@ import VideosPage from './pages/Profile/Videos.page';
 import LogoutPage from './pages/logout/logout.page';
 import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS, useGlobalState } from './state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCurrentUser, useGlobalState } from './state/GlobalState';
 import currentPageIs from './utils/currentPageIs';
 import PaymentPage from './pages/payment/Payment.Page';
 import CookiePolicy from './pages/cookiePolicy/CookiePolicy.page';
@@ -58,6 +58,7 @@ function App() {
 
   useEffect(() => {
     answerInvitation()
+    updateCurrentUser()
   }, [])
 
   useEffect(() => {

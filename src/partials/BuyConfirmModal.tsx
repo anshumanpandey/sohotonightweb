@@ -1,6 +1,7 @@
 import useAxios from 'axios-hooks';
 import React from 'react';
 import Loader from 'react-loader-spinner';
+import { useHistory } from 'react-router-dom';
 //@ts-ignore
 import { hideConfirmBuyingAsset, setSuccessAlert, updateCurrentUser, useGlobalState } from '../state/GlobalState';
 import { BrandColor } from '../utils/Colors';
@@ -8,6 +9,7 @@ import SohoButton from './SohoButton';
 import SohoModal from './SohoModal';
 
 const BuyConfirmModal: React.FC = () => {
+    let history = useHistory();
     const [currentBuyingAsset] = useGlobalState('currentBuyingAsset')
     const [{ data, loading, error }, buyAssets] = useAxios({ url: '/assets/buy', method: 'POST' }, { manual: true });
 
@@ -23,6 +25,8 @@ const BuyConfirmModal: React.FC = () => {
         .then(() => {
             setSuccessAlert("Item bought successfully")
             hideConfirmBuyingAsset()
+            history.go(0)
+            history.push(history.location.pathname + '?tabIdx=1')
         })
     }
 

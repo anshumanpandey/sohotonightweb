@@ -172,7 +172,7 @@ function ProfilePage() {
                                                 <p style={{ fontSize: 16, textAlign: 'center', color: "#d32a6b" }}>No Post</p>
                                             )}
                                             {!loading && user?.Posts?.length != 0 && user?.Posts?.sort((a: any, b: any) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())?.map((p: any) => {
-                                                return <PostItem post={p} user={user} />
+                                                return <PostItem key={p.id} post={p} user={user} />
                                             })}
                                         </div>
                                     </div>

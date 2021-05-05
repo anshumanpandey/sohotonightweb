@@ -25,7 +25,6 @@ let mainDiv: any = undefined
 let audioPlayer: any = undefined
 
 export const UsePeerCall = (p?: { node?: HTMLElement }) => {
-    const [onCallReceivedCb, setOnCallReceivedCb] = useState<undefined | CallReceivedCb>()
     const [userData] = useGlobalState("userData")
     const [currentCall] = useGlobalState("currentCall")
     const [currentVoiceChat, setCurrentVoiceChat] = useState<undefined | any>()
@@ -35,14 +34,6 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     const [callTokenReq, request] = useAxios({
         method: 'GET',
     }, { manual: true })
-
-    useEffect(() => {
-        const socket = startSocketConnection()
-        socket?.on("NEW_VOICE_INVITATION", (i: any) => {
-            console.log(i)
-            onCallReceivedCb && onCallReceivedCb(i)
-        })
-    }, [userData, onCallReceivedCb])
 
     useEffect(() => {
         if (p) {
@@ -55,10 +46,6 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
             endPeerCall()
         }
     }, [currentCall])
-
-    const onCallReceived = (cb: CallReceivedCb) => {
-        setOnCallReceivedCb(() => cb)
-    }
 
     const onCallAccepted = (invitation: any) => {
         const peer = buildPeerClient();
@@ -88,7 +75,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                 })
         })
 
-        return navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        return navigator.mediaDevices.getUserMedia({ video: false, audio: true })
         .then((localStream) => {
             peer.addStream(localStream)
             socket?.on("VOICE_CALL_ENDED", (i: any) => {
@@ -96,6 +83,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                 peer.destroy()
                 callEnded()
                 socket.off("INVITATION_HANDSHAKE")
+                window.location.reload()
             })
         })
     }
@@ -162,6 +150,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                         peer2.destroy()
                         callEnded()
                         socket.off("INVITATION_HANDSHAKE")
+                        window.location.reload()
                     })
                 })
             })
@@ -174,6 +163,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
         socket?.emit("END_VOICE_CHAT", currentVoiceChat)
         socket?.off("INVITATION_ACCEPTED")
         setCurrentVoiceChat(undefined)
+        window.location.reload()
     }
 
     const rejectCall = ({ invitation }: { invitation: any }) => {
@@ -181,7 +171,6 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
     }
 
     return {
-        onCallReceived,
         sendCallRequest,
         acceptCall,
         rejectCall,

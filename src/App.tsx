@@ -51,14 +51,16 @@ import BuyConfirmModal from './partials/BuyConfirmModal';
 function App() {
   const alert = useAlert()
   const location = useLocation()
-  const [userData] = useGlobalState('userData')
+  const [jwtToken] = useGlobalState('jwtToken')
   const [error] = useGlobalState('error')
   const [info] = useGlobalState('info')
   const [success] = useGlobalState('success')
 
   useEffect(() => {
     answerInvitation()
-    updateCurrentUser()
+    if (jwtToken) {
+      updateCurrentUser()
+    }
   }, [])
 
   useEffect(() => {

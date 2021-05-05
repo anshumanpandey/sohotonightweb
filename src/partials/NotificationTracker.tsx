@@ -11,8 +11,7 @@ const isVideoChat = (i: any) => {
     return i.videoChat
 }
 
-const VoiceCallsTracker: React.FC = () => {
-    let history = useHistory();
+const NotificationTracker: React.FC = () => {
     const [userData] = useGlobalState("userData")
     const [invitations, setInvitations] = useState<any[]>([])
     const [rejectingVideoChat, setRejectingVideoChat] = useState<boolean>(false)
@@ -31,10 +30,11 @@ const VoiceCallsTracker: React.FC = () => {
 
     useEffect(() => {
         const socket = startSocketConnection()
-        socket?.on("NEW_VOICE_INVITATION",(i) => {
+        if (!socket?.hasListeners('NEW_VOICE_INVITATION')) {socket?.once("NEW_VOICE_INVITATION",(i) => {
             console.log("NEW_VOICE_INVITATION", i)
             setInvitations(p => [i, ...p])
         })
+        }
         peerVideo.onInvitationReceived((i) => {
             setInvitations(p => [...p, i])
         })
@@ -91,4 +91,4 @@ const VoiceCallsTracker: React.FC = () => {
         </>
     );
 }
-export default VoiceCallsTracker;
+export default NotificationTracker;

@@ -69,7 +69,10 @@ const BuyConfirmModal: React.FC = () => {
                     <SohoButton
                         style={{ width: '25%' }}
                         disabled={loading}
-                        onClick={() => history.push(`/payment`)}
+                        onClick={() => {
+                            history.push(`/payment`)
+                            close()
+                        }}
                         value={"Buy More Tokens"} />
                 </div>
             )

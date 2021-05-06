@@ -189,7 +189,10 @@ function VideoUpload() {
                                                                     Buy Now <br /> {p.price}</>): "Download"}
                                                                     </span>
                                                                 </a>
-                                                                <img src={require("../../img/soho-watchme.png")} />
+                                                                {UserBoughtAsset({ user: userData, asset: p, type: "VIDEO" }) ?
+                                                                    <video style={{ height: 250 }} controls src={p.assetUrl} />:
+                                                                    <img src={require("../../img/soho-watchme.png")} />
+                                                                }
                                                             </div>
                                                         )}
                                                     </div>

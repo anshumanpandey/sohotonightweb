@@ -24,7 +24,7 @@ const BuyConfirmModal: React.FC = () => {
         })
             .then(() => updateCurrentUser())
             .then(() => {
-                setSuccessAlert("Item bought successfully")
+                setSuccessAlert("Purchase Completed.")
                 hideConfirmBuyingAsset()
                 history.go(0)
                 history.push(history.location.pathname + '?tabIdx=1')

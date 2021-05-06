@@ -20,7 +20,7 @@ const SohoVideoModal: React.FC = () => {
             title="Chatting..."
             footer={(close) => <button onClick={() => {
                 close()
-            }} type="button" className="btn btn-default">Disconect</button>}
+            }} type="button" className="btn btn-default">Hang Up</button>}
         >
             <div id="video-div"></div>
         </SohoModal>

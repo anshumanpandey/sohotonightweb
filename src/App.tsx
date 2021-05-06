@@ -37,7 +37,6 @@ import AntiSlavery from './pages/antiSlavery/AntiSlavery.page';
 import MarketplaceAgreement from './pages/marketplaceAgreement/MarketplaceAgreement.page';
 import RegionsPage from './pages/regions/Regions.page';
 import CallTest from './pages/callTest/CallTest.page';
-import VideoChat from './pages/Profile/VideoChat.page';
 import BuyTokenModal from './partials/BuyTokenModal';
 import { answerInvitation } from './request/socketClient';
 import VoiceCallsTracker from './partials/NotificationTracker';
@@ -148,9 +147,6 @@ function App() {
         </Route>
         <Route path="/profile-about/:id?">
           <AboutPage />
-        </Route>
-        <Route path="/video-chat/:id?/:acceptedInvitationId?">
-          <VideoChat />
         </Route>
         <Route path="/profile-video/:id?">
           <VideosPage />

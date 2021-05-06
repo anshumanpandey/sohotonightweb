@@ -80,9 +80,12 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     useEffect(() => {
         if (!userData) return
         const socket = startSocketConnection()
-        socket?.on("NEW_VIDEO_INVITATION", (i: any) => {
-            onInvitationReceivedCb && onInvitationReceivedCb(i)
-        })
+        const evName = "NEW_VIDEO_INVITATION"
+        if (!socket?.hasListeners(evName)) {
+            socket?.on(evName, (i: any) => {
+                onInvitationReceivedCb && onInvitationReceivedCb(i)
+            })
+        }
     }, [userData, onInvitationReceivedCb])
 
     useEffect(() => {

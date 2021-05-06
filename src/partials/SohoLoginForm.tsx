@@ -53,6 +53,7 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
                         <div className="form-group">
                             <label htmlFor="xsinput">Nickname</label>
                             <input
+                                autoCapitalize="none"
                                 type="text"
                                 className="form-control input-sm"
                                 placeholder="Nickname"

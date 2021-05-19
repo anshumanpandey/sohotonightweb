@@ -83,5 +83,5 @@
     "@types/react-scroll": "^1.8.2",
     "@types/simple-peer": "^9.6.2",
     "post-commit": "0.0.1"
-  },
+  }
 }

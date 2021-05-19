@@ -46,6 +46,7 @@ import UserIsLogged from './utils/UserIsLogged';
 import UserLoggedIsModel from './utils/UserLoggedIsModel';
 import MessagesPage from './pages/messages/Messages.page';
 import BuyConfirmModal from './partials/BuyConfirmModal';
+import CacheBuster, { CacheBusterState } from './CacheBuster';
 
 function App() {
   const alert = useAlert()
@@ -95,85 +96,99 @@ function App() {
   }
 
   return (
-    <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', display: 'flex', flexDirection: 'column', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
-      <Switch>
-        <Route exact path="/">
-          <Landing />
-        </Route>
-        <Route exact path="/cookiePolicy">
-          <CookiePolicy />
-        </Route>
-        <Route exact path="/callTest">
-          <CallTest />
-        </Route>
-        <Route exact path="/privacyPolicy">
-          <PrivacyPolicy />
-        </Route>
-        <Route exact path="/statementAndOpinion">
-          <StatementAndOpinion />
-        </Route>  
-        <Route exact path="/userAgreement">
-          <UserAgreement />
-        </Route>
-        <Route exact path="/webUserAgreement">
-          <WebUserAgreement />
-        </Route>
-        <Route exact path="/regions">
-          <RegionsPage />
-        </Route>
-        <Route exact path="/antiSlavery">
-          <AntiSlavery />
-        </Route>
-        <Route exact path="/marketplaceAgreement">
-          <MarketplaceAgreement />
-        </Route>
-        <Route path="/contact-us">
-          <ContactUs />
-        </Route>
-        <Route path="/about-us">
-          <AboutUs />
-        </Route>
-        <Route path="/register">
-          <RegisterPage />
-        </Route>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/list-post">
-          <ListPostPage />
-        </Route>
-        <Route path="/profile/:id?">
-          <ProfilePage />
-        </Route>
-        <Route path="/profile-about/:id?">
-          <AboutPage />
-        </Route>
-        <Route path="/profile-video/:id?">
-          <VideosPage />
-        </Route>
-        <Route path="/messages">
-          <MessagesPage />
-        </Route>
-        <Route path="/profile-pictures/:id?">
-          <PicturesPage />
-        </Route>
-        <Route path="/payment">
-          <PaymentPage />
-        </Route>
-        <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
-        <ProtectedRoute path="/logout" component={LogoutPage} />
-      </Switch>
-      {UserIsLogged() && <BuyConfirmModal />}
-      {UserIsLogged() && <SohoCallModal />}
-      {UserIsLogged() && <SohoVideoModal />}
-      {UserIsLogged() && <BuyTokenModal />}
-      {UserIsLogged() && <VoiceCallsTracker />}
-      
-      <CookieConsent buttonText="Accept Cookies">
-        This website uses cookies to enhance the user experience.{' '}
-        <Link to="/cookiePolicy">See more</Link>
-      </CookieConsent>
-    </body>
+    <CacheBuster>
+      {({ loading, isLatestVersion, refreshCacheAndReload }: CacheBusterState) => {
+        console.log({ loading })
+        if (loading) return null;
+        if (!loading && !isLatestVersion) {
+          // You can decide how and when you want to force reload
+          refreshCacheAndReload();
+        }
+
+        return (
+          <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', display: 'flex', flexDirection: 'column', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
+            <Switch>
+              <Route exact path="/">
+                <Landing />
+              </Route>
+              <Route exact path="/cookiePolicy">
+                <CookiePolicy />
+              </Route>
+              <Route exact path="/callTest">
+                <CallTest />
+              </Route>
+              <Route exact path="/privacyPolicy">
+                <PrivacyPolicy />
+              </Route>
+              <Route exact path="/statementAndOpinion">
+                <StatementAndOpinion />
+              </Route>
+              <Route exact path="/userAgreement">
+                <UserAgreement />
+              </Route>
+              <Route exact path="/webUserAgreement">
+                <WebUserAgreement />
+              </Route>
+              <Route exact path="/regions">
+                <RegionsPage />
+              </Route>
+              <Route exact path="/antiSlavery">
+                <AntiSlavery />
+              </Route>
+              <Route exact path="/marketplaceAgreement">
+                <MarketplaceAgreement />
+              </Route>
+              <Route path="/contact-us">
+                <ContactUs />
+              </Route>
+              <Route path="/about-us">
+                <AboutUs />
+              </Route>
+              <Route path="/register">
+                <RegisterPage />
+              </Route>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <Route path="/list-post">
+                <ListPostPage />
+              </Route>
+              <Route path="/profile/:id?">
+                <ProfilePage />
+              </Route>
+              <Route path="/profile-about/:id?">
+                <AboutPage />
+              </Route>
+              <Route path="/profile-video/:id?">
+                <VideosPage />
+              </Route>
+              <Route path="/messages">
+                <MessagesPage />
+              </Route>
+              <Route path="/profile-pictures/:id?">
+                <PicturesPage />
+              </Route>
+              <Route path="/payment">
+                <PaymentPage />
+              </Route>
+              <ProtectedRoute path="/profile-edit" component={ProfileEditPage} />
+              <ProtectedRoute path="/logout" component={LogoutPage} />
+            </Switch>
+            {UserIsLogged() && <BuyConfirmModal />}
+            {UserIsLogged() && <SohoCallModal />}
+            {UserIsLogged() && <SohoVideoModal />}
+            {UserIsLogged() && <BuyTokenModal />}
+            {UserIsLogged() && <VoiceCallsTracker />}
+
+            <CookieConsent buttonText="Accept Cookies">
+              This website uses cookies to enhance the user experience.{' '}
+              <Link to="/cookiePolicy">See more</Link>
+            </CookieConsent>
+          </body>
+
+        );
+      }}
+    </CacheBuster>
   );
 }
 

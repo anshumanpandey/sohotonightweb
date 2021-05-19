@@ -57,9 +57,13 @@
     "start": "PORT=35323 serve",
     "dev": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "prebuild": "node ./update-build.js",
+    "postcommit": "npm version patch && git add ../package.json",
     "eject": "react-scripts eject"
   },
+  "post-commit": [
+    "postcommit"
+  ],
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -77,6 +81,7 @@
   },
   "devDependencies": {
     "@types/react-scroll": "^1.8.2",
-    "@types/simple-peer": "^9.6.2"
-  }
+    "@types/simple-peer": "^9.6.2",
+    "post-commit": "0.0.1"
+  },
 }

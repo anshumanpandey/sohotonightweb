@@ -1,6 +1,6 @@
+import axios from 'axios';
 import React from 'react';
 import packageJson from '../package.json';
-import { AxiosInstance } from './utils/AxiosBootstrap';
 declare global {
     var appVersion: string;
  }
@@ -46,9 +46,7 @@ class CacheBuster extends React.Component<any, CacheBusterState> {
     }
 
     componentDidMount() {
-        AxiosInstance({
-            url: '/meta.json'
-        })
+        axios({ url: '/meta.json' })
             .then(({ data }) => {
                 const latestVersion = data.meta.version;
                 const currentVersion = global.appVersion;

@@ -1,6 +1,6 @@
 {
   "name": "sohotonight-frontend-live",
-  "version": "0.1.6",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.0.6",
@@ -58,11 +58,11 @@
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "prebuild": "node ./update-build.js",
-    "postcommit": "npm version patch && git add ../package.json",
+    "predeploy": "npm version patch",
     "eject": "react-scripts eject"
   },
   "post-commit": [
-    "postcommit"
+    "predeploy"
   ],
   "eslintConfig": {
     "extends": "react-app"

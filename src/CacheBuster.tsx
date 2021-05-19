@@ -60,9 +60,6 @@ class CacheBuster extends React.Component<any, CacheBusterState> {
                     this.setState({ loading: false, isLatestVersion: true });
                 }
             })
-            .catch(() => {
-                this.setState({ loading: false, isLatestVersion: false });
-            })
     }
     render() {
         const { loading, isLatestVersion, refreshCacheAndReload } = this.state;

@@ -87,7 +87,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             })
         }
         return () => {
-            socket.off(evName)
+            socket?.off(evName)
         }
     }, [userData, onInvitationReceivedCb])
 

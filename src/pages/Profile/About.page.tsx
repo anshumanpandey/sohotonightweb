@@ -190,7 +190,7 @@ function AboutPage() {
                                                     Services:
                   </div>
                                                 <div className="col-xs-7" style={{ display: 'flex', flexWrap: "wrap", }}>
-                                                    {user?.Services?.map((s: any) => {
+                                                    {user?.services?.map((s: any) => {
                                                         return <p style={{ margin: 0, lineHeight: 'normal',borderStyle: 'solid', borderRadius: 30 ,padding: "0.5rem", marginBottom: '0.5rem',marginRight: '0.5rem',borderWidth: 1, borderColor: BrandColor }}>{s.name}</p>
                                                     })}
                                                 </div>

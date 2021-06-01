@@ -116,7 +116,7 @@ function ListPostPage() {
             })
             .filter((a: any) => {
                 const filters = getValuesFiltersFor(FILTER_KEY.SERVICE)
-                return filters.length != 0 ? filters.some(f => a.Services?.find((s: any) => s.name == f)) : true
+                return filters.length != 0 ? filters.some(f => a.services?.find((s: any) => s.name == f)) : true
             })
         setFilteredUsers([...r])
     }, [filters, data])

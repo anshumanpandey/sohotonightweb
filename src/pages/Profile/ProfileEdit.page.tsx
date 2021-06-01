@@ -285,7 +285,7 @@ function ProfileEditPage() {
 
                                                 <div className="form-group row">
                                                     <div className="col-sm-2 col-md-offset-2 col-form-label">Services:</div>
-                                                    <div className="col-sm-10 col-md-6" style={{ display: 'flex', flexWrap: 'wrap', alignItems: "flex-end" }}>
+                                                    <div className="col-sm-10 col-md-8" style={{ display: 'flex', flexWrap: 'wrap', alignItems: "flex-end" }}>
                                                         {servicesReq?.data?.map((s: any) => {
                                                             return (
                                                                 <div key={s.name} className="checkbox" style={{ width: '33%', height: '34px' }}>
@@ -293,10 +293,10 @@ function ProfileEditPage() {
                                                                         <input
                                                                             type="checkbox"
                                                                             onChange={() => {
-                                                                                const servicesState = getServicesList(s, formik.values.Services)
+                                                                                const servicesState = getServicesList(s, formik.values.services)
                                                                                 formik.setFieldValue("Services", servicesState)
                                                                             }}
-                                                                            checked={formik.values.Services.find((currentSer: any) => currentSer.id == s.id)}
+                                                                            checked={formik.values.services.find((currentSer: any) => currentSer.id == s.id)}
                                                                         />
                                                                         <span className="text">{s.name}</span>
                                                                     </label>

@@ -294,7 +294,7 @@ function ProfileEditPage() {
                                                                             type="checkbox"
                                                                             onChange={() => {
                                                                                 const servicesState = getServicesList(s, formik.values.services)
-                                                                                formik.setFieldValue("Services", servicesState)
+                                                                                formik.setFieldValue("services", servicesState)
                                                                             }}
                                                                             checked={formik.values.services.find((currentSer: any) => currentSer.id == s.id)}
                                                                         />

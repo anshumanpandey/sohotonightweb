@@ -46,7 +46,7 @@ class CacheBuster extends React.Component<any, CacheBusterState> {
     }
 
     componentDidMount() {
-        axios({ url: '/meta.json' })
+        axios({ url: `/meta.json?${new Date().toString()}` })
             .then(({ data }) => {
                 const latestVersion = data.version;
                 const currentVersion = global.appVersion;

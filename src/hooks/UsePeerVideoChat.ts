@@ -6,6 +6,7 @@ import { startSocketConnection } from '../request/socketClient';
 import { hideVideoModal, updateCurrentUser, useGlobalState } from '../state/GlobalState';
 import { createGlobalState } from 'react-hooks-global-state';
 import { buildPeerClient } from '../utils/PeerClient';
+import { logActionToServer } from '../utils/logaction';
 
 const buildDefaultPlayerMessage = (text: string = "Wait for a invitation and start a video chat") => {
     const newDiv = document.createElement("h2");
@@ -142,13 +143,35 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         })
         peer.on('error', (err) => {
             console.log(err)
+            logActionToServer({
+                body: JSON.stringify({
+                    event: "ONINVITATIONACCEPTED_REMOTESTREAM_TRACK_NUMBER",
+                    message: err.message,
+                    stack: err.stack,
+                })
+            })
         })
 
         peer.on('stream', stream => {
             const globalMediaStream = new MediaStream();
             player.addRemoteStream(globalMediaStream)
 
-            stream.getTracks().forEach((t: any) => globalMediaStream.addTrack(t))
+            logActionToServer({
+                body: JSON.stringify({
+                    event: "ONINVITATIONACCEPTED_GET_TRACK",
+                    remoteStream: stream
+                })
+            })
+            stream.getTracks()
+            .forEach((t: any) => {
+                globalMediaStream.addTrack(t)
+                logActionToServer({
+                    body: JSON.stringify({
+                        event: "ONCALLACCEPTED_REMOTESTREAM_TRACK_NUMBER",
+                        amount: t.length
+                    })
+                })
+            })
 
             timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
             setIsOnCall(true)
@@ -219,8 +242,22 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 peer2.on('stream', stream => {
                     const globalMediaStream = new MediaStream();
                     player.addRemoteStream(globalMediaStream)
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ACCEPTINVITATION_GET_TRACK",
+                            remoteStream: stream
+                        })
+                    })
                     stream.getTracks()
-                        .forEach((t: any) => globalMediaStream.addTrack(t))
+                        .forEach((t: any) => {
+                            globalMediaStream.addTrack(t)
+                            logActionToServer({
+                                body: JSON.stringify({
+                                    event: "ACCEPTINVITATION_REMOTESTREAM_TRACK_NUMBER",
+                                    amount: t.length
+                                })
+                            })
+                        })
                     socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
                 })
             })

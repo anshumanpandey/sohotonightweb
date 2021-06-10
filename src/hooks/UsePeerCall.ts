@@ -1,10 +1,10 @@
 import useAxios from "axios-hooks"
-import SimplePeer from 'simple-peer';
 import { useEffect, useState } from "react"
 import { startSocketConnection } from "../request/socketClient"
 import { callEnded, updateCallStatus, useGlobalState } from "../state/GlobalState"
 import { UseCallTracker } from "./UseCallTracker"
 import { buildPeerClient } from "../utils/PeerClient";
+import { logActionToServer } from "../utils/logaction";
 
 type CallReceivedCb = (i: any) => void
 
@@ -54,11 +54,24 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
 
         peer.on('error', (err) => {
             console.log(err)
+            logActionToServer({
+                body: JSON.stringify({
+                    event: "ONCALLACCEPTED_ERROR_ON_PEER_CREATION",
+                    inviation: err.message,
+                    stack: err.stack,
+                })
+            })
         })
 
         socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
         peer.on('signal', data => {
             socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+            logActionToServer({
+                body: JSON.stringify({
+                    event: "ONCALLACCEPTED_PEER2_SIGNAL",
+                    data: data?.toString(),
+                })
+            })
         })
 
         peer.on('stream', (remoteStream) => {
@@ -69,9 +82,22 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
             mainDiv?.appendChild(player)
             audioPlayer = player
             timeTracker.startTracker({ callId: invitation.voiceCall.id, callType: 'VOICE' })
-            remoteStream.getTracks()
+            logActionToServer({
+                body: JSON.stringify({
+                    event: "ONCALLACCEPTED_GETTING_REMOTE",
+                    remoteStream
+                })
+            })
+            remoteStream
+                .getTracks()
                 .forEach((s: any) => {
                     globalMediaStream.addTrack(s)
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ONCALLACCEPTED_REMOTESTREAM_TRACK_NUMBER",
+                            amount: s.length
+                        })
+                    })
                 })
         })
 
@@ -99,10 +125,22 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                 const socket = startSocketConnection()
                 socket?.once("INVITATION_ACCEPTED", (i: any) => {
                     onCallAccepted(i)
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "INVITATION_ACCEPTED",
+                            inviation: i
+                        })
+                    })
                 })
                 socket?.once("INVITATION_DECLINED", (i: any) => {
                     endPeerCall()
                     callEnded()
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "INVITATION_DECLINED",
+                            inviation: i
+                        })
+                    })
                 })
             })
     }
@@ -121,15 +159,41 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
             .then((localStream) => {
                 const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: false })
                 peer2.on('error', (err) => {
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ACCEPTCALL_ERROR_ON_PEER_CREATION",
+                            inviation: err.message,
+                            stack: err.stack,
+                        })
+                    })
                     console.log(err)
                 })
 
-                socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
+                socket?.on("INVITATION_HANDSHAKE", (i: any) => {
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ACCEPTCALL_SOCKET_INVITATION_HANDSHAKE",
+                            data: i?.toString(),
+                        })
+                    })
+                    peer2.signal(i)
+                })
                 peer2.on('signal', data => {
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ACCEPTCALL_PEER2_SIGNAL",
+                            data: data,
+                        })
+                    })
                     socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
                 })
 
                 peer2.on('stream', (remoteStream) => {
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ACCEPTCALL_PEER2_STREAM_RECEIVE",
+                        })
+                    })
                     console.log({ remoteStream })
                     updateCallStatus("Talking")
                     const globalMediaStream = new MediaStream();
@@ -139,9 +203,21 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                     audioPlayer = player
                     mainDiv?.appendChild(player)
 
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ACCEPTCALL_GETTING_REMOTE",
+                            remoteStream
+                        })
+                    })
                     remoteStream.getTracks()
                         .forEach((s: any) => {
                             globalMediaStream.addTrack(s)
+                            logActionToServer({
+                                body: JSON.stringify({
+                                    event: "ACCEPTCALL_REMOTESTREAM_TRACK_NUMBER",
+                                    amount: s.length
+                                })
+                            })
                         })
 
                     const socket = startSocketConnection()

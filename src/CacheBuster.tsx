@@ -7,7 +7,7 @@ declare global {
 global.appVersion = packageJson.version
 
 // version from response - first param, local version second param
-const semverGreaterThan = (versionA: string, versionB: string) => {
+const semverGreaterThan = (versionA: string = "", versionB: string = "") => {
     const versionsA = versionA.split(/\./g);
 
     const versionsB = versionB.split(/\./g);

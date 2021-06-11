@@ -140,6 +140,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
         peer.on('signal', data => {
             socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+            console.log({ onInvitationAcceptedSignal: data })
         })
         peer.on('error', (err) => {
             console.log(err)
@@ -168,7 +169,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 logActionToServer({
                     body: JSON.stringify({
                         event: "ONCALLACCEPTED_REMOTESTREAM_TRACK_NUMBER",
-                        amount: t.length
+                        amount: t
                     })
                 })
             })

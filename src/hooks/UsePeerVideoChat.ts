@@ -3,10 +3,46 @@ import SimplePeer from 'simple-peer';
 import { useEffect, useState } from 'react';
 import { UseCallTracker } from './UseCallTracker';
 import { startSocketConnection } from '../request/socketClient';
-import { hideVideoModal, updateCurrentUser, useGlobalState } from '../state/GlobalState';
+import { hideVideoModal, useGlobalState } from '../state/GlobalState';
 import { createGlobalState } from 'react-hooks-global-state';
 import { buildPeerClient } from '../utils/PeerClient';
 import { logActionToServer } from '../utils/logaction';
+
+const buildPlayerSuggestion = () => {
+    const newContent = document.createTextNode(`X`);
+    const closeMark = document.createElement("span");
+    closeMark.setAttribute("aria-hidden", "true")
+    closeMark.appendChild(newContent)
+
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button"
+    closeBtn.className = "close"
+    closeBtn.style.marginTop = "0"
+    closeBtn.setAttribute("data-dismiss", "alert")
+    closeBtn.setAttribute("aria-label", "Close")
+    closeBtn.appendChild(closeMark)
+
+    const suggestionDiv = document.createElement("div");
+    suggestionDiv.className = "alert alert-warning alert-dismissible"
+    suggestionDiv.setAttribute("role", "alert")
+    suggestionDiv.appendChild(closeBtn)
+
+    const points = [
+        'If video does not start click on play button'
+    ]
+    const uList = document.createElement("ul");
+    points.forEach(point => {
+        const el = document.createElement("li");
+        el.style.textAlign = 'center'
+        const txt = document.createTextNode(point);
+        el.appendChild(txt)
+        uList.appendChild(el)        
+    });
+
+    suggestionDiv.appendChild(uList)
+
+    return suggestionDiv
+}
 
 const buildDefaultPlayerMessage = (text: string = "Wait for a invitation and start a video chat") => {
     const newDiv = document.createElement("h2");
@@ -39,12 +75,14 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     const text = document.createTextNode("Your browser does not support HTML5 video.");
     mainVideoPlayer.appendChild(text)
     previewVideoPlayer.appendChild(text)
+    const suggestionNode = buildPlayerSuggestion()
 
     while (parentNode.firstChild) {
         parentNode.removeChild(parentNode.firstChild);
     }
     parentNode.appendChild(mainVideoPlayer)
     parentNode.appendChild(previewVideoPlayer)
+    parentNode.appendChild(suggestionNode)    
     return {
         addRemoteStream: (s: MediaStream) => mainVideoPlayer.srcObject = s,
         addLocalStream: (s: MediaStreamTrack) => {

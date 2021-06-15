@@ -1,6 +1,5 @@
 import React from 'react';
 import { UsePeerVideo, useVideoState } from '../hooks/UsePeerVideoChat';
-import { callEnded, hideVideoModal, useGlobalState } from '../state/GlobalState';
 import SohoModal from './SohoModal';
 
 const SohoVideoModal: React.FC = () => {
@@ -22,7 +21,7 @@ const SohoVideoModal: React.FC = () => {
                 close()
             }} type="button" className="btn btn-default">Hang Up</button>}
         >
-            <div id="video-div"></div>
+            <div id="video-div" className="embed-responsive embed-responsive-16by9"></div>
         </SohoModal>
     );
 }

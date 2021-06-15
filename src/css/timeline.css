@@ -990,7 +990,7 @@ h4, .h4 {
     border: rgba(0, 0, 0, 0)
 }
 
-.modal-content .close {
+.modal-content.close {
     font-size: 26px
 }
 

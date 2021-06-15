@@ -96,7 +96,7 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     return {
         addRemoteStream: (s: MediaStream) => {
             mainVideoPlayer.srcObject = s
-            previewVideoPlayer.style.marginRight = (mainVideoPlayer.width + 20) + 'px'
+            previewVideoPlayer.style.marginRight = (mainVideoPlayer.videoWidth + 20) + 'px'
         },
         addLocalStream: (s: MediaStreamTrack) => {
             const stream = new MediaStream()

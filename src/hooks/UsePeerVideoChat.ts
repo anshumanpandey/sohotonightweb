@@ -97,7 +97,7 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
         addRemoteStream: (s: MediaStream) => {
             mainVideoPlayer.srcObject = s
             mainVideoPlayer.addEventListener( "loadedmetadata", function (e) {
-                previewVideoPlayer.style.marginLeft = (this.videoWidth + 50) + 'px'
+                previewVideoPlayer.style.marginLeft = (this.videoWidth + 10) + 'px'
             }, false );
         },
         addLocalStream: (s: MediaStreamTrack) => {

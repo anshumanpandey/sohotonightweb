@@ -94,6 +94,7 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
             const stream = new MediaStream()
             stream.addTrack(s)
             previewVideoPlayer.srcObject = stream
+            previewVideoPlayer.style.marginRight = (mainVideoPlayer.width + 20) + 'px'
         },
     }
 }

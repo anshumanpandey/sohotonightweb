@@ -31,6 +31,8 @@ const buildPlayerSuggestion = () => {
     suggestionDiv.style.backgroundColor = Color(BrandColor).lighten(0.1).toString()
     suggestionDiv.style.borderColor = Color(BrandColor).lighten(0.4).toString()
     suggestionDiv.style.color = 'white'
+    suggestionDiv.style.zIndex = '5'
+    suggestionDiv.style.position = 'relative'
 
     const points = [
         'If video does not start click on play button'
@@ -87,14 +89,19 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     }
     parentNode.appendChild(mainVideoPlayer)
     parentNode.appendChild(previewVideoPlayer)
-    parentNode.appendChild(suggestionNode)    
+    parentNode.appendChild(suggestionNode)
+    setTimeout(() => {
+        parentNode.removeChild(suggestionNode)
+    }, 7 * 1000)
     return {
-        addRemoteStream: (s: MediaStream) => mainVideoPlayer.srcObject = s,
+        addRemoteStream: (s: MediaStream) => {
+            mainVideoPlayer.srcObject = s
+            previewVideoPlayer.style.marginRight = (mainVideoPlayer.width + 20) + 'px'
+        },
         addLocalStream: (s: MediaStreamTrack) => {
             const stream = new MediaStream()
             stream.addTrack(s)
             previewVideoPlayer.srcObject = stream
-            previewVideoPlayer.style.marginRight = (mainVideoPlayer.width + 20) + 'px'
         },
     }
 }

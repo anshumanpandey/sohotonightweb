@@ -7,6 +7,8 @@ import { hideVideoModal, useGlobalState } from '../state/GlobalState';
 import { createGlobalState } from 'react-hooks-global-state';
 import { buildPeerClient } from '../utils/PeerClient';
 import { logActionToServer } from '../utils/logaction';
+import { BrandColor } from '../utils/Colors';
+import Color from 'color';
 
 const buildPlayerSuggestion = () => {
     const newContent = document.createTextNode(`X`);
@@ -26,6 +28,9 @@ const buildPlayerSuggestion = () => {
     suggestionDiv.className = "alert alert-warning alert-dismissible"
     suggestionDiv.setAttribute("role", "alert")
     suggestionDiv.appendChild(closeBtn)
+    suggestionDiv.style.backgroundColor = Color(BrandColor).lighten(0.1).toString()
+    suggestionDiv.style.borderColor = Color(BrandColor).lighten(0.4).toString()
+    suggestionDiv.style.color = 'white'
 
     const points = [
         'If video does not start click on play button'

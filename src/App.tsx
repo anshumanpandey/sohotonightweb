@@ -55,6 +55,7 @@ function App() {
   const [error] = useGlobalState('error')
   const [info] = useGlobalState('info')
   const [success] = useGlobalState('success')
+  const [buyTokenModal] = useGlobalState("buyTokenModal");
 
   useEffect(() => {
     answerInvitation()
@@ -177,7 +178,7 @@ function App() {
             {UserIsLogged() && <BuyConfirmModal />}
             {UserIsLogged() && <SohoCallModal />}
             {UserIsLogged() && <SohoVideoModal />}
-            {UserIsLogged() && <BuyTokenModal />}
+            {UserIsLogged() && buyTokenModal && <BuyTokenModal />}
             {UserIsLogged() && <VoiceCallsTracker />}
 
             <CookieConsent buttonText="Accept Cookies">

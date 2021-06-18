@@ -97,10 +97,8 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
         addRemoteStream: (s: MediaStream) => {
             mainVideoPlayer.srcObject = s
             mainVideoPlayer.addEventListener( "loadeddata", function (e) {
-                console.log(s.getVideoTracks()[0].getConstraints())
-                console.log(s.getVideoTracks()[0].getSettings())
-                console.log(s.getVideoTracks()[0])
-                previewVideoPlayer.style.marginLeft = ((s.getVideoTracks()[0].getSettings().width || 1) + 10) + 'px'
+                const rect = mainVideoPlayer.getClientRects()
+                previewVideoPlayer.style.marginLeft = ((rect[0].x || 1) + 10) + 'px'
             }, false );
         },
         addLocalStream: (s: MediaStreamTrack) => {

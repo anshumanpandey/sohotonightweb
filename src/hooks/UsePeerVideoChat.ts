@@ -98,6 +98,7 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
             mainVideoPlayer.srcObject = s
             mainVideoPlayer.addEventListener( "loadeddata", function (e) {
                 console.log(s.getVideoTracks()[0].getConstraints())
+                console.log(s.getVideoTracks()[0].getSettings())
                 console.log(s.getVideoTracks()[0])
                 previewVideoPlayer.style.marginLeft = ((s.getVideoTracks()[0].getSettings().width || 1) + 10) + 'px'
             }, false );

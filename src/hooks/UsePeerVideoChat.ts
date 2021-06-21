@@ -9,6 +9,7 @@ import { buildPeerClient } from '../utils/PeerClient';
 import { logActionToServer } from '../utils/logaction';
 import { BrandColor } from '../utils/Colors';
 import Color from 'color';
+import { UseMediaStreamManager } from './UseMediaStreamManager';
 
 const buildPlayerSuggestion = () => {
     const newContent = document.createTextNode(`X`);
@@ -43,7 +44,7 @@ const buildPlayerSuggestion = () => {
         el.style.textAlign = 'center'
         const txt = document.createTextNode(point);
         el.appendChild(txt)
-        uList.appendChild(el)        
+        uList.appendChild(el)
     });
 
     suggestionDiv.appendChild(uList)
@@ -77,29 +78,34 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     previewVideoPlayer.style.top = "0"
     previewVideoPlayer.style.marginTop = "3rem"
     previewVideoPlayer.style.marginRight = "2rem"
-
-
-    const text = document.createTextNode("Your browser does not support HTML5 video.");
-    mainVideoPlayer.appendChild(text)
-    previewVideoPlayer.appendChild(text)
-    const suggestionNode = buildPlayerSuggestion()
-
-    while (parentNode.firstChild) {
-        parentNode.removeChild(parentNode.firstChild);
-    }
-    parentNode.appendChild(mainVideoPlayer)
-    parentNode.appendChild(previewVideoPlayer)
-    parentNode.appendChild(suggestionNode)
-    setTimeout(() => {
-        parentNode.removeChild(suggestionNode)
-    }, 7 * 1000)
     return {
         addRemoteStream: (s: MediaStream) => {
-            mainVideoPlayer.srcObject = s
-            mainVideoPlayer.addEventListener( "loadeddata", function (e) {
+            const text = document.createTextNode("Your browser does not support HTML5 video.");
+            mainVideoPlayer.appendChild(text)
+            previewVideoPlayer.appendChild(text)
+            const suggestionNode = buildPlayerSuggestion()
+
+            while (parentNode.firstChild) {
+                parentNode.removeChild(parentNode.firstChild);
+            }
+            parentNode.appendChild(mainVideoPlayer)
+            parentNode.appendChild(previewVideoPlayer)
+            parentNode.appendChild(suggestionNode)
+            setTimeout(() => {
+                parentNode.childNodes.forEach(c => {
+                    return c === suggestionNode ? parentNode.removeChild(suggestionNode) : null
+                })
+            }, 7 * 1000)
+            if ('srcObject' in mainVideoPlayer) {
+                mainVideoPlayer.srcObject = s
+            } else {
+                mainVideoPlayer.src = window.URL.createObjectURL(s)
+            }
+            mainVideoPlayer.addEventListener("loadeddata", function (e) {
                 const rect = mainVideoPlayer.getClientRects()
                 previewVideoPlayer.style.marginLeft = ((rect[0].x || 1) + 10) + 'px'
-            }, false );
+                mainVideoPlayer.play()
+            }, false);
         },
         addLocalStream: (s: MediaStreamTrack) => {
             const stream = new MediaStream()
@@ -125,6 +131,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const [isOnCall, setIsOnCall] = useState<boolean>(false)
     const [isListening, setIsListening] = useState<boolean>(false)
     const [onInvitationReceivedCb, setOnInvitationReceivedCb] = useState<undefined | InvitationCb>()
+    const StreamManager = UseMediaStreamManager()
 
     const timeTracker = UseCallTracker()
 
@@ -158,14 +165,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         }
     }, [params?.parentNode])
 
-    const listenInvitations = () => {
-        console.log({ isListening })
-        if (isListening) return
-        const socket = startSocketConnection()
-        console.log('listening INVITATION_ACCEPTED')
-        setIsListening(true)
-    }
-
     const setChildNode = ({ node }: { node: any }) => {
         if (videoNode) {
             while (videoNode.firstChild) {
@@ -175,29 +174,20 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         }
     }
 
-    const getInvitations = () => {
-        return request({
-            url: '/video/invitations',
-        })
-            .then(({ data }) => data)
+    const setModalMessage = (txt: string) => {
+        const msg = buildDefaultPlayerMessage(txt)
+        setChildNode({ node: msg })
     }
 
     const onInvitationAccepted = (invitation: any) => {
+        console.log("INVITATION_HANDSHAKE")
         setCurrentVideoChat(invitation.videoChat)
-        const peer = buildPeerClient();
-        const msg = buildDefaultPlayerMessage("Waiting connection")
-        setChildNode({ node: msg })
+        setModalMessage("Waiting connection")
         const player = attachVideoPlayer({ parentNode: videoNode })
-
         const socket = startSocketConnection()
-        socket?.on("INVITATION_HANDSHAKE", (i: any) => peer.signal(i))
-
-        peer.on('signal', data => {
-            socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
-            console.log({ onInvitationAcceptedSignal: data })
-        })
+        const peer = buildPeerClient();
         peer.on('error', (err) => {
-            console.log(err)
+            setModalMessage(`There was an error when making the connection to the other client: ${err.message}`)
             logActionToServer({
                 body: JSON.stringify({
                     event: "ONINVITATIONACCEPTED_REMOTESTREAM_TRACK_NUMBER",
@@ -207,32 +197,47 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             })
         })
 
-        peer.on('stream', stream => {
-            const globalMediaStream = new MediaStream();
-            player.addRemoteStream(globalMediaStream)
-
-            logActionToServer({
-                body: JSON.stringify({
-                    event: "ONINVITATIONACCEPTED_GET_TRACK",
-                    remoteStream: stream
-                })
-            })
-            stream.getTracks()
-            .forEach((t: any) => {
-                globalMediaStream.addTrack(t)
-                logActionToServer({
-                    body: JSON.stringify({
-                        event: "ONCALLACCEPTED_REMOTESTREAM_TRACK_NUMBER",
-                        amount: t
-                    })
-                })
-            })
-
-            timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
-            setIsOnCall(true)
+        socket?.on("INVITATION_HANDSHAKE", (i: any) => {
+            console.log(invitation)
+            peer.signal(i)
+        })
+        peer.on('signal', data => {
+            console.log({ data })
+            socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
         })
 
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        peer.on('stream', (stream: MediaStream) => {
+            if (stream.getVideoTracks().length === 0) {
+                setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
+            } else if (stream.getAudioTracks().length === 0) {
+                setModalMessage(`We could not detect any audio source coming for the other user. Please ask him to make sure microphone is setup properly`)
+            } else {
+                const globalMediaStream = new MediaStream();
+                player.addRemoteStream(globalMediaStream)
+
+                logActionToServer({
+                    body: JSON.stringify({
+                        event: "ONINVITATIONACCEPTED_GET_TRACK",
+                        remoteStream: stream
+                    })
+                })
+                stream.getTracks()
+                    .forEach((t: any) => {
+                        globalMediaStream.addTrack(t)
+                        logActionToServer({
+                            body: JSON.stringify({
+                                event: "ONCALLACCEPTED_REMOTESTREAM_TRACK_NUMBER",
+                                amount: t
+                            })
+                        })
+                    })
+
+                timeTracker.startTracker({ callId: invitation.videoChat.id, callType: 'VIDEO' })
+                setIsOnCall(true)
+            }
+        })
+
+        StreamManager.getMediaStreams()
             .then((s) => {
                 player.addLocalStream(s.getVideoTracks()[0])
                 peer.addStream(s)
@@ -247,74 +252,65 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 const msg = buildDefaultPlayerMessage("Waiting response")
                 setChildNode({ node: msg })
                 setCurrentVideoChat(data)
-                const socket = startSocketConnection()
-                socket?.once("INVITATION_ACCEPTED", (i: any) => {
-                    if (i.videoChat) {
-                        onInvitationAccepted(i)
-                    }
-                })
-                socket?.once("INVITATION_DECLINED", (i: any) => {
-                    if (i.videoChat) {
-                        setIsAwaitingResponse(false)
-                        setCurrentVideoChat(undefined)
-                        const message = buildDefaultPlayerMessage()
-                        setChildNode({ node: message })
-                    }
-                })
             })
     }
 
-    const rejectInvitation = ({ invitationId }: { invitationId: string }) => {
-        return request({
-            url: '/invitation/reject',
-            method: 'post',
-            data: { invitationId },
-        })
-    }
-
     const acceptInvitation = ({ invitation }: { invitation: any }) => {
-        const socket = startSocketConnection()
         setCurrentVideoChat(invitation.videoChat)
-        setIsAwaitingResponse(false)
-        const msg = buildDefaultPlayerMessage("Waiting connection")
-        setChildNode({ node: msg })
+        const socket = startSocketConnection()
+        StreamManager.getMediaStreams()
+            .then(localStream => {
+                if (localStream.getVideoTracks().length === 0) {
+                    setModalMessage("We cannot find a video stream from the current device. Please ensure your camera is set up properly.")
+                } else {
+                    const player = attachVideoPlayer({ parentNode: videoNode })
+                    player.addLocalStream(localStream.getVideoTracks()[0])
 
-        return request({
-            url: '/invitation/accept',
-            method: 'post',
-            data: { invitationId: invitation.id }
-        })
-            .then(() => navigator.mediaDevices.getUserMedia({ video: true, audio: true }))
-            .then((localStream) => {
-                const player = attachVideoPlayer({ parentNode: videoNode })
-                player.addLocalStream(localStream.getVideoTracks()[0])
-
-                const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: false })
-                socket?.on("INVITATION_HANDSHAKE", (i: any) => peer2.signal(i))
-                peer2.on('signal', data => {
-                    socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
-                })
-                peer2.on('stream', stream => {
-                    const globalMediaStream = new MediaStream();
-                    player.addRemoteStream(globalMediaStream)
-                    logActionToServer({
-                        body: JSON.stringify({
-                            event: "ACCEPTINVITATION_GET_TRACK",
-                            remoteStream: stream
-                        })
+                    setModalMessage("Waiting for the other user to start the connection")
+                    const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: false })
+                    const onSignal = (data: any) => {
+                        console.log("onSignal")
+                        console.log(data)
+                        socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
+                    }
+                    peer2.on('error', err => {
+                        setModalMessage(`There was an error when making the connection to the other client: ${err.message}`)
+                        peer2.off("signal", onSignal)
                     })
-                    stream.getTracks()
-                        .forEach((t: any) => {
-                            globalMediaStream.addTrack(t)
+                    peer2.on('signal', onSignal)
+                    socket?.on("INVITATION_HANDSHAKE", (i: any) => {
+                        peer2.signal(i)
+                    })
+
+                    peer2.on('stream', (stream: MediaStream) => {
+                        console.log(stream.getVideoTracks())
+                        if (stream.getVideoTracks().length === 0) {
+                            setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
+                        } else if (stream.getAudioTracks().length === 0) {
+                            setModalMessage(`We could not detect any audio source coming for the other user. Please ask him to make sure microphone is setup properly`)
+                        } else {
+                            const globalMediaStream = new MediaStream();
+                            player.addRemoteStream(globalMediaStream)
                             logActionToServer({
                                 body: JSON.stringify({
-                                    event: "ACCEPTINVITATION_REMOTESTREAM_TRACK_NUMBER",
-                                    amount: t.length
+                                    event: "ACCEPTINVITATION_GET_TRACK",
+                                    remoteStream: stream
                                 })
                             })
-                        })
-                    socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
-                })
+                            stream.getTracks().forEach((t) => {
+                                globalMediaStream.addTrack(t)
+                                logActionToServer({
+                                    body: JSON.stringify({
+                                        event: "ACCEPTINVITATION_REMOTESTREAM_TRACK_NUMBER",
+                                        amount: t
+                                    })
+                                })
+                            })
+                        }
+
+                        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
+                    })
+                }
             })
     }
 
@@ -355,13 +351,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }
 
     return {
-        getInvitations,
         sendRequest,
-        rejectInvitation,
         onInvitationAccepted,
         onInvitationReceived,
         acceptInvitation,
-        listenInvitations,
         endCall,
         canStartChat: isOnCall === false && isAwaitingResponse === false,
         currentVideoChat

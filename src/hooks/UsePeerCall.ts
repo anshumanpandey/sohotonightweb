@@ -69,7 +69,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
             logActionToServer({
                 body: JSON.stringify({
                     event: "ONCALLACCEPTED_PEER2_SIGNAL",
-                    data: data?.toString(),
+                    data: data,
                 })
             })
         })
@@ -173,7 +173,7 @@ export const UsePeerCall = (p?: { node?: HTMLElement }) => {
                     logActionToServer({
                         body: JSON.stringify({
                             event: "ACCEPTCALL_SOCKET_INVITATION_HANDSHAKE",
-                            data: i?.toString(),
+                            data: i,
                         })
                     })
                     peer2.signal(i)

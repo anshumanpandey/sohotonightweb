@@ -11,11 +11,17 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
     const [userData] = useGlobalState("userData")
     const [{ data, loading, error }, doLogin] = useAxios({ url: '/user/login', method: 'POST' }, { manual: true });
 
-    if (redirect && userData) {
-        if (userData.role == "MODEL") return <Redirect to={`/profile/${userData.id}`} />
-        if (userData.role == "USER" && userData.tokensBalance == 0) return <Redirect to="/payment" />
-        if (userData.role == "USER" && userData.tokensBalance != 0) return <Redirect to="/list-post" />
+    if (redirect) {
+        if (userData) {
+            if (userData.role == "MODEL") return <Redirect to={`/profile/${userData.id}`} />
+            if (userData.role == "USER" && userData.tokensBalance == 0) return <Redirect to="/payment" />
+            if (userData.role == "USER" && userData.tokensBalance != 0) return <Redirect to="/list-post" />
+        }
+        return <Redirect to="/forgot-password" />
     }
+
+    const btnIsDisabled = () => disabled === true || loading === true
+    const onRedirectBtnClick = () => setRedirect(true)
 
     return (
         <Formik
@@ -77,7 +83,10 @@ function SohoLoginForm({ disabled }: { disabled?: boolean }) {
                             />
                             {errors.password && touched.password && <ErrorLabel message={errors.password.toString()} />}
                         </div>
-                        <SohoButton disabled={disabled} style={{ marginLeft: 'auto' }} onClick={() => handleSubmit()} value={"Login"} />
+                        <div style={{ display: 'flex', width: '50%', marginLeft: 'auto' }}>
+                            <SohoButton disabled={btnIsDisabled()} style={{ marginLeft: 'auto' }} onClick={onRedirectBtnClick} value={"Recover"} />
+                            <SohoButton disabled={btnIsDisabled()} style={{ marginLeft: 'auto' }} onClick={handleSubmit} value={"Login"} />
+                        </div>
                     </div>
                 )}
         </Formik>

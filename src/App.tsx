@@ -47,6 +47,8 @@ import UserLoggedIsModel from './utils/UserLoggedIsModel';
 import MessagesPage from './pages/messages/Messages.page';
 import BuyConfirmModal from './partials/BuyConfirmModal';
 import CacheBuster, { CacheBusterState } from './CacheBuster';
+import ForgotPassword from './pages/forgotPassword/ForgotPassword.page';
+import SetupPassword from './pages/setupPassword/SetupPassword.page';
 
 function App() {
   const alert = useAlert()
@@ -114,6 +116,12 @@ function App() {
               </Route>
               <Route exact path="/cookiePolicy">
                 <CookiePolicy />
+              </Route>
+              <Route exact path="/forgot-password">
+                <ForgotPassword />
+              </Route>
+              <Route exact path="/setup-password">
+                <SetupPassword />
               </Route>
               <Route exact path="/callTest">
                 <CallTest />

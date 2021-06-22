@@ -1,8 +1,8 @@
 import Color from 'color';
 import React, { useEffect, useState } from 'react';
-import Loader from "react-loader-spinner";
 import { BrandColor } from "../utils/Colors"
 import SohoButton from './SohoButton';
+import SohoLoader from './SohoLoader';
 
 export const SohoAlert = ({ onAccept, onClose, body, disable = false, busy = false, autoCloseOnSeconds }: { autoCloseOnSeconds?: number, busy?: boolean, disable?: boolean, body: () => React.ReactNode, onAccept: () => void, onClose: () => void }) => {
   const [timer, setTimer] = useState<undefined | NodeJS.Timeout>()
@@ -46,14 +46,7 @@ export const SohoAlert = ({ onAccept, onClose, body, disable = false, busy = fal
 
   return (
     <div style={{ border: `1px solid ${BrandColor}`, backgroundColor: 'white',borderRadius: '25px', marginBottom: '0.5rem', position: 'relative' }}>
-      {busy === true && (<div style={{ pointerEvents: "none", position: 'absolute', backgroundColor: '#ffffff50', display: 'flex', justifyContent: 'center', width: '100%', height: '100%' }}>
-        <Loader
-          type="ThreeDots"
-          color={BrandColor}
-          height={80}
-          width={80}
-        />
-      </div>)}
+      <SohoLoader show={busy} />
       <div style={{ backgroundColor: BrandColor, padding: "1rem", borderTopLeftRadius: '24px', borderTopRightRadius: '24px' }}>
         <p style={{ color: 'white', margin: 0 }}>
           {body()}

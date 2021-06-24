@@ -42,7 +42,6 @@ export const UseNotificationManager = () => {
 
   useEffect(() => {
     const socket = startSocketConnection()
-    console.log(invitationAcceptedCb)
     if (invitationAcceptedCb && !socket?.hasListeners('INVITATION_ACCEPTED')) {
       socket?.once("INVITATION_ACCEPTED", onInvitationAccepted)
     }

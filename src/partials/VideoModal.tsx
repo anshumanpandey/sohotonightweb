@@ -32,8 +32,8 @@ const SohoVideoModal: React.FC = () => {
                 return (
                     <div style={{ display: 'flex', justifyContent: "space-around" }}>
                         <i onClick={videoPeer.isBroadcastingAudio ? videoPeer.muteMyself : videoPeer.shareAudio} style={audioStyleIcon} className={`fa fa-microphone`} aria-hidden="true"></i>
-                        <i onClick={endCall} style={iconBaseStyle} className={`fa fa-window-close`} aria-hidden="true"></i>
                         <i onClick={videoPeer.isBroadcastingVideo ? videoPeer.stopMyVideo : videoPeer.shareVideo} style={videoStyleIcon} className="fa fa-video-camera" aria-hidden="true"></i>
+                        <i onClick={endCall} style={iconBaseStyle} className={`fa fa-window-close`} aria-hidden="true"></i>
                     </div>
                 )
             }}

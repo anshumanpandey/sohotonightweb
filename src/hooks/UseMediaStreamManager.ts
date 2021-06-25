@@ -1,15 +1,31 @@
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import { createGlobalState } from "react-hooks-global-state";
+import SimplePeer from "simple-peer";
+
+enum BroadcastTypes {
+  'AUDIO',
+  'VIDEO'
+}
+
+type OnTrackAddedCb = (t: MediaStreamTrack) => void
 
 type InitialState = {
   currentMediaStream: undefined | MediaStream,
   currentRemoteMediaStream: undefined | MediaStream,
-  broadcasting: ('AUDIO' | 'VIDEO')[],
+  broadcasting: BroadcastTypes[],
+  requestedTracks: BroadcastTypes[],
+  onTrackAddedCb: OnTrackAddedCb | undefined,
 }
 export const {
   useGlobalState: useMediaState,
   getGlobalState
-} = createGlobalState<InitialState>({ currentMediaStream: undefined, currentRemoteMediaStream: undefined, broadcasting: [] });
+} = createGlobalState<InitialState>({
+  currentMediaStream: undefined,
+  currentRemoteMediaStream: undefined,
+  broadcasting: [],
+  requestedTracks: [],
+  onTrackAddedCb: undefined
+});
 
 const getNonMutedTracks = (tracks: MediaStreamTrack[]) => {
   return new Promise<MediaStreamTrack[]>((resolve, rejected) => {
@@ -37,14 +53,40 @@ export const UseMediaStreamManager = () => {
   const [currentMediaStream, setCurrentMediaStream] = useMediaState("currentMediaStream")
   const [, setCurrentRemoteMediaStream] = useMediaState("currentRemoteMediaStream")
   const [, setBroadcasting] = useMediaState("broadcasting")
+  const [, setRequestedTracks] = useMediaState("requestedTracks")
+  const [, setOnTrackAddedCb] = useMediaState("onTrackAddedCb")
 
-  const getMediaStreams = () => {
-    return navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+  const remoteStream = getGlobalState("currentRemoteMediaStream")
+  const onTrackAddedCb = getGlobalState("onTrackAddedCb")
+
+  useEffect(() => {
+    if (!remoteStream) return
+    remoteStream.onaddtrack = (ev) => {
+      const cb = getGlobalState("onTrackAddedCb")
+      if (ev.track && cb) {
+        cb(ev.track)
+      }
+    }
+  }, [remoteStream, onTrackAddedCb])
+
+  const getMediaStreams = (p?: { onlyAudio: boolean }) => {
+    const constraints: MediaStreamConstraints = { video: true, audio: true }
+    if (p?.onlyAudio === true) {
+      constraints.video = false
+    }
+    return navigator.mediaDevices.getUserMedia(constraints)
       .then((s) => {
-        setBroadcasting(["VIDEO", "AUDIO"])
+        const types = [BroadcastTypes.AUDIO].concat(p?.onlyAudio === true ? []: [BroadcastTypes.VIDEO])
+        setBroadcasting(types)
+        setRequestedTracks(types)
         setCurrentMediaStream(s)
         return s
       })
+  }
+
+  const hasRequestedVideo = () => {
+    return getGlobalState("requestedTracks")
+    .find(i => i === BroadcastTypes.VIDEO) !== undefined
   }
 
   const stopAudio = useCallback(() => {
@@ -62,11 +104,11 @@ export const UseMediaStreamManager = () => {
   }, [currentMediaStream])
 
   const isBroadcastingVideo = () => {
-    return getGlobalState("broadcasting").find(e => e === 'VIDEO') !== undefined
+    return getGlobalState("broadcasting").find(e => e === BroadcastTypes.VIDEO) !== undefined
   }
 
   const isBroadcastingAudio = () => {
-    return getGlobalState("broadcasting").find(e => e === 'AUDIO') !== undefined
+    return getGlobalState("broadcasting").find(e => e === BroadcastTypes.AUDIO) !== undefined
   }
 
   const getRemoteVideo = () => {
@@ -87,13 +129,12 @@ export const UseMediaStreamManager = () => {
   const getRemoteTracks = () => {
     return getRemoteAudio()
       .then(audioTracks => {
-        console.log({ audioTracks })
         return getRemoteVideo().concat(audioTracks)
       })
   }
 
   const stopVideoBroadcast = () => {
-    setBroadcasting(p => [...p.filter(t => t !== "VIDEO")])
+    setBroadcasting(p => [...p.filter(t => t !== BroadcastTypes.VIDEO)])
     getGlobalState("currentMediaStream")
       ?.getVideoTracks()
       .forEach(t => {
@@ -102,7 +143,7 @@ export const UseMediaStreamManager = () => {
   }
 
   const stopAudioBroadcast = () => {
-    setBroadcasting(p => [...p.filter(t => t !== "AUDIO")])
+    setBroadcasting(p => [...p.filter(t => t !== BroadcastTypes.AUDIO)])
     getGlobalState("currentMediaStream")
       ?.getAudioTracks()
       .forEach(t => {
@@ -110,17 +151,33 @@ export const UseMediaStreamManager = () => {
       })
   }
 
-  const shareVideo = () => {
-    setBroadcasting(p => p.filter(t => t !== "VIDEO").concat(["VIDEO"]))
-    getGlobalState("currentMediaStream")
-      ?.getVideoTracks()
+  const shareVideo = ({ peer }: { peer?: SimplePeer.Instance }) => {
+    setBroadcasting(p => p.filter(t => t !== BroadcastTypes.VIDEO).concat([BroadcastTypes.VIDEO]))
+    const localStream = getGlobalState("currentMediaStream")
+    if (!localStream) return 
+
+    if (hasRequestedVideo() === false) {
+      return navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => stream.getVideoTracks())
+      .then(videoTracks => {
+        videoTracks.forEach(t => {
+          localStream.addTrack(t)
+          peer?.addTrack(t, localStream)
+        })
+      })
+      .then(() => setRequestedTracks(p => [...p, BroadcastTypes.VIDEO]))
+      .then(() => localStream)
+    } else {
+      localStream.getVideoTracks()
       .forEach(t => {
         t.enabled = true
       })
+      return Promise.resolve(localStream)
+    }
   }
 
   const shareAudio = () => {
-    setBroadcasting(p => p.filter(t => t !== "AUDIO").concat(["AUDIO"]))
+    setBroadcasting(p => p.filter(t => t !== BroadcastTypes.AUDIO).concat([BroadcastTypes.AUDIO]))
     getGlobalState("currentMediaStream")
       ?.getAudioTracks()
       .forEach(t => {
@@ -157,5 +214,8 @@ export const UseMediaStreamManager = () => {
     shareAudio,
     stopVideo,
     getMediaStreams,
+    onTrackAdded: (cb: OnTrackAddedCb) => {
+      setOnTrackAddedCb(() => cb)
+    }
   }
 }

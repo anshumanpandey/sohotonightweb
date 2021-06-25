@@ -25,8 +25,8 @@ export const CallIcons = ({ disabled = false, model, hideMessageIcon = false }: 
                     return
                 }
 
-                callStarted({ toModel: model })
-                call.sendCallRequest({ toNickname: model.nickname })
+                peerVideo.sendRequest({ toUserNickname: model.nickname, startWithVoice: true })
+                    .then(() => showVideoChatModal())
             }}
             disabled={disabled}
             style={{ textAlign: 'end', width: '20%', marginBottom: 0, marginRight: '2rem' }}>

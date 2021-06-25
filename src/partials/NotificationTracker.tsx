@@ -25,7 +25,6 @@ const NotificationTracker: React.FC = () => {
 
     useEffect(() => {
         onInvitationAccepted(i => {
-            console.log("onInvitationAccepted")
             if (i && isVideoChat(i)) {
                 peerVideo.onInvitationAccepted(i)
             }

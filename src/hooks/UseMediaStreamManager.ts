@@ -76,6 +76,7 @@ export const UseMediaStreamManager = () => {
     }
     return navigator.mediaDevices.getUserMedia(constraints)
       .then((s) => {
+        console.log("stream obtained", s)
         const types = [BroadcastTypes.AUDIO].concat(p?.onlyAudio === true ? []: [BroadcastTypes.VIDEO])
         setBroadcasting(types)
         setRequestedTracks(types)
@@ -113,10 +114,9 @@ export const UseMediaStreamManager = () => {
 
   const getRemoteVideo = () => {
     const videoTracks = getGlobalState("currentRemoteMediaStream")
-    ?.getVideoTracks()
-    .filter(t => t.muted === false)
+    ?.getVideoTracks() || []
 
-    return videoTracks || []
+    return getNonMutedTracks(videoTracks) || []
   }
 
   const getRemoteAudio = () => {
@@ -129,7 +129,10 @@ export const UseMediaStreamManager = () => {
   const getRemoteTracks = () => {
     return getRemoteAudio()
       .then(audioTracks => {
-        return getRemoteVideo().concat(audioTracks)
+        return getRemoteVideo()
+        .then(videoTracks => {
+        return videoTracks.concat(audioTracks)
+        })
       })
   }
 

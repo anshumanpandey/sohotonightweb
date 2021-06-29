@@ -19,7 +19,7 @@ const SohoModal: FunctionComponent<Props> = ({ title, show = false, onClose, clo
     }, [show])
 
     return (
-        <div className="modal fade" data-backdrop={closeOnBackdropClik == true ? "true": "static"} id={htmlId} tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
+        <div className="modal fade modal-fullscreen-xs-down" data-backdrop={closeOnBackdropClik == true ? "true": "static"} id={htmlId} tabIndex={-1} role="dialog" aria-labelledby="myModalLabel">
             <div className={`modal-dialog ${size ? 'modal-lg': undefined}`} role="document">
                 <div className="modal-content">
                     <div className="modal-header">

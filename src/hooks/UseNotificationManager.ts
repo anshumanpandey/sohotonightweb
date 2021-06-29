@@ -8,17 +8,20 @@ type NotificationState = {
   notifications: any[],
   acceptedInvitations: any[],  
   onInvitationAccepted?: (i: any) => void,
+  onInvitationRejected?: (i: any) => void,
 }
 const InitialState = {
   notifications: [],
   acceptedInvitations: [],
   onInvitationAccepted: undefined,
+  onInvitationRejected: undefined,
 }
 const { useGlobalState: useNotificationState } = createGlobalState<NotificationState>(InitialState);
 
 export const UseNotificationManager = () => {
   const [notificationsArr, setNotifications] = useNotificationState('notifications');
   const [invitationAcceptedCb, setInvitationAcceptedCb] = useNotificationState('onInvitationAccepted');
+  const [onInvitationRejected, setOnInvitationRejected] = useNotificationState('onInvitationRejected');
   const [acceptedInvitations, setAcceptedInvitations] = useNotificationState('acceptedInvitations');
   
   const [jwtToken] = useGlobalState('jwtToken')
@@ -37,7 +40,6 @@ export const UseNotificationManager = () => {
     if (!socket?.hasListeners('NEW_VIDEO_INVITATION')) {
       socket?.once("NEW_VIDEO_INVITATION", onInvitationReceived)
     }
-    socket?.once("INVITATION_DECLINED", removeNotification)
   }, [jwtToken])
 
   useEffect(() => {
@@ -45,7 +47,19 @@ export const UseNotificationManager = () => {
     if (invitationAcceptedCb && !socket?.hasListeners('INVITATION_ACCEPTED')) {
       socket?.once("INVITATION_ACCEPTED", onInvitationAccepted)
     }
-  }, [invitationAcceptedCb])  
+  }, [invitationAcceptedCb])
+
+  useEffect(() => {
+    const socket = startSocketConnection()
+    if (onInvitationRejected) {
+      socket?.off("INVITATION_DECLINED", onInvitationRejected)
+      socket?.once("INVITATION_DECLINED", onInvitationRejected)
+    } else {
+      socket?.off("INVITATION_DECLINED", removeNotification)
+      socket?.once("INVITATION_DECLINED", removeNotification)
+    }
+  }, [onInvitationRejected, jwtToken])
+
 
   const onInvitationReceived = (i: any) => {
     setNotifications(p => ([...p, i]))
@@ -80,16 +94,18 @@ export const UseNotificationManager = () => {
       method: 'post',
       data: { invitationId },
     })
-  }
-
-  const onInvitationAcceptedListener = (cb: (i: any) => void) => {
-    setInvitationAcceptedCb(() => () => cb)
+      .then(() => removeNotification({ id: invitationId }))
   }
 
   return {
     notificationsArr,
     acceptInvitation,
     rejectInvitation,
-    onInvitationAccepted: onInvitationAcceptedListener
+    onInvitationAccepted: (cb: (i: any) => void) => {
+      setInvitationAcceptedCb(() => () => cb)
+    },
+    onInvitationRejected: (cb: (i: any) => void) => {
+      setOnInvitationRejected(() => () => cb)
+    }
   }
 }

@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@media (max-width: 991px) {
+  #video-div {
+    height: 100%;
+  }
+  .modal-fullscreen-xs-down {
+    padding: 0 !important;
+  }
+  .modal-fullscreen-xs-down .modal-dialog {
+    height: 95%;
+  }
+  .modal-fullscreen-xs-down .modal-content {
+    height: 100%;
+    min-height: 100%;
+  } 
+  
+  .modal-fullscreen-xs-down .modal-body {
+    height: 82%;
+    min-height: 82%;
+  } 
+}

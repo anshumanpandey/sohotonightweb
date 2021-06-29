@@ -10,7 +10,9 @@ import { logActionToServer } from '../utils/logaction';
 import { BrandColor } from '../utils/Colors';
 import Color from 'color';
 import { UseMediaStreamManager } from './UseMediaStreamManager';
+import { UseNotificationManager } from './UseNotificationManager';
 
+const suggestionDivId = "suggestiondivid"
 const buildPlayerSuggestion = () => {
     const newContent = document.createTextNode(`X`);
     const closeMark = document.createElement("span");
@@ -26,6 +28,7 @@ const buildPlayerSuggestion = () => {
     closeBtn.appendChild(closeMark)
 
     const suggestionDiv = document.createElement("div");
+    suggestionDiv.id = suggestionDivId
     suggestionDiv.className = "alert alert-warning alert-dismissible"
     suggestionDiv.setAttribute("role", "alert")
     suggestionDiv.appendChild(closeBtn)
@@ -52,8 +55,10 @@ const buildPlayerSuggestion = () => {
     return suggestionDiv
 }
 
+const videoModalTextId = "video-modal-text"
 const buildDefaultPlayerMessage = (text: string = "Wait for a invitation and start a video chat") => {
     const newDiv = document.createElement("h2");
+    newDiv.id = videoModalTextId
     const newContent = document.createTextNode(text);
     newDiv.style.textAlign = "center"
 
@@ -75,7 +80,19 @@ const createPreviewPlayer = () => {
     previewVideoPlayer.style.top = "0"
     previewVideoPlayer.style.marginTop = "3rem"
     previewVideoPlayer.style.marginRight = "2rem"
+    previewVideoPlayer.style.zIndex = "10"
     return previewVideoPlayer
+}
+
+const getCurrentVideoPreview = () => {
+    return document.getElementById(videoPreviewId)
+}
+
+const setPreviewPosition = ({ horizontalMargin }: { horizontalMargin: number }) => {
+    const currentPreview = getCurrentVideoPreview()
+    if (currentPreview) {
+        currentPreview.style.marginLeft = horizontalMargin + 'px'
+    }
 }
 
 const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
@@ -85,27 +102,19 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     mainVideoPlayer.controls = true
     mainVideoPlayer.autoplay = true
     mainVideoPlayer.style.width = "100%"
-
-    const previewVideoPlayer = createPreviewPlayer()
     
     return {
-        addRemoteStream: (s: MediaStream, opt?: { includePreview?: MediaStreamTrack }) => {
+        addRemoteStream: (s: MediaStream) => {
             const text = document.createTextNode("Your browser does not support HTML5 video.");
             mainVideoPlayer.appendChild(text)
             const suggestionNode = buildPlayerSuggestion()
 
             document.getElementById(videoMainId)?.remove()
+            document.getElementById(videoModalTextId)?.remove()
+            document.getElementById(suggestionDivId)?.remove()            
+            
             parentNode.appendChild(mainVideoPlayer)
-            if (opt?.includePreview) {
-                const stream = new MediaStream([opt.includePreview])
-                if ('srcObject' in previewVideoPlayer) {
-                    previewVideoPlayer.srcObject = stream
-                } else {
-                    previewVideoPlayer.src = window.URL.createObjectURL(stream)
-                }
-                parentNode.appendChild(previewVideoPlayer)
-                parentNode.appendChild(suggestionNode)
-            }
+            parentNode.appendChild(suggestionNode)
             setTimeout(() => {
                 parentNode.childNodes.forEach(c => {
                     return c === suggestionNode ? parentNode.removeChild(suggestionNode) : null
@@ -118,8 +127,10 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
             }
             mainVideoPlayer.addEventListener("loadeddata", function (e) {
                 const rect = mainVideoPlayer.getClientRects()
-                if (rect[0]) {
-                    previewVideoPlayer.style.marginLeft = ((rect[0].x || 1) + 10) + 'px'
+                const videoPreview = getCurrentVideoPreview()
+                if (rect[0] && videoPreview) {
+                    const horizontalMargin = ((rect[0].x || 1) + 10)
+                    setPreviewPosition({ horizontalMargin })
                     mainVideoPlayer.play()
                 }
             }, false);
@@ -127,7 +138,20 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
         removePreview: () => {
             document.getElementById(videoPreviewId)?.remove()
         },
+        requestMainVideoFullScreen: () => {
+            const mainVideo = document.getElementById(videoMainId)
+            if (mainVideo) {
+                if (mainVideo.requestFullscreen) {
+                    mainVideo.requestFullscreen();
+                    //@ts-expect-error
+                  } else if (mainVideo.webkitRequestFullscreen) { /* Safari */
+                    //@ts-expect-error
+                    mainVideo.webkitRequestFullscreen();
+                  }
+            }
+        },
         displayPreview: (s: MediaStreamTrack) => {
+            const previewVideoPlayer = createPreviewPlayer()
             const stream = new MediaStream()
             stream.addTrack(s)
             const text = document.createTextNode("Your browser does not support HTML5 video.");
@@ -138,13 +162,13 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
                 previewVideoPlayer.src = window.URL.createObjectURL(stream)
             }
             const rect = document.getElementById(videoMainId)?.getClientRects()
+            let horizontalMargin = 10
             if (rect) {
-                previewVideoPlayer.style.marginLeft = ((rect[0].x || 1) + 10) + 'px'
-            } else {
-                previewVideoPlayer.style.marginLeft = 10 + 'px'
+                horizontalMargin = ((rect[0].x || 1) + 10)
             }
+            setPreviewPosition({ horizontalMargin })
             parentNode.appendChild(previewVideoPlayer)
-        }
+        },
     }
 }
 
@@ -166,6 +190,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const [onInvitationReceivedCb, setOnInvitationReceivedCb] = useState<undefined | InvitationCb>()
     const StreamManager = UseMediaStreamManager()
     const player = attachVideoPlayer({ parentNode: videoNode })
+    const notificationManager = UseNotificationManager()
 
     const timeTracker = UseCallTracker()
 
@@ -201,9 +226,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const setChildNode = ({ node }: { node: any }) => {
         if (videoNode) {
-            while (videoNode.firstChild) {
-                videoNode.removeChild(videoNode.firstChild);
-            }
+            document.getElementById(videoModalTextId)?.remove()
             videoNode.appendChild(node)
         }
     }
@@ -265,21 +288,20 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                         })
                     })
 
-                socket?.on("STOPPED_VIDEO_BROADCAST", (i: any) => {
+                socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
                     const newStream = new MediaStream();
-                    player.addRemoteStream(newStream, {
-                        includePreview: StreamManager.isBroadcastingVideo() ? StreamManager.getLocalVideo() : undefined
-                    })
+                    const audioTracks = await StreamManager.getRemoteAudio()
+                    if (audioTracks) {
+                        audioTracks
+                        .forEach(t => newStream.addTrack(t))
+                    }
+                    player.addRemoteStream(newStream)
                 })
-                socket?.on("RESUMED_VIDEO_BROADCAST", (i: any) => {
-                    const tracks = stream.getVideoTracks()
-                    const newStream = new MediaStream(tracks);
-                    const localS = StreamManager.getLocalVideo()
-                    player.addRemoteStream(newStream, {
-                        includePreview: StreamManager.isBroadcastingVideo() ? localS : undefined
-                    })
+                socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
+                    const tracks = StreamManager.isBroadcastingAudio() ? StreamManager.getRemoteTracks() : Promise.resolve(stream.getVideoTracks())
+                    const newStream = new MediaStream(await tracks);
+                    player.addRemoteStream(newStream)
                     StreamManager.onTrackAdded((newT) => {
-                        console.log("onTrackAdded 1")
                         if (newT) {
                             newStream.addTrack(newT)
                         }
@@ -297,7 +319,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     player.displayPreview(s.getVideoTracks()[0])
                 }
                 peer.addStream(s)
-                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: s, peer }))
+                socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded())
             })
         setCurrentPeer(peer)
     }
@@ -316,6 +338,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 const msg = buildDefaultPlayerMessage("Waiting response")
                 setChildNode({ node: msg })
                 setCurrentVideoChat(data)
+                notificationManager.onInvitationRejected(() => {
+                    onCallEnded()
+                })
             })
     }
 
@@ -363,24 +388,18 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                             })
                         }
 
-                        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded({ stream: localStream, peer: peer2 }))
+                        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded())
                         socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
                             const m = await StreamManager.getRemoteAudio()
                             const newStream = new MediaStream(m);
-                            player.addRemoteStream(newStream, {
-                                includePreview: StreamManager.isBroadcastingVideo() ? StreamManager.getLocalVideo() : undefined
-                            })
+                            player.addRemoteStream(newStream)
                         })
                         socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
                             const tracks = stream.getVideoTracks()
                             const audioTracks = await StreamManager.getRemoteAudio()
                             const newStream = new MediaStream(tracks.concat(audioTracks));
-                            const localS = StreamManager.getLocalVideo()
-                            player.addRemoteStream(newStream, {
-                                includePreview: StreamManager.isBroadcastingVideo() ? localS : undefined
-                            })
+                            player.addRemoteStream(newStream)
                             StreamManager.onTrackAdded((newT) => {
-                                console.log("onTrackAdded 2")
                                 if (newT) {
                                     newStream.addTrack(newT)
                                 }
@@ -444,8 +463,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         window.location.reload()
     }
 
-    const onCallEnded = ({ peer, stream }: { peer: SimplePeer.Instance, stream: MediaStream }) => {
-        peer.destroy()
+    const onCallEnded = () => {
         const socket = startSocketConnection()
         socket?.off("INVITATION_HANDSHAKE")
         socket?.off("INVITATION_ACCEPTED")
@@ -453,7 +471,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         hideVideoModal()
         setIsAwaitingResponse(() => false)
         setCurrentVideoChat(undefined)
-        stream.getTracks().forEach(s => s.stop())
         timeTracker.endTracker()
         const m = buildDefaultPlayerMessage()
         setChildNode({ node: m })
@@ -470,6 +487,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         stopMyVideo,
         shareVideo,
         shareAudio,
+        requestFullScreen: () => {
+            player.requestMainVideoFullScreen()
+        },
         isBroadcastingVideo: StreamManager.isBroadcastingVideo(),
         isBroadcastingAudio: StreamManager.isBroadcastingAudio(),
         canStartChat: isOnCall === false && isAwaitingResponse === false,

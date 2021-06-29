@@ -92,12 +92,9 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
         addRemoteStream: (s: MediaStream, opt?: { includePreview?: MediaStreamTrack }) => {
             const text = document.createTextNode("Your browser does not support HTML5 video.");
             mainVideoPlayer.appendChild(text)
-            previewVideoPlayer.appendChild(text)
             const suggestionNode = buildPlayerSuggestion()
 
-            while (parentNode.firstChild) {
-                parentNode.removeChild(parentNode.firstChild);
-            }
+            document.getElementById(videoMainId)?.remove()
             parentNode.appendChild(mainVideoPlayer)
             if (opt?.includePreview) {
                 const stream = new MediaStream([opt.includePreview])
@@ -133,6 +130,8 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
         displayPreview: (s: MediaStreamTrack) => {
             const stream = new MediaStream()
             stream.addTrack(s)
+            const text = document.createTextNode("Your browser does not support HTML5 video.");
+            previewVideoPlayer.appendChild(text)
             if ('srcObject' in previewVideoPlayer) {
                 previewVideoPlayer.srcObject = stream
             } else {

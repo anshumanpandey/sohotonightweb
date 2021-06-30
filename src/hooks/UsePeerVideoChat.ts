@@ -172,9 +172,14 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
     }
 }
 
+type State = {
+    currentVideoChat: any,
+    isOnCall: boolean,
+    currentPeer: SimplePeer.Instance | undefined
+}
 export const {
     useGlobalState: useVideoState,
-} = createGlobalState<{ currentVideoChat: any, currentPeer: SimplePeer.Instance | undefined }>({ currentVideoChat: undefined, currentPeer: undefined });
+} = createGlobalState<State>({ currentVideoChat: undefined, currentPeer: undefined, isOnCall: false });
 
 
 let videoNode: any = undefined
@@ -185,7 +190,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const [userData] = useGlobalState("userData")
     const [currentVideoChat, setCurrentVideoChat] = useVideoState("currentVideoChat")
     const [isAwaitingResponse, setIsAwaitingResponse] = useState<boolean>(false)
-    const [isOnCall, setIsOnCall] = useState<boolean>(false)
+    const [isOnCall, setIsOnCall] = useVideoState("isOnCall")
     const [currentPeer, setCurrentPeer] = useVideoState("currentPeer")
     const [onInvitationReceivedCb, setOnInvitationReceivedCb] = useState<undefined | InvitationCb>()
     const StreamManager = UseMediaStreamManager()

@@ -325,14 +325,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }
 
     const sendRequest = async ({ toUserNickname, startWithVoice = false }: { toUserNickname: string, startWithVoice?: boolean }) => {
-        return request({
-            url: '/video/create',
-            method: "post",
-            data: {
-                toUserNickname,
-                startWithVoice
-            }
-        })
+        return notificationManager.sendInvitation({ toUserNickname, startWithVoice })
             .then(({ data }) => {
                 setIsAwaitingResponse(true)
                 const msg = buildDefaultPlayerMessage("Waiting response")
@@ -405,6 +398,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                                 }
                             })
                         })
+                        setIsOnCall(true)
                     })
                     setCurrentPeer(peer2)
                 }
@@ -493,6 +487,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         isBroadcastingVideo: StreamManager.isBroadcastingVideo(),
         isBroadcastingAudio: StreamManager.isBroadcastingAudio(),
         canStartChat: isOnCall === false && isAwaitingResponse === false,
+        isOnCall,
         currentVideoChat
     }
 

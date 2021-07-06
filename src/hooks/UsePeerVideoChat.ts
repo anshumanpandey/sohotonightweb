@@ -277,7 +277,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
                 logActionToServer({
                     body: JSON.stringify({
-                        event: "ONINVITATIONACCEPTED_GET_TRACK",
+                        event: "ONINVITATIONACCEPTED_PEER_STREAM",
                         remoteStream: stream
                     })
                 })
@@ -285,13 +285,13 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 tracks
                     .forEach((t: any) => {
                         globalMediaStream.addTrack(t)
-                        logActionToServer({
-                            body: JSON.stringify({
-                                event: "ONCALLACCEPTED_REMOTESTREAM_TRACK_NUMBER",
-                                amount: t
-                            })
-                        })
                     })
+                logActionToServer({
+                    body: JSON.stringify({
+                        event: "ONCALLACCEPTED_REMOTESTREAM_TRACKS",
+                        amount: tracks
+                    })
+                })
 
                 socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
                     const newStream = new MediaStream();
@@ -321,7 +321,14 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         StreamManager.getMediaStreams({ onlyAudio: invitation.startWithVoice })
             .then((s) => {
                 if (invitation.startWithVoice === false) {
-                    player.displayPreview(s.getVideoTracks()[0])
+                    const video = s.getVideoTracks()[0]
+                    player.displayPreview(video)
+                    logActionToServer({
+                        body: JSON.stringify({
+                            event: "ONCALLACCEPTED_DISPLAY_PREVIEW",
+                            amount: video
+                        })
+                    })
                 }
                 peer.addStream(s)
                 socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded())
@@ -362,6 +369,13 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     peer2.on('error', err => {
                         setModalMessage(`There was an error when making the connection to the other client: ${err.message}`)
                         peer2.off("signal", onSignal)
+                        logActionToServer({
+                            body: JSON.stringify({
+                                event: "ACCEPTINVITATION_REMOTESTREAM_TRACK_NUMBER",
+                                message: err.message,
+                                stack: err.stack,
+                            })
+                        })
                     })
                     peer2.on('signal', onSignal)
                     socket?.on("INVITATION_HANDSHAKE", (i: any) => {
@@ -380,7 +394,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                             player.addRemoteStream(globalMediaStream)
                             logActionToServer({
                                 body: JSON.stringify({
-                                    event: "ACCEPTINVITATION_GET_TRACK",
+                                    event: "ACCEPTINVITATION_STREAM",
                                     remoteStream: stream
                                 })
                             })

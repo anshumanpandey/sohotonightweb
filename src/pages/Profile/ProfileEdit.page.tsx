@@ -285,10 +285,10 @@ function ProfileEditPage() {
 
                                                 <div className="form-group row">
                                                     <div className="col-sm-2 col-md-offset-2 col-form-label">Services:</div>
-                                                <div className="col-sm-10 col-md-8" style={{ display: 'flex', flexWrap: 'wrap', alignItems: "flex-end" }}>
+                                                <div className="col-sm-10 col-md-8" style={{ display: 'flex', flexWrap: 'wrap', alignItems: isMobile ? "unset": "flex-end" }}>
                                                         {servicesReq?.data?.map((s: any) => {
                                                             return (
-                                                                <div key={s.name} className="checkbox" style={{ width: '33%', height: '34px' }}>
+                                                                <div key={s.name} className="checkbox" style={{ width: isMobile ? '50%': '33%', minHeight: '34px' }}>
                                                                     <label>
                                                                         <input
                                                                             type="checkbox"

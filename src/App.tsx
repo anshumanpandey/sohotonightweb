@@ -49,6 +49,7 @@ import BuyConfirmModal from './partials/BuyConfirmModal';
 import CacheBuster, { CacheBusterState } from './CacheBuster';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword.page';
 import SetupPassword from './pages/setupPassword/SetupPassword.page';
+import UseIsMobile from './utils/UseIsMobile';
 
 function App() {
   const alert = useAlert()
@@ -58,6 +59,7 @@ function App() {
   const [info] = useGlobalState('info')
   const [success] = useGlobalState('success')
   const [buyTokenModal] = useGlobalState("buyTokenModal");
+  const isMobile = UseIsMobile();
 
   useEffect(() => {
     answerInvitation()
@@ -109,7 +111,7 @@ function App() {
         }
 
         return (
-          <body style={{ minHeight: '100vh', backgroundColor: '#e9eaed', display: 'flex', flexDirection: 'column', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
+          <body style={{ minHeight: '100vh', marginTop: isMobile ? "120px":"90px", backgroundColor: '#e9eaed', display: 'flex', flexDirection: 'column', backgroundImage: pageToShowBackgroundImg() ? `url(${enter})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
             <Switch>
               <Route exact path="/">
                 <Landing />

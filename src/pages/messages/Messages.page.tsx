@@ -38,6 +38,11 @@ function MessagesPage() {
         method: 'post'
     }, { manual: true });
 
+    const [markChatAsReadedReq, markChatAsReaded] = useAxios({
+        url: '/chat/readed',
+        method: 'post'
+    }, { manual: true });
+
     const [sendMessageReq, sendMessage] = useAxios({
         url: '/chat/message',
         method: 'post'
@@ -60,6 +65,16 @@ function MessagesPage() {
             socket?.off("NEW_MESSAGE")
         }
     }, [])
+
+    useEffect(() => {
+        if (selectedChat && markChatAsReadedReq.loading === false && thereAreUnreadedMessages(selectedChat.messages)) {
+            markChatAsReaded({ data: { conversationId: selectedChat.id} })
+            .then(({ data }) => {
+                setSelectedChat({ ...data })
+            })
+            .then(updateUserChats)
+        }
+    }, [selectedChat])
 
     useEffect(() => {
         const forCreateWithId = query.get('startWith')
@@ -90,6 +105,9 @@ function MessagesPage() {
             document.removeEventListener("keydown", listener);
         }
     }, [currentMessage])
+
+    const thereAreUnreadedMessages = (messages: any[]) => messages.some((m: any) => m.readed === false && userData && m.createdByUserId !== userData.id)
+
 
     const sendMessageFn = () => {
         if (currentMessage == "") return
@@ -143,6 +161,9 @@ function MessagesPage() {
     const isFetchingChats = () => loading || startChatReq.loading
 
     const selectedChatUser = selectedChat?.createdByUser.id == userData?.id ? selectedChat?.toUser : selectedChat?.createdByUser
+    const shouldShowSelectChatTile = () => selectedChat === undefined && isFetchingChats() === false
+
+    console.log({ userChats })
 
     return (
         <>
@@ -151,6 +172,7 @@ function MessagesPage() {
                 <div style={{ display: 'flex', flexGrow: 1, flexDirection: isMobile ? 'column' : 'row' }}>
                     <div style={{ display: 'flex' }} className="col-md-3 col-xs-12">
                         <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }} className="row-xs">
+                            {shouldShowSelectChatTile() && <h4>Select a chat</h4>}
                             <div style={{ flexGrow: 1 }} className="main-box clearfix">
                                 <h4>Chats</h4>
                                 {isFetchingChats() && <h5>Fetching...</h5>}
@@ -158,16 +180,21 @@ function MessagesPage() {
                                     <>
                                         {userChats.length != 0 ? userChats.map((c: any) => {
                                             const userToShow = c.createdByUser.id == userData?.id ? c.toUser : c.createdByUser
+                                            const lastestMessage = c.messages[c.messages.length - 1]
+                                            const thereIsUnreadMessages = thereAreUnreadedMessages(c.messages)
                                             return (
                                                 <SohoLink key={c.id} onClick={() => setSelectedChat(c)}>
                                                     <div style={{ display: 'flex', borderBottom: `1px solid #00000020`, paddingBottom: '1rem',flexDirection: 'row', borderRight: selectedChat?.id == c.id ? `3px solid ${BrandColor}` : undefined }}>
                                                         <img style={{ borderRadius: "50%", maxWidth: "100%", maxHeight: 4, minHeight: 40 }} src={userToShow.profilePic || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"} className="img-responsive" alt="profile" />
                                                         <div style={{ width: '80%' }}>
                                                             <div style={{ marginLeft: '1rem', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                                <p style={{ fontSize: 14 }}>{userToShow.nickname}</p>
-                                                                <p style={{ color: 'gray', fontSize: 10, marginRight: '4px' }}>{c.messages[c.messages.length - 1]?.createdAt ? formatRelative(parseISO(c.messages[c.messages.length - 1]?.createdAt), new Date()) : "No messages"}</p>
+                                                                <div style={{ display: 'flex', alignItems: 'flex-end'}}>
+                                                                    <p style={{ fontSize: 14 }}>{userToShow.nickname}</p>
+                                                                    {thereIsUnreadMessages && <p style={{ fontSize: 12 }}>(1)</p>}
+                                                                </div>
+                                                                <p style={{ color: 'gray', fontSize: 10, marginRight: '4px' }}>{lastestMessage?.createdAt ? formatRelative(parseISO(lastestMessage?.createdAt), new Date()) : "No messages"}</p>
                                                             </div>
-                                                            <p style={{  marginLeft: '1rem', marginBottom: 0, overflow: 'hidden', textOverflow: 'ellipsis', color: 'gray', fontSize: 10, marginRight: '4px' }}>{c.messages[c.messages.length - 1]?.createdAt ? c.messages[c.messages.length - 1].body.slice(0, 10) : ""}</p>
+                                                            <p style={{ marginLeft: '1rem', marginBottom: 0, overflow: 'hidden', textOverflow: 'ellipsis', fontSize: 10, marginRight: '4px', color: thereIsUnreadMessages ? BrandColor: 'gray' }}>{lastestMessage?.createdAt ? lastestMessage.body.slice(0, 10) : ""}</p>
                                                         </div>
                                                     </div>
                                                 </SohoLink>
@@ -180,7 +207,7 @@ function MessagesPage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column' }} className="col-md-9 col-xs-12">
-                        {selectedChat === undefined ? <h4>Select a chat</h4> : (
+                        {selectedChat === undefined ? <></> : (
                             <>
                                 <div style={{ display: 'flex', flexDirection: 'row', borderBottom: `1px solid ${BrandColor}` }}>
                                     <img

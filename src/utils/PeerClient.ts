@@ -8,6 +8,8 @@ export const buildPeerClient = (p?: SimplePeer.Options) => {
                 {
                     "url": "turn:turn.sohotonight.com:5349",
                     "urls": "turn:turn.sohotonight.com:5349",
+                    "username": "admin",
+                    "credential": "123456abc!"
                 }
                 //{'url': 'stun:stun.l.google.com:19302', 'urls': 'stun:stun.l.google.com:19302'}
             ]

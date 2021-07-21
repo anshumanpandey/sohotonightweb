@@ -179,6 +179,7 @@ type State = {
 }
 export const {
     useGlobalState: useVideoState,
+    getGlobalState: getGlobalVideoState
 } = createGlobalState<State>({ currentVideoChat: undefined, currentPeer: undefined, isOnCall: false });
 
 
@@ -434,18 +435,21 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const muteMyself = () => {
         StreamManager.stopAudioBroadcast()
         const socket = startSocketConnection()
+        const currentVideoChat = getGlobalVideoState("currentVideoChat")
         socket?.emit('STOP_VIDEO_AUDIO_BROADCAST', { currentVideoChat })
     }
 
     const shareAudio = () => {
         StreamManager.shareAudio()
         const socket = startSocketConnection()
+        const currentVideoChat = getGlobalVideoState("currentVideoChat")
         socket?.emit('RESUME_VIDEO_AUDIO_BROADCAST', { currentVideoChat })
     }
 
     const stopMyVideo = () => {
         StreamManager.stopVideoBroadcast()
         const socket = startSocketConnection()
+        const currentVideoChat = getGlobalVideoState("currentVideoChat")
         socket?.emit('STOP_VIDEO_BROADCAST', { currentVideoChat })
         player.removePreview()
     }
@@ -462,6 +466,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             }
         })
         const socket = startSocketConnection()
+        const currentVideoChat = getGlobalVideoState("currentVideoChat")
         socket?.emit('RESUME_VIDEO_BROADCAST', { currentVideoChat })
     }
 

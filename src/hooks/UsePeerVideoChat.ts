@@ -304,7 +304,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 })
                 socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
                     const tracks = StreamManager.isBroadcastingAudio() ? StreamManager.getRemoteTracks() : Promise.resolve(stream.getVideoTracks())
-                    const newStream = new MediaStream(await tracks);
+                    const tracksToAdd = await tracks
+                    console.log("RESUMED_VIDEO_BROADCAST",tracksToAdd)
+                    const newStream = new MediaStream(tracksToAdd);
                     player.addRemoteStream(newStream)
                     StreamManager.onTrackAdded((newT) => {
                         if (newT) {

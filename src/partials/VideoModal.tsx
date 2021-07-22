@@ -26,7 +26,7 @@ const SohoVideoModal: React.FC = () => {
         <SohoModal
             closeOnBackdropClik={false}
             size={"lg"}
-            onClose={endCall}
+            onClose={videoPeer.isOnCall ? endCall: cancelNotification}
             show={currentVideoChat != null}
             title="Chatting..."
             footer={() => {

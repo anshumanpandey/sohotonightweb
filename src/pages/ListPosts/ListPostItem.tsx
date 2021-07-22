@@ -6,6 +6,7 @@ import { CallIcons } from '../../partials/CallIcons';
 import { useGlobalState } from '../../state/GlobalState';
 import GetUserAge from '../../utils/GetUserAge';
 import UseIsMobile from '../../utils/UseIsMobile';
+import UserLoggedIsModel from '../../utils/UserLoggedIsModel';
 
 const ListPostItem = ({ girl: g }: { girl: any }) => {
     let history = useHistory();
@@ -38,14 +39,16 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
                     <p>{g.orientation} {GetUserAge(g)} year old {g.gender}</p>
                     {g.aboutYouDetail && <p style={{ wordWrap: "break-word" }}>{g.aboutYouDetail}</p>}
                 </div>
-                <div style={{ width: '100%' }}>
-                    <div>
-                        <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: isMobile ? "start":"end" }}>Call me now for one to one live chat: </p>
-                        <div style={{ display: 'flex', justifyContent: 'end', marginRight: '2rem'}}>
-                            <CallIcons disabled={false} model={g} />
+                {UserLoggedIsModel() === false && (
+                    <div style={{ width: '100%' }}>
+                        <div>
+                            <p style={{ fontFamily: 'AeroliteItalic', fontSize: 16, textAlign: isMobile ? "start":"end" }}>Call me now for one to one live chat: </p>
+                            <div style={{ display: 'flex', justifyContent: 'end', marginRight: '2rem'}}>
+                                <CallIcons disabled={false} model={g} />
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

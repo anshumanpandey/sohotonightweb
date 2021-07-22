@@ -2,6 +2,8 @@ import { createStore } from 'react-hooks-global-state';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { UserData } from '../types/UserData';
 import { AxiosInstance } from '../utils/AxiosBootstrap';
+import { startSocketConnection } from '../request/socketClient';
+import { useHistory } from 'react-router-dom';
 
 export enum GLOBAL_STATE_ACIONS {
   JWT_TOKEN,
@@ -91,7 +93,6 @@ const reducer = (state: any, action: any) => {
       return { ...state, above18: newState };
     }
     case GLOBAL_STATE_ACIONS.LOGOUT: {
-      const newState = !state.above18
       localStorage.removeItem("jwtToken")
       localStorage.removeItem("userData")
       return { ...state, jwtToken: null, userData: null };
@@ -193,4 +194,23 @@ export const showConfirmBuyingAsset = (asset: any) => {
 
 export const hideConfirmBuyingAsset = () => {
   dispatchGlobalState({ type: GLOBAL_STATE_ACIONS.SET_SHOW_BUY_MODAL, payload: null })
+}
+
+export const UseListenLogoutEvent = () => {
+  const eventName = "LOGOUT"
+  let history = useHistory();
+  const socket = startSocketConnection()
+
+  return {
+    startListening: () => {
+      if (!socket?.hasListeners(eventName)) {
+        socket?.on(eventName, () => {
+          history.push("/logout?reason=DUPLICATED_SESSION")
+        })
+      }
+    },
+    stopListening: () => {
+      socket?.off(eventName)
+    }
+  }
 }

@@ -23,9 +23,8 @@ import PicturesPage from './pages/Profile/pictures/Pictures.page';
 import AboutPage from './pages/Profile/About.page';
 import VideosPage from './pages/Profile/Videos.page';
 import LogoutPage from './pages/logout/logout.page';
-import ComingSoon from './pages/comingSoon/CominSoon.page';
 import enter from './img/Photos/enter-bg.jpg';
-import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCurrentUser, useGlobalState } from './state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACIONS, updateCurrentUser, useGlobalState, UseListenLogoutEvent } from './state/GlobalState';
 import currentPageIs from './utils/currentPageIs';
 import PaymentPage from './pages/payment/Payment.Page';
 import CookiePolicy from './pages/cookiePolicy/CookiePolicy.page';
@@ -43,7 +42,6 @@ import VoiceCallsTracker from './partials/NotificationTracker';
 import SohoCallModal from './partials/CallModal';
 import SohoVideoModal from './partials/VideoModal';
 import UserIsLogged from './utils/UserIsLogged';
-import UserLoggedIsModel from './utils/UserLoggedIsModel';
 import MessagesPage from './pages/messages/Messages.page';
 import BuyConfirmModal from './partials/BuyConfirmModal';
 import CacheBuster, { CacheBusterState } from './CacheBuster';
@@ -60,13 +58,21 @@ function App() {
   const [success] = useGlobalState('success')
   const [buyTokenModal] = useGlobalState("buyTokenModal");
   const isMobile = UseIsMobile();
-
+  const logoutListener = UseListenLogoutEvent()
   useEffect(() => {
     answerInvitation()
     if (jwtToken) {
       updateCurrentUser()
     }
   }, [])
+
+  useEffect(() => {
+    if (jwtToken) {
+      logoutListener.startListening()
+    } else {
+      logoutListener.stopListening()
+    }
+  }, [jwtToken])
 
   useEffect(() => {
     if (!error) return

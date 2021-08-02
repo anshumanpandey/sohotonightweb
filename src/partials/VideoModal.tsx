@@ -28,7 +28,7 @@ const SohoVideoModal: React.FC = () => {
             size={"lg"}
             onClose={videoPeer.isOnCall ? endCall: cancelNotification}
             show={currentVideoChat != null}
-            title="Chatting..."
+            title="Connected..."
             footer={() => {
                 return (
                     <div style={{ display: 'flex', justifyContent: "space-around" }}>

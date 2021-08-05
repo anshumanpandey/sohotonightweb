@@ -392,6 +392,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                                 remoteStream: stream
                             })
                         })
+                        console.log(stream)
+                        console.log(stream.getVideoTracks())
+                        console.log(stream.getAudioTracks())
                         if (stream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                             setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
                         } else if (stream.getAudioTracks().length === 0) {

@@ -386,6 +386,12 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     })
 
                     peer2.on('stream', async (stream: MediaStream) => {
+                        logActionToServer({
+                            body: JSON.stringify({
+                                event: "ACCEPTINVITATION_ONSTREAM_PEER_EVENT",
+                                remoteStream: stream
+                            })
+                        })
                         if (stream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                             setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
                         } else if (stream.getAudioTracks().length === 0) {

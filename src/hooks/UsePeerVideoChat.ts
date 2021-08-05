@@ -366,7 +366,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     }
 
                     setModalMessage("Waiting for the other user to start the connection")
-                    const peer2 = buildPeerClient({ stream: localStream, initiator: true })
+                    const peer2 = buildPeerClient({ stream: localStream, initiator: true, trickle: true })
                     const onSignal = (data: any) => {
                         socket?.emit('CONNECTION_HANDSHAKE', { handshake: data, invitation })
                     }

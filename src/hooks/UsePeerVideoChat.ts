@@ -285,6 +285,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 const tracks = invitation.startWithVoice === true ? stream.getAudioTracks() : stream.getTracks()
                 tracks
                     .forEach((t: any) => {
+                        console.log({ t });
                         globalMediaStream.addTrack(t)
                     })
                 logActionToServer({

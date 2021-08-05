@@ -252,7 +252,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             setModalMessage(`There was an error when making the connection to the other client: ${err.message}`)
             logActionToServer({
                 body: JSON.stringify({
-                    event: "ONINVITATIONACCEPTED_REMOTESTREAM_TRACK_NUMBER",
+                    event: "ONINVITATIONACCEPTED_PEER_ERROR",
                     message: err.message,
                     stack: err.stack,
                 })

@@ -4,7 +4,11 @@ export const buildPeerClient = (p?: SimplePeer.Options) => {
     return new SimplePeer({
         config: {
             iceServers: [
-                { url: 'stun:stun.sohotonight.com:5349', urls: 'stun:stun.sohotonight.com:5349' },
+                {
+                    url: 'stun:stun.sohotonight.com:5349',
+                    urls: 'stun:stun.sohotonight.com:5349',
+                    "username": "admin",
+                    "credential": "123456abc!" },
                 {
                     "url": "turn:turn.sohotonight.com:5349",
                     "urls": "turn:turn.sohotonight.com:5349",

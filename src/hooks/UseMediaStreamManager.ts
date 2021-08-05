@@ -34,10 +34,17 @@ const getNonMutedTracks = (tracks: MediaStreamTrack[]) => {
     const inmutedTracks: MediaStreamTrack[] = [];
     const isAllMuted = tracks.every(isMuted)
     if (isAllMuted) {
+      const expiryTicker = setTimeout(() => {
+        tracks.forEach(t => {
+          t.onunmute = null
+        })
+        resolve([]);
+      }, 1000);
       tracks.forEach(t => {
         t.onunmute = function () {
           inmutedTracks.push(this)
           if (inmutedTracks.length === tracks.length) {
+            clearTimeout(expiryTicker);
             resolve(inmutedTracks)
             t.onunmute = null
           }
@@ -76,7 +83,7 @@ export const UseMediaStreamManager = () => {
     }
     return navigator.mediaDevices.getUserMedia(constraints)
       .then((s) => {
-        const types = [BroadcastTypes.AUDIO].concat(p?.onlyAudio === true ? []: [BroadcastTypes.VIDEO])
+        const types = [BroadcastTypes.AUDIO].concat(p?.onlyAudio === true ? [] : [BroadcastTypes.VIDEO])
         setBroadcasting(types)
         setRequestedTracks(types)
         setCurrentMediaStream(s)
@@ -86,7 +93,7 @@ export const UseMediaStreamManager = () => {
 
   const hasRequestedVideo = () => {
     return getGlobalState("requestedTracks")
-    .find(i => i === BroadcastTypes.VIDEO) !== undefined
+      .find(i => i === BroadcastTypes.VIDEO) !== undefined
   }
 
   const stopAudio = useCallback(() => {
@@ -113,7 +120,7 @@ export const UseMediaStreamManager = () => {
 
   const getRemoteVideo = () => {
     const videoTracks = getGlobalState("currentRemoteMediaStream")
-    ?.getVideoTracks() || []
+      ?.getVideoTracks() || []
 
     return videoTracks
   }
@@ -153,24 +160,24 @@ export const UseMediaStreamManager = () => {
   const shareVideo = ({ peer }: { peer?: SimplePeer.Instance }) => {
     setBroadcasting(p => p.filter(t => t !== BroadcastTypes.VIDEO).concat([BroadcastTypes.VIDEO]))
     const localStream = getGlobalState("currentMediaStream")
-    if (!localStream) return 
+    if (!localStream) return
 
     if (hasRequestedVideo() === false) {
       return navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => stream.getVideoTracks())
-      .then(videoTracks => {
-        videoTracks.forEach(t => {
-          localStream.addTrack(t)
-          peer?.addTrack(t, localStream)
+        .then(stream => stream.getVideoTracks())
+        .then(videoTracks => {
+          videoTracks.forEach(t => {
+            localStream.addTrack(t)
+            peer?.addTrack(t, localStream)
+          })
         })
-      })
-      .then(() => setRequestedTracks(p => [...p, BroadcastTypes.VIDEO]))
-      .then(() => localStream)
+        .then(() => setRequestedTracks(p => [...p, BroadcastTypes.VIDEO]))
+        .then(() => localStream)
     } else {
       localStream.getVideoTracks()
-      .forEach(t => {
-        t.enabled = true
-      })
+        .forEach(t => {
+          t.enabled = true
+        })
       return Promise.resolve(localStream)
     }
   }

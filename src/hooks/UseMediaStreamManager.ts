@@ -36,7 +36,9 @@ const getNonMutedTracks = (tracks: MediaStreamTrack[]) => {
     if (isAllMuted) {
       const expiryTicker = setTimeout(() => {
         tracks.forEach(t => {
-          t.onunmute = null
+          t.onunmute = function () {
+            console.log("unmuted", this)
+          }
         })
         resolve([]);
       }, 1000);

@@ -374,7 +374,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                         peer2.off("signal", onSignal)
                         logActionToServer({
                             body: JSON.stringify({
-                                event: "ACCEPTINVITATION_REMOTESTREAM_TRACK_NUMBER",
+                                event: "ACCEPTINVITATION_ERROR",
                                 message: err.message,
                                 stack: err.stack,
                             })

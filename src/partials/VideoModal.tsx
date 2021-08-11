@@ -24,7 +24,7 @@ const SohoVideoModal: React.FC = () => {
 
     const closeCallback = () => {
         setCurrentVideoChat(null);
-        return videoPeer.isOnCall ? endCall: cancelNotification
+        return videoPeer.isOnCall ? endCall(): cancelNotification()
     }
 
     return (

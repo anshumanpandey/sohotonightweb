@@ -395,7 +395,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 setChildNode({ node: msg })
                 setCurrentVideoChat({})
             } else {
-                promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice })
+                promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice, ignoreAudio: r.microphone === false })
             }
             return promise
         })

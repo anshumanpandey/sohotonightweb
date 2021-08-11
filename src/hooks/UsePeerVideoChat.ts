@@ -151,7 +151,8 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
             }
         },
         displayPreview: (s: MediaStreamTrack) => {
-            const previewVideoPlayer = createPreviewPlayer()
+            return
+            /*const previewVideoPlayer = createPreviewPlayer()
             const stream = new MediaStream()
             stream.addTrack(s)
             const text = document.createTextNode("Your browser does not support HTML5 video.");
@@ -167,8 +168,18 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
                 horizontalMargin = ((rect[0].x || 1) + 10)
             }
             setPreviewPosition({ horizontalMargin })
-            parentNode.appendChild(previewVideoPlayer)
+            parentNode.appendChild(previewVideoPlayer)*/
         },
+        addDetailMessage: (str: string) => {
+            const newDiv = document.createElement("p");
+            newDiv.id = videoModalTextId
+            const newContent = document.createTextNode(str);
+            newDiv.style.textAlign = "center"
+        
+            newDiv.appendChild(newContent); //añade texto al div creado.
+
+            parentNode.appendChild(newDiv)
+        }
     }
 }
 
@@ -244,8 +255,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
     const onInvitationAccepted = (invitation: any) => {
         setCurrentVideoChat(invitation.videoChat)
-        setModalMessage("Waiting connection")
+        //setModalMessage("Waiting connection")
         const player = attachVideoPlayer({ parentNode: videoNode })
+        player.addDetailMessage("Invitation accepted")
         const socket = startSocketConnection()
         const peer = buildPeerClient();
         peer.on('error', (err) => {
@@ -267,6 +279,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         })
 
         peer.on('stream', (stream: MediaStream) => {
+            player.addDetailMessage("recieved remote stream")
             if (stream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                 setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
             } else if (stream.getAudioTracks().length === 0 && invitation.startWithVoice === true) {
@@ -283,6 +296,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     })
                 })
                 const tracks = invitation.startWithVoice === true ? stream.getAudioTracks() : stream.getTracks()
+                player.addDetailMessage(`adding ${tracks.length} tracks to the current player`)
                 tracks
                     .forEach((t: any) => {
                         console.log({ t });
@@ -372,6 +386,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             .then(({ data }) => {
                 setIsAwaitingResponse(true)
                 const msg = buildDefaultPlayerMessage("Waiting response")
+                player.addDetailMessage("waiting for other user to accept request")
                 setChildNode({ node: msg })
                 setCurrentVideoChat(data)
                 notificationManager.onInvitationRejected(() => {
@@ -393,6 +408,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     setChildNode({ node: msg })
                     setCurrentVideoChat({})
             } else {
+                    player.addDetailMessage("asking for audio permission")
                     promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice || r.webcam === false })
                 }
             } else if (r.microphone === false && r.webcam === false) {
@@ -401,6 +417,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 setChildNode({ node: msg })
                 setCurrentVideoChat({})
             } else {
+                player.addDetailMessage("asking for audio and video permission")
                 promise = StreamManager.getMediaStreams({
                     ignoreVideo: invitation.startWithVoice || r.webcam === false,
                     ignoreAudio: r.microphone === false
@@ -447,6 +464,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                         console.log(stream)
                         console.log(stream.getVideoTracks())
                         console.log(stream.getAudioTracks())
+                        player.addDetailMessage(`received remote stream | ${stream.getTracks().length} tracks included`)
                         if (stream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                             setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
                         } else if (stream.getAudioTracks().length === 0 && invitation.startWithVoice === true) {

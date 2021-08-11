@@ -5,7 +5,7 @@ import SohoModal from './SohoModal';
 import { UseNotificationManager } from '../hooks/UseNotificationManager';
 
 const SohoVideoModal: React.FC = () => {
-    const [currentVideoChat] = useVideoState("currentVideoChat")
+    const [currentVideoChat, setCurrentVideoChat] = useVideoState("currentVideoChat")
     const { cancelNotification } = UseNotificationManager()
 
     const videoPeer = UsePeerVideo({ parentNode: document.getElementById('video-div') as HTMLElement })
@@ -22,11 +22,16 @@ const SohoVideoModal: React.FC = () => {
 
     const endCall = () => videoPeer.endCall(currentVideoChat)
 
+    const closeCallback = () => {
+        setCurrentVideoChat(null);
+        return videoPeer.isOnCall ? endCall: cancelNotification
+    }
+
     return (
         <SohoModal
             closeOnBackdropClik={false}
             size={"lg"}
-            onClose={videoPeer.isOnCall ? endCall: cancelNotification}
+            onClose={closeCallback}
             show={currentVideoChat != null}
             title="Connected..."
             footer={() => {
@@ -35,7 +40,7 @@ const SohoVideoModal: React.FC = () => {
                         <i onClick={videoPeer.isBroadcastingAudio ? videoPeer.muteMyself : videoPeer.shareAudio} style={audioIconStyles} className={`fa fa-microphone`} aria-hidden="true"></i>
                         <i onClick={videoPeer.isBroadcastingVideo ? videoPeer.stopMyVideo : videoPeer.shareVideo} style={videIconStyles} className="fa fa-video-camera" aria-hidden="true"></i>
                         <i onClick={videoPeer.isBroadcastingAudio ? videoPeer.requestFullScreen: undefined} style={videIconStyles} className={`fa fa-expand`} aria-hidden="true"></i>
-                        <i onClick={videoPeer.isOnCall ? endCall: cancelNotification} style={iconBaseStyle} className={`fa fa-window-close`} aria-hidden="true"></i>
+                        <i onClick={closeCallback} style={iconBaseStyle} className={`fa fa-window-close`} aria-hidden="true"></i>
                     </div>
                 )
             }}

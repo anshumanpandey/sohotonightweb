@@ -131,7 +131,7 @@ export const UseNotificationManager = () => {
   }
 
   const cancelNotification = () => {
-    const invitationId = getGlobalNotificationManagerState("lastInvitationSended").id
+    const invitationId = getGlobalNotificationManagerState("lastInvitationSended")?.id
     if (!invitationId) return
 
     return request({

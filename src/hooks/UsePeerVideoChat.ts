@@ -322,7 +322,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             }
         })
 
-        StreamManager.getMediaStreams({ onlyAudio: invitation.startWithVoice })
+        StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice })
             .then((s) => {
                 if (invitation.startWithVoice === false) {
                     const video = s.getVideoTracks()[0]
@@ -341,7 +341,28 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }
 
     const sendRequest = async ({ toUserNickname, startWithVoice = false }: { toUserNickname: string, startWithVoice?: boolean }) => {
-        return notificationManager.sendInvitation({ toUserNickname, startWithVoice })
+        StreamManager.getAvailableDevices()
+        .then((r) => {
+            let promise = Promise.reject<any>();
+            if (startWithVoice === true) {
+                if (r.microphone === false) {
+                    setIsAwaitingResponse(true)
+                    const msg = buildDefaultPlayerMessage("There is a problem connecting to your microphone. please check your connection to these devices.")
+                    setChildNode({ node: msg })
+                    setCurrentVideoChat({})
+            } else {
+                    promise = notificationManager.sendInvitation({ toUserNickname, startWithVoice })
+                }
+            } else if (r.microphone === false && r.webcam === false) {
+                setIsAwaitingResponse(true)
+                const msg = buildDefaultPlayerMessage("There is a problem connecting to your microphone and camera. please check your connection to these devices.")
+                setChildNode({ node: msg })
+                setCurrentVideoChat({})
+            } else {
+                promise = notificationManager.sendInvitation({ toUserNickname, startWithVoice })
+            }
+            return promise
+        })
             .then(({ data }) => {
                 setIsAwaitingResponse(true)
                 const msg = buildDefaultPlayerMessage("Waiting response")
@@ -356,7 +377,28 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const acceptInvitation = ({ invitation }: { invitation: any }) => {
         setCurrentVideoChat(invitation.videoChat)
         const socket = startSocketConnection()
-        StreamManager.getMediaStreams({ onlyAudio: invitation.startWithVoice })
+        StreamManager.getAvailableDevices()
+        .then((r) => {
+            let promise = Promise.reject<any>();
+            if (invitation.startWithVoice === true) {
+                if (r.microphone === false) {
+                    setIsAwaitingResponse(true)
+                    const msg = buildDefaultPlayerMessage("There is a problem connecting to your microphone. please check your connection to these devices.")
+                    setChildNode({ node: msg })
+                    setCurrentVideoChat({})
+            } else {
+                    promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice })
+                }
+            } else if (r.microphone === false && r.webcam === false) {
+                setIsAwaitingResponse(true)
+                const msg = buildDefaultPlayerMessage("There is a problem connecting to your microphone and camera. please check your connection to these devices.")
+                setChildNode({ node: msg })
+                setCurrentVideoChat({})
+            } else {
+                promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice })
+            }
+            return promise
+        })
             .then(localStream => {
                 if (localStream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                     setModalMessage("We cannot find a video stream from the current device. Please ensure your camera is set up properly.")

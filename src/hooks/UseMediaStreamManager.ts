@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react"
 import { createGlobalState } from "react-hooks-global-state";
 import SimplePeer from "simple-peer";
+var DetectRTC = require('detectrtc');
+
 
 enum BroadcastTypes {
   'AUDIO',
@@ -78,14 +80,30 @@ export const UseMediaStreamManager = () => {
     }
   }, [remoteStream, onTrackAddedCb])
 
-  const getMediaStreams = (p?: { onlyAudio: boolean }) => {
+  const getAvailableDevices = () => {
+    return new Promise<{ webcam: boolean, microphone: boolean }>((resolve) => {
+      DetectRTC.load(() => {
+        resolve({
+          webcam: DetectRTC.hasWebcam,
+          microphone: DetectRTC.hasMicrophone,
+        })
+      })
+    })
+  }
+
+  const getMediaStreams = (p?: { ignoreAudio?: boolean, ignoreVideo?: boolean }) => {
     const constraints: MediaStreamConstraints = { video: true, audio: true }
-    if (p?.onlyAudio === true) {
+    if (p?.ignoreAudio === true) {
+      constraints.audio = false
+    }
+    if (p?.ignoreVideo === true) {
       constraints.video = false
     }
     return navigator.mediaDevices.getUserMedia(constraints)
       .then((s) => {
-        const types = [BroadcastTypes.AUDIO].concat(p?.onlyAudio === true ? [] : [BroadcastTypes.VIDEO])
+        const types = ([] as BroadcastTypes[])
+          .concat(constraints.video === false ? [] : [BroadcastTypes.VIDEO])
+          .concat(constraints.audio === false ? [] : [BroadcastTypes.AUDIO])
         setBroadcasting(types)
         setRequestedTracks(types)
         setCurrentMediaStream(s)
@@ -221,6 +239,7 @@ export const UseMediaStreamManager = () => {
     shareVideo,
     shareAudio,
     stopVideo,
+    getAvailableDevices,
     getMediaStreams,
     onTrackAdded: (cb: OnTrackAddedCb) => {
       setOnTrackAddedCb(() => cb)

@@ -322,7 +322,13 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             }
         })
 
-        StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice })
+        StreamManager.getAvailableDevices()
+        .then((r) => {
+            return StreamManager.getMediaStreams({
+                ignoreVideo: invitation.startWithVoice || r.webcam === false,
+                ignoreAudio: r.microphone === false
+            })
+        })
             .then((s) => {
                 if (invitation.startWithVoice === false) {
                     const video = s.getVideoTracks()[0]
@@ -387,7 +393,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                     setChildNode({ node: msg })
                     setCurrentVideoChat({})
             } else {
-                    promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice })
+                    promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice || r.webcam === false })
                 }
             } else if (r.microphone === false && r.webcam === false) {
                 setIsAwaitingResponse(true)
@@ -395,7 +401,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                 setChildNode({ node: msg })
                 setCurrentVideoChat({})
             } else {
-                promise = StreamManager.getMediaStreams({ ignoreVideo: invitation.startWithVoice, ignoreAudio: r.microphone === false })
+                promise = StreamManager.getMediaStreams({
+                    ignoreVideo: invitation.startWithVoice || r.webcam === false,
+                    ignoreAudio: r.microphone === false
+                })
             }
             return promise
         })

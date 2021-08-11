@@ -269,7 +269,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         peer.on('stream', (stream: MediaStream) => {
             if (stream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                 setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
-            } else if (stream.getAudioTracks().length === 0) {
+            } else if (stream.getAudioTracks().length === 0 && invitation.startWithVoice === true) {
                 setModalMessage(`We could not detect any audio source coming for the other user. Please ask him to make sure microphone is setup properly`)
             } else {
                 StreamManager.setCurrentRemoteMediaStream(stream)
@@ -449,7 +449,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
                         console.log(stream.getAudioTracks())
                         if (stream.getVideoTracks().length === 0 && invitation.startWithVoice === false) {
                             setModalMessage(`We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`)
-                        } else if (stream.getAudioTracks().length === 0) {
+                        } else if (stream.getAudioTracks().length === 0 && invitation.startWithVoice === true) {
                             setModalMessage(`We could not detect any audio source coming for the other user. Please ask him to make sure microphone is setup properly`)
                         } else {
                             StreamManager.setCurrentRemoteMediaStream(stream)

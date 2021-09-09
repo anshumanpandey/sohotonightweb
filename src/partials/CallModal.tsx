@@ -1,28 +1,36 @@
-import React from 'react';
+import React from "react";
 //@ts-ignore
-import AudioSpectrum from 'react-audio-spectrum';
-import { UsePeerCall } from '../hooks/UsePeerCall';
-import { callEnded, useGlobalState } from '../state/GlobalState';
-import { BrandColor } from '../utils/Colors';
-import SohoModal from './SohoModal';
+import AudioSpectrum from "react-audio-spectrum";
+import { callEnded, useGlobalState } from "../state/GlobalState";
+import { BrandColor } from "../utils/Colors";
+import SohoModal from "./SohoModal";
 
 const SohoCallModal: React.FC = () => {
-    const [currentCall] = useGlobalState("currentCall");
-    const call = UsePeerCall({ node: document.getElementById('call-div') as HTMLElement })
+  const [currentCall] = useGlobalState("currentCall");
 
-    return (
-        <SohoModal
-            closeOnBackdropClik={false}
-            onClose={() => callEnded()}
-            show={currentCall != null && !(currentCall == "Ending...")}
-            title="Calling..."
-            footer={(close) => <button onClick={() => {
-                close()
-            }} type="button" className="btn btn-default">Hang Up</button>}
+  return (
+    <SohoModal
+      closeOnBackdropClik={false}
+      onClose={() => callEnded()}
+      show={currentCall != null && !(currentCall == "Ending...")}
+      title="Calling..."
+      footer={(close) => (
+        <button
+          onClick={() => {
+            close();
+          }}
+          type="button"
+          className="btn btn-default"
         >
-            <p style={{ fontSize: 20, color: BrandColor, textAlign: 'center' }}>{currentCall}</p>
-            <div id="call-div"></div>
-            {/*call.audioPlayer && (
+          Hang Up
+        </button>
+      )}
+    >
+      <p style={{ fontSize: 20, color: BrandColor, textAlign: "center" }}>
+        {currentCall}
+      </p>
+      <div id="call-div"></div>
+      {/*call.audioPlayer && (
                 <AudioSpectrum
                     id="audio-canvas"
                     height={200}
@@ -40,7 +48,7 @@ const SohoCallModal: React.FC = () => {
                     gap={4}
                 />
             )*/}
-        </SohoModal>
-    );
-}
+    </SohoModal>
+  );
+};
 export default SohoCallModal;

@@ -57,7 +57,8 @@ const buildPlayerSuggestion = () => {
 
 const videoModalTextId = "video-modal-text";
 const buildDefaultPlayerMessage = (
-  text: string = "Wait for a invitation and start a video chat"
+  text: string = "Wait for a invitation and start a video chat",
+  removePlayer: boolean = false
 ) => {
   const newDiv = document.createElement("h2");
   newDiv.id = videoModalTextId;
@@ -65,6 +66,10 @@ const buildDefaultPlayerMessage = (
   newDiv.style.textAlign = "center";
 
   newDiv.appendChild(newContent); //añade texto al div creado.
+
+  if (removePlayer === true) {
+    document.getElementById("my-video")?.remove();
+  }
 
   return newDiv;
 };
@@ -272,21 +277,21 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     }
   };
 
-  const setModalMessage = (txt: string) => {
-    const msg = buildDefaultPlayerMessage(txt);
+  const setModalMessage = (txt: string, removePlayer?: boolean) => {
+    const msg = buildDefaultPlayerMessage(txt, removePlayer);
     setChildNode({ node: msg });
   };
 
   const onInvitationAccepted = async (invitation: any) => {
     setCurrentVideoChat(invitation.videoChat);
-    //setModalMessage("Waiting connection")
     const player = attachVideoPlayer({ parentNode: videoNode });
     player.addDetailMessage("Invitation accepted");
     const socket = startSocketConnection();
     const peer = await buildPeerClient();
     peer.on("error", (err) => {
       setModalMessage(
-        `There was an error when making the connection to the other client: ${err.message}`
+        `There was an error when making the connection to the other client: ${err.message}`,
+        true
       );
       logActionToServer({
         body: JSON.stringify({
@@ -518,7 +523,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
           };
           peer2.on("error", (err) => {
             setModalMessage(
-              `There was an error when making the connection to the other client: ${err.message}`
+              `There was an error when making the connection to the other client: ${err.message}`,
+              true
             );
             peer2.off("signal", onSignal);
             logActionToServer({

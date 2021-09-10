@@ -5,7 +5,7 @@ import { UseCallTracker } from "./UseCallTracker";
 import { startSocketConnection } from "../request/socketClient";
 import { hideVideoModal, useGlobalState } from "../state/GlobalState";
 import { createGlobalState } from "react-hooks-global-state";
-import { buildPeerClient } from "../utils/PeerClient";
+import { buildPeerClient, ViewRoles } from "../utils/PeerClient";
 import { logActionToServer } from "../utils/logaction";
 import { BrandColor } from "../utils/Colors";
 import Color from "color";
@@ -287,7 +287,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const player = attachVideoPlayer({ parentNode: videoNode });
     player.addDetailMessage("Invitation accepted");
     const socket = startSocketConnection();
-    const peer = await buildPeerClient();
+    const peer = await buildPeerClient({ role: ViewRoles.VIEWER });
     peer.on("error", (err) => {
       setModalMessage(
         `There was an error when making the connection to the other client: ${err.message}`,
@@ -514,6 +514,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             stream: localStream,
             initiator: true,
             trickle: true,
+            role: ViewRoles.MASTER,
           });
           const onSignal = (data: any) => {
             socket?.emit("CONNECTION_HANDSHAKE", {

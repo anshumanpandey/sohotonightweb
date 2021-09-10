@@ -48,7 +48,6 @@ import CacheBuster, { CacheBusterState } from "./CacheBuster";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.page";
 import SetupPassword from "./pages/setupPassword/SetupPassword.page";
 import UseIsMobile from "./utils/UseIsMobile";
-import { updateIceServers } from "./utils/PeerClient";
 
 function App() {
   const alert = useAlert();
@@ -64,7 +63,6 @@ function App() {
     answerInvitation();
     if (jwtToken) {
       updateCurrentUser();
-      updateIceServers();
     }
   }, []);
 

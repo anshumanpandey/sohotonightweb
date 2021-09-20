@@ -42,7 +42,7 @@ interface State {
   userData: null | UserData;
   above18: boolean;
   buyTokenModal: boolean;
-  iceServes: [];
+  iceServer: null | RTCIceServer;
 }
 
 const initialState: State = {
@@ -62,7 +62,7 @@ const initialState: State = {
       ? true
       : false,
   buyTokenModal: false,
-  iceServes: [],
+  iceServer: null,
 };
 
 const reducer = (state: any, action: any) => {

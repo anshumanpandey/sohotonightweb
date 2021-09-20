@@ -39,7 +39,6 @@ import CallTest from "./pages/callTest/CallTest.page";
 import BuyTokenModal from "./partials/BuyTokenModal";
 import { answerInvitation } from "./request/socketClient";
 import VoiceCallsTracker from "./partials/NotificationTracker";
-import SohoCallModal from "./partials/CallModal";
 import SohoVideoModal from "./partials/VideoModal";
 import UserIsLogged from "./utils/UserIsLogged";
 import MessagesPage from "./pages/messages/Messages.page";
@@ -217,7 +216,6 @@ function App() {
               <ProtectedRoute path="/logout" component={LogoutPage} />
             </Switch>
             {UserIsLogged() && <BuyConfirmModal />}
-            {UserIsLogged() && <SohoCallModal />}
             {UserIsLogged() && <SohoVideoModal />}
             {UserIsLogged() && buyTokenModal && <BuyTokenModal />}
             {UserIsLogged() && <VoiceCallsTracker />}

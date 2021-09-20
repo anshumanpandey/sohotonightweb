@@ -287,7 +287,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const player = attachVideoPlayer({ parentNode: videoNode });
     player.addDetailMessage("Invitation accepted");
     const socket = startSocketConnection();
-    const peer = await buildPeerClient({ role: ViewRoles.VIEWER });
+    const peer = await buildPeerClient({
+      role: ViewRoles.VIEWER,
+      videoChatId: invitation.videoChat.id,
+    });
     peer.on("error", (err) => {
       setModalMessage(
         `There was an error when making the connection to the other client: ${err.message}`,
@@ -418,7 +421,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   }) => {
     StreamManager.getAvailableDevices()
       .then((r) => {
-        let promise = Promise.reject<any>();
+        let promise = null;
         if (startWithVoice === true) {
           if (r.microphone === false) {
             setIsAwaitingResponse(true);
@@ -446,6 +449,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             startWithVoice,
           });
         }
+        if (promise === null) {
+          return Promise.reject();
+        }
         return promise;
       })
       .then(({ data }) => {
@@ -465,7 +471,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const socket = startSocketConnection();
     StreamManager.getAvailableDevices()
       .then((r) => {
-        let promise = Promise.reject<any>();
+        let promise = null;
         if (invitation.startWithVoice === true) {
           if (r.microphone === false) {
             setIsAwaitingResponse(true);
@@ -494,6 +500,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             ignoreAudio: r.microphone === false,
           });
         }
+        if (promise === null) {
+          return Promise.reject();
+        }
         return promise;
       })
       .then(async (localStream) => {
@@ -515,6 +524,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             initiator: true,
             trickle: true,
             role: ViewRoles.MASTER,
+            videoChatId: invitation.videoChat.id,
           });
           const onSignal = (data: any) => {
             socket?.emit("CONNECTION_HANDSHAKE", {
@@ -649,10 +659,14 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   };
 
   const endCall = (currentChat: any) => {
+    console.log(1);
     if (!currentChat) return;
+    console.log(2);
     const socket = startSocketConnection();
+    console.log(3);
     socket?.emit("END_VIDEO_CHAT", currentChat);
     socket?.off("INVITATION_ACCEPTED");
+    console.log(4);
     setIsOnCall(false);
     hideVideoModal();
     setIsAwaitingResponse(false);

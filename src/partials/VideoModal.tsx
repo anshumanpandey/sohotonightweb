@@ -44,12 +44,12 @@ const SohoVideoModal: React.FC = () => {
 
   const closeCallback = () => {
     setCurrentVideoChat(null);
-    console.log({ isOnCall: videoPeer.isOnCall });
     return videoPeer.isOnCall ? endCall() : cancelNotification();
   };
 
   return (
     <SohoModal
+      hideCrossIcon={true}
       closeOnBackdropClik={false}
       size={"lg"}
       onClose={closeCallback}

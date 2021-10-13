@@ -319,14 +319,14 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         invitation.startWithVoice === false
       ) {
         setModalMessage(
-          `We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`
+          `We could not detect any video source coming for the other user. Please ask him/her to make sure camera is setup properly`
         );
       } else if (
         stream.getAudioTracks().length === 0 &&
         invitation.startWithVoice === true
       ) {
         setModalMessage(
-          `We could not detect any audio source coming for the other user. Please ask him to make sure microphone is setup properly`
+          `We could not detect any audio source coming for the other user. Please ask him/her to make sure microphone is setup properly`
         );
       } else {
         StreamManager.setCurrentRemoteMediaStream(stream);
@@ -455,14 +455,22 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         return promise;
       })
       .then(({ data }) => {
-        setIsAwaitingResponse(true);
-        const msg = buildDefaultPlayerMessage("Waiting response");
-        player.addDetailMessage("waiting for other user to accept request");
-        setChildNode({ node: msg });
-        setCurrentVideoChat(data);
-        notificationManager.onInvitationRejected(() => {
-          onCallEnded();
-        });
+        if (data.statusCode && data.statusCode === 409) {
+          setIsAwaitingResponse(true);
+          const msg = buildDefaultPlayerMessage(data.message);
+          player.addDetailMessage("This person is on another call");
+          setChildNode({ node: msg });
+          setCurrentVideoChat(data);
+        } else {
+          setIsAwaitingResponse(true);
+          const msg = buildDefaultPlayerMessage("Waiting response");
+          player.addDetailMessage("waiting for other user to accept request");
+          setChildNode({ node: msg });
+          setCurrentVideoChat(data);
+          notificationManager.onInvitationRejected(() => {
+            onCallEnded();
+          });
+        }
       });
   };
 
@@ -571,14 +579,14 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
               invitation.startWithVoice === false
             ) {
               setModalMessage(
-                `We could not detect any video source coming for the other user. Please ask him to make sure camera is setup properly`
+                `We could not detect any video source coming for the other user. Please ask him/her to make sure camera is setup properly`
               );
             } else if (
               stream.getAudioTracks().length === 0 &&
               invitation.startWithVoice === true
             ) {
               setModalMessage(
-                `We could not detect any audio source coming for the other user. Please ask him to make sure microphone is setup properly`
+                `We could not detect any audio source coming for the other user. Please ask him/her to make sure microphone is setup properly`
               );
             } else {
               StreamManager.setCurrentRemoteMediaStream(stream);

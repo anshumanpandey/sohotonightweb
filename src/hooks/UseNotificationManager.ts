@@ -130,7 +130,7 @@ export const UseNotificationManager = () => {
         toUserNickname,
         startWithVoice,
       },
-      validateStatus: (httpCode) => httpCode === 409,
+      validateStatus: (httpCode) => httpCode === 409 || httpCode === 200,
     }).then((r) => {
       setLastInvitationSended(r.data);
       return r;
@@ -170,6 +170,7 @@ export const UseNotificationManager = () => {
 
   return {
     notificationsArr,
+    invitationRequest: callTokenReq,
     sendInvitation,
     acceptInvitation,
     rejectInvitation,

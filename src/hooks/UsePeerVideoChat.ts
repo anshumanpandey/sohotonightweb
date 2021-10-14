@@ -711,6 +711,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     requestFullScreen: () => {
       player.requestMainVideoFullScreen();
     },
+    invitationRequest: notificationManager.invitationRequest,
     isBroadcastingVideo: StreamManager.isBroadcastingVideo(),
     isBroadcastingAudio: StreamManager.isBroadcastingAudio(),
     canStartChat: isOnCall === false && isAwaitingResponse === false,

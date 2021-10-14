@@ -1,15 +1,11 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import { UsePeerVideo } from "../../hooks/UsePeerVideoChat";
+import { Link } from "react-router-dom";
 import { CallIcons } from "../../partials/CallIcons";
-import { useGlobalState } from "../../state/GlobalState";
 import GetUserAge from "../../utils/GetUserAge";
 import UseIsMobile from "../../utils/UseIsMobile";
 import UserLoggedIsModel from "../../utils/UserLoggedIsModel";
 
 const ListPostItem = ({ girl: g }: { girl: any }) => {
-  let history = useHistory();
-
   const isMobile = UseIsMobile();
 
   return (

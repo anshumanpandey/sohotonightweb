@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { UsePeerVideo } from "../hooks/UsePeerVideoChat";
 import {
-  callStarted,
   showVideoChatModal,
   useGlobalState,
   userIsLogged,
@@ -10,7 +9,7 @@ import {
 import SohoLink from "./SohoLink";
 
 export const CallIcons = ({
-  disabled = false,
+  disabled: disabledProp = false,
   model,
   hideMessageIcon = false,
 }: {
@@ -18,10 +17,21 @@ export const CallIcons = ({
   model: any;
   hideMessageIcon?: boolean;
 }) => {
+  const [isDisabled, setIsDisabled] = useState(disabledProp);
   let history = useHistory();
   let [userData] = useGlobalState("userData");
 
   const peerVideo = UsePeerVideo({});
+
+  useEffect(() => {
+    setIsDisabled(disabledProp);
+  }, [disabledProp]);
+
+  useEffect(() => {
+    if (disabledProp !== true) {
+      setIsDisabled(peerVideo.invitationRequest.loading);
+    }
+  }, [peerVideo.invitationRequest, disabledProp]);
 
   return (
     <div
@@ -45,7 +55,7 @@ export const CallIcons = ({
             })
             .then(() => showVideoChatModal());
         }}
-        disabled={disabled}
+        disabled={isDisabled}
         style={{
           textAlign: "end",
           width: "20%",
@@ -73,7 +83,7 @@ export const CallIcons = ({
             .sendRequest({ toUserNickname: model.nickname })
             .then(() => showVideoChatModal());
         }}
-        disabled={disabled}
+        disabled={isDisabled}
         style={{
           textAlign: "end",
           width: "20%",
@@ -96,7 +106,7 @@ export const CallIcons = ({
             }
             history.push(`/messages?startWith=${model.id}`);
           }}
-          disabled={disabled}
+          disabled={isDisabled}
           style={{ textAlign: "end", width: "20%", marginBottom: 0 }}
         >
           <i

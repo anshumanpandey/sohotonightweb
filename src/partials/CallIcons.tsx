@@ -33,6 +33,12 @@ export const CallIcons = ({
     }
   }, [peerVideo.invitationRequest, disabledProp]);
 
+  useEffect(() => {
+    if (disabledProp !== true) {
+      setIsDisabled(!model.isLogged);
+    }
+  }, [model.isLogged]);
+
   return (
     <div
       style={{ display: "flex", flexDirection: "row", justifyContent: "end" }}

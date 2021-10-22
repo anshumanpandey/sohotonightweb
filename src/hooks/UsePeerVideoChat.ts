@@ -64,6 +64,7 @@ const buildDefaultPlayerMessage = (
   newDiv.id = videoModalTextId;
   const newContent = document.createTextNode(text);
   newDiv.style.textAlign = "center";
+  newDiv.style.paddingLeft = "0";
 
   newDiv.appendChild(newContent); //añade texto al div creado.
 
@@ -199,6 +200,17 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
       newDiv.appendChild(newContent); //añade texto al div creado.
 
       parentNode.appendChild(newDiv);
+    },
+    showErrorIcon: () => {
+      const icon = document.createElement("i");
+      icon.className = "fa fa-window-close";
+      icon.ariaHidden = "true";
+      icon.style.display = "block";
+      icon.style.textAlign = "center";
+      icon.style.fontSize = "14rem";
+      icon.style.color = BrandColor;
+
+      parentNode.appendChild(icon);
     },
   };
 };
@@ -458,8 +470,9 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         if (data.statusCode && data.statusCode === 409) {
           setIsAwaitingResponse(true);
           const msg = buildDefaultPlayerMessage(data.message);
-          player.addDetailMessage("This person is on another call");
+          player.addDetailMessage("Could not make the call");
           setChildNode({ node: msg });
+          player.showErrorIcon();
           setCurrentVideoChat(data);
         } else {
           setIsAwaitingResponse(true);

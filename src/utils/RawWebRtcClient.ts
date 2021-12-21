@@ -19,7 +19,7 @@ export const buildPeerClient = async (p: PeerParams & VideoChatIdParam) => {
   const servers = await getIceServers(p);
   return new SimplePeer({
     config: {
-      iceServers: servers ? [servers] : [],
+      iceServers: servers?.servers ? [servers.servers] : [],
     },
     ...p,
   });

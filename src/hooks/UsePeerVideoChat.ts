@@ -1,16 +1,16 @@
-import useAxios from "axios-hooks";
-import SimplePeer from "simple-peer";
 import { useEffect, useState } from "react";
 import { UseCallTracker } from "./UseCallTracker";
 import { startSocketConnection } from "../request/socketClient";
 import { hideVideoModal, useGlobalState } from "../state/GlobalState";
 import { createGlobalState } from "react-hooks-global-state";
-import { buildPeerClient, ViewRoles } from "../utils/PeerClient";
+import { Role } from "amazon-kinesis-video-streams-webrtc";
 import { logActionToServer } from "../utils/logaction";
 import { BrandColor } from "../utils/Colors";
 import Color from "color";
 import { UseMediaStreamManager } from "./UseMediaStreamManager";
 import { UseNotificationManager } from "./UseNotificationManager";
+import { GetMasterClient } from "../utils/peerClient/MasterClient";
+import { getViewClient } from "../utils/peerClient/ViewerClient";
 
 const suggestionDivId = "suggestiondivid";
 const buildPlayerSuggestion = () => {
@@ -218,7 +218,7 @@ const attachVideoPlayer = ({ parentNode }: { parentNode: HTMLElement }) => {
 type State = {
   currentVideoChat: any;
   isOnCall: boolean;
-  currentPeer: SimplePeer.Instance | undefined;
+  currentPeer: RTCPeerConnection | undefined;
 };
 export const {
   useGlobalState: useVideoState,
@@ -248,13 +248,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   const notificationManager = UseNotificationManager();
 
   const timeTracker = UseCallTracker();
-
-  const [callTokenReq, request] = useAxios(
-    {
-      method: "GET",
-    },
-    { manual: true }
-  );
 
   useEffect(() => {
     if (!userData) return;
@@ -299,33 +292,36 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
     const player = attachVideoPlayer({ parentNode: videoNode });
     player.addDetailMessage("Invitation accepted");
     const socket = startSocketConnection();
-    const peer = await buildPeerClient({
-      role: ViewRoles.VIEWER,
-      videoChatId: invitation.videoChat.id,
-    });
-    peer.on("error", (err) => {
+    const p = {
+      role: Role.VIEWER,
+      videoChatUuid: invitation.videoChat.uuid,
+      receiverUuid: invitation.receiverUuid,
+      clientUserId: "654as8dasd",
+      startWithVoice: invitation.videoChat.startWithVoice,
+      onReadyToSendTrack: (peer: RTCPeerConnection) => {
+        setCurrentPeer(peer);
+        return StreamManager.getMediaStreams({
+          ignoreVideo: true,
+        }).then((streams) => {
+          streams.getTracks().forEach((track) => {
+            peer.addTrack(track, streams);
+          });
+        });
+      },
+    };
+    const client = await getViewClient(p);
+
+    if (client === false) {
       setModalMessage(
-        `There was an error when making the connection to the other client: ${err.message}`,
-        true
+        `We could not detect any audio source coming for the other user. Please ask him/her to make sure microphone is setup properly`
       );
-      logActionToServer({
-        body: JSON.stringify({
-          event: "ONINVITATIONACCEPTED_PEER_ERROR",
-          message: err.message,
-          stack: err.stack,
-        }),
-      });
-    });
+      return;
+    }
 
-    socket?.on("INVITATION_HANDSHAKE", (i: any) => {
-      peer.signal(i);
+    client.onPeerCreated((peer) => {
+      setCurrentPeer(peer);
     });
-    peer.on("signal", (data) => {
-      socket?.emit("CONNECTION_HANDSHAKE", { handshake: data, invitation });
-    });
-
-    peer.on("stream", (stream: MediaStream) => {
-      player.addDetailMessage("recieved remote stream");
+    client.onNewTrack((stream) => {
       if (
         stream.getVideoTracks().length === 0 &&
         invitation.startWithVoice === false
@@ -342,54 +338,25 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         );
       } else {
         StreamManager.setCurrentRemoteMediaStream(stream);
-        const globalMediaStream = new MediaStream();
+        const globalMediaStream = new MediaStream(
+          invitation.videoChat.startWithVoice
+            ? stream.getAudioTracks()
+            : stream.getTracks()
+        );
         player.addRemoteStream(globalMediaStream);
 
-        logActionToServer({
-          body: JSON.stringify({
-            event: "ONINVITATIONACCEPTED_PEER_STREAM",
-            remoteStream: stream,
-          }),
-        });
-        const tracks =
-          invitation.startWithVoice === true
-            ? stream.getAudioTracks()
-            : stream.getTracks();
-        player.addDetailMessage(
-          `adding ${tracks.length} tracks to the current player`
-        );
-        tracks.forEach((t: any) => {
-          console.log({ t });
-          globalMediaStream.addTrack(t);
-        });
-        logActionToServer({
-          body: JSON.stringify({
-            event: "ONCALLACCEPTED_REMOTESTREAM_TRACKS",
-            amount: tracks,
-          }),
-        });
-
+        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
         socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
-          const newStream = new MediaStream();
-          const audioTracks = await StreamManager.getRemoteAudio();
-          if (audioTracks) {
-            audioTracks.forEach((t) => newStream.addTrack(t));
-          }
+          const m = await StreamManager.getRemoteAudio();
+          const newStream = new MediaStream(m);
           player.addRemoteStream(newStream);
         });
         socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
-          const tracks = StreamManager.isBroadcastingAudio()
-            ? StreamManager.getRemoteTracks()
-            : Promise.resolve(stream.getVideoTracks());
-          const tracksToAdd = await tracks;
-          console.log("RESUMED_VIDEO_BROADCAST_1", tracksToAdd);
-          const newStream = new MediaStream(tracksToAdd);
+          const tracks = StreamManager.getRemoteVideo();
+          console.log("RESUMED_VIDEO_BROADCAST_1", tracks);
+          const audioTracks = await StreamManager.getRemoteAudio();
+          const newStream = new MediaStream(tracks.concat(audioTracks));
           player.addRemoteStream(newStream);
-          StreamManager.onTrackAdded((newT) => {
-            if (newT) {
-              newStream.addTrack(newT);
-            }
-          });
         });
 
         timeTracker.startTracker({
@@ -399,29 +366,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         setIsOnCall(true);
       }
     });
-
-    StreamManager.getAvailableDevices()
-      .then((r) => {
-        return StreamManager.getMediaStreams({
-          ignoreVideo: invitation.startWithVoice || r.webcam === false,
-          ignoreAudio: r.microphone === false,
-        });
-      })
-      .then((s) => {
-        if (invitation.startWithVoice === false) {
-          const video = s.getVideoTracks()[0];
-          player.displayPreview(video);
-          logActionToServer({
-            body: JSON.stringify({
-              event: "ONCALLACCEPTED_DISPLAY_PREVIEW",
-              amount: video,
-            }),
-          });
-        }
-        peer.addStream(s);
-        socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
-      });
-    setCurrentPeer(peer);
   };
 
   const sendRequest = async ({
@@ -540,79 +484,38 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
           }
 
           setModalMessage("Waiting for the other user to start the connection");
-          const peer2 = await buildPeerClient({
-            stream: localStream,
-            initiator: true,
-            trickle: true,
-            role: ViewRoles.MASTER,
-            videoChatId: invitation.videoChat.id,
+
+          const streams = await StreamManager.getMediaStreams({
+            ignoreVideo: invitation.videoChat.startWithVoice,
           });
-          const onSignal = (data: any) => {
-            socket?.emit("CONNECTION_HANDSHAKE", {
-              handshake: data,
-              invitation,
-            });
+          const tracks = streams.getTracks();
+          const p = {
+            role: Role.MASTER,
+            videoChatUuid: invitation.videoChat.uuid,
+            receiverUuid: invitation.receiverUuid,
+            startWithVoice: invitation.videoChat.startWithVoice,
+            onReadyToSendTrack: (peer: RTCPeerConnection) => {
+              setCurrentPeer(peer);
+              tracks.forEach((track) => peer.addTrack(track, streams));
+            },
           };
-          peer2.on("error", (err) => {
+          const client = await GetMasterClient(p);
+
+          if (client === false) {
             setModalMessage(
-              `There was an error when making the connection to the other client: ${err.message}`,
-              true
+              "We cannot find a video stream from the current device. Please ensure your camera is set up properly."
             );
-            peer2.off("signal", onSignal);
-            logActionToServer({
-              body: JSON.stringify({
-                event: "ACCEPTINVITATION_ERROR",
-                message: err.message,
-                stack: err.stack,
-              }),
-            });
-          });
-          peer2.on("signal", onSignal);
-          socket?.on("INVITATION_HANDSHAKE", (i: any) => {
-            peer2.signal(i);
+            return;
+          }
+
+          client.onPeerCreated((peer) => {
+            setCurrentPeer(peer);
           });
 
-          peer2.on("stream", async (stream: MediaStream) => {
-            logActionToServer({
-              body: JSON.stringify({
-                event: "ACCEPTINVITATION_ONSTREAM_PEER_EVENT",
-                remoteStream: stream,
-              }),
-            });
-            console.log(stream);
-            console.log(stream.getVideoTracks());
-            console.log(stream.getAudioTracks());
-            player.addDetailMessage(
-              `received remote stream | ${
-                stream.getTracks().length
-              } tracks included`
-            );
-            if (
-              stream.getVideoTracks().length === 0 &&
-              invitation.startWithVoice === false
-            ) {
-              setModalMessage(
-                `We could not detect any video source coming for the other user. Please ask him/her to make sure camera is setup properly`
-              );
-            } else if (
-              stream.getAudioTracks().length === 0 &&
-              invitation.startWithVoice === true
-            ) {
-              setModalMessage(
-                `We could not detect any audio source coming for the other user. Please ask him/her to make sure microphone is setup properly`
-              );
-            } else {
-              StreamManager.setCurrentRemoteMediaStream(stream);
-              const tracks = await StreamManager.getRemoteTracks();
-              const globalMediaStream = new MediaStream(tracks);
-              player.addRemoteStream(globalMediaStream);
-              logActionToServer({
-                body: JSON.stringify({
-                  event: "ACCEPTINVITATION_STREAM",
-                  remoteStream: stream,
-                }),
-              });
-            }
+          client.onNewTrack((stream) => {
+            StreamManager.setCurrentRemoteMediaStream(stream);
+            const globalMediaStream = new MediaStream(stream.getAudioTracks());
+            player.addRemoteStream(globalMediaStream);
 
             socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
             socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
@@ -621,8 +524,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
               player.addRemoteStream(newStream);
             });
             socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
-              const tracks = stream.getVideoTracks();
-              console.log("RESUMED_VIDEO_BROADCAST_2", tracks);
+              const tracks = await StreamManager.getRemoteVideo();
               const audioTracks = await StreamManager.getRemoteAudio();
               const newStream = new MediaStream(tracks.concat(audioTracks));
               player.addRemoteStream(newStream);
@@ -634,7 +536,19 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             });
             setIsOnCall(true);
           });
-          setCurrentPeer(peer2);
+
+          client.onError((err) => {
+            setModalMessage(
+              `There was an error when making the connection to the other client: ${err.message}`,
+              true
+            );
+            logActionToServer({
+              body: JSON.stringify({
+                event: "ACCEPTINVITATION_ERROR",
+                message: err.toString(),
+              }),
+            });
+          });
         }
       });
   };
@@ -666,6 +580,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   };
 
   const shareVideo = () => {
+    if (!currentPeer) return;
     StreamManager.shareVideo({ peer: currentPeer })?.then((localMedia) => {
       if (localMedia) {
         const videoT = localMedia.getVideoTracks()[0];
@@ -680,14 +595,11 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   };
 
   const endCall = (currentChat: any) => {
-    console.log(1);
+    console.log("endCall");
     if (!currentChat) return;
-    console.log(2);
     const socket = startSocketConnection();
-    console.log(3);
     socket?.emit("END_VIDEO_CHAT", currentChat);
     socket?.off("INVITATION_ACCEPTED");
-    console.log(4);
     setIsOnCall(false);
     hideVideoModal();
     setIsAwaitingResponse(false);
@@ -698,6 +610,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   };
 
   const onCallEnded = () => {
+    console.log("onCallEnded");
     const socket = startSocketConnection();
     socket?.off("INVITATION_HANDSHAKE");
     socket?.off("INVITATION_ACCEPTED");

@@ -40,7 +40,9 @@ const SohoVideoModal: React.FC = () => {
     };
   }
 
-  const endCall = () => videoPeer.endCall(currentVideoChat);
+  const endCall = () => {
+    videoPeer.endCall(currentVideoChat);
+  };
 
   const closeCallback = () => {
     setCurrentVideoChat(null);

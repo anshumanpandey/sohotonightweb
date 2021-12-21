@@ -124,7 +124,7 @@ export const UseNotificationManager = () => {
     startWithVoice?: boolean;
   }) => {
     return request({
-      url: "/video/create",
+      url: "/invitation/create",
       method: "post",
       data: {
         toUserNickname,
@@ -141,8 +141,14 @@ export const UseNotificationManager = () => {
     return request({
       url: "/invitation/accept",
       method: "post",
-      data: { invitationId: invitation.id },
-    }).then(() => removeNotification(invitation));
+      data: {
+        invitationId: invitation.id,
+        startWithVoice: invitation.videoChat.startWithVoice,
+      },
+    }).then(({ data }) => {
+      removeNotification(invitation);
+      return data;
+    });
   };
 
   const rejectInvitation = ({ invitationId }: { invitationId: string }) => {

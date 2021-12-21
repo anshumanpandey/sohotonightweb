@@ -23,7 +23,7 @@ const NotificationTracker: React.FC = () => {
     onInvitationAccepted,
   } = UseNotificationManager();
 
-  const [callTokenReq, request] = useAxios(
+  const [callTokenReq] = useAxios(
     {
       method: "GET",
       url: "/call/invitations",
@@ -48,7 +48,7 @@ const NotificationTracker: React.FC = () => {
       {notificationsArr
         .filter((i) => i.responseFromUser === "WAITING_RESPONSE")
         .map((i, idx) => {
-          let notificationBody = `${i.videoChat.createdBy.nickname} is calling you`;
+          let notificationBody = `${i.createdBy.nickname} is calling you`;
           return (
             <div
               key={i.id}
@@ -69,7 +69,7 @@ const NotificationTracker: React.FC = () => {
                 onAccept={() => {
                   Promise.resolve(showVideoChatModal())
                     .then(() => acceptInvitation({ invitation: i }))
-                    .then(() => peerVideo.acceptInvitation({ invitation: i }));
+                    .then((i) => peerVideo.acceptInvitation({ invitation: i }));
                 }}
                 onClose={() => {
                   setRejectingVideoChat(true);

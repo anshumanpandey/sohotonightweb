@@ -28,6 +28,16 @@ const token = localStorage.getItem("jwtToken");
 const userData = localStorage.getItem("userData");
 const selectedTown = localStorage.getItem("selectedTown");
 
+export type KinesisSetup = {
+  servers: RTCIceServer;
+  signalingData: {
+    role: string;
+    arnChannel: string;
+    endpointsByProtocol: Record<string, string>;
+  };
+  receiverUuid?: string;
+};
+
 interface State {
   globalLoading: boolean;
   error: null | string;
@@ -42,7 +52,7 @@ interface State {
   userData: null | UserData;
   above18: boolean;
   buyTokenModal: boolean;
-  iceServer: null | RTCIceServer;
+  iceServer: null | KinesisSetup;
 }
 
 const initialState: State = {

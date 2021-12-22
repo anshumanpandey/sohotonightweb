@@ -60,7 +60,7 @@ const SohoVideoModal: React.FC = () => {
       footer={() => {
         return (
           <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <i
+            {/*<i
               onClick={
                 videoPeer.isBroadcastingAudio
                   ? videoPeer.muteMyself
@@ -89,7 +89,7 @@ const SohoVideoModal: React.FC = () => {
               style={videIconStyles}
               className={`fa fa-expand`}
               aria-hidden="true"
-            ></i>
+            ></i>*/}
             <i
               onClick={closeCallback}
               style={iconBaseStyle}

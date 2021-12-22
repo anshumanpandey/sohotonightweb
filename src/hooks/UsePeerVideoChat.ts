@@ -12,7 +12,7 @@ import { UseNotificationManager } from "./UseNotificationManager";
 import { GetMasterClient } from "../utils/peerClient/MasterClient";
 import { getViewClient } from "../utils/peerClient/ViewerClient";
 
-const StreamStore = new Map();
+const StreamStore = new Map<"AUDIO" | "VIDEO", MediaStreamTrack>();
 const StreamPool = {
   addTrack: (forType: "AUDIO" | "VIDEO", track: MediaStreamTrack) => {
     StreamStore.set(forType, track);

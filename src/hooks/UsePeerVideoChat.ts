@@ -338,24 +338,23 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         );
       } else {
         StreamManager.setCurrentRemoteMediaStream(stream);
-        /*const globalMediaStream = new MediaStream(
+        const globalMediaStream = new MediaStream(
           invitation.videoChat.startWithVoice
             ? stream.getAudioTracks()
             : stream.getTracks()
-        );*/
-        const globalMediaStream = new MediaStream(stream.getTracks());
+        );
         player.addRemoteStream(globalMediaStream);
 
         socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
         socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
-          const m = await StreamManager.getRemoteAudio();
+          const m = await stream.getAudioTracks();
           const newStream = new MediaStream(m);
           player.addRemoteStream(newStream);
         });
         socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
-          const tracks = StreamManager.getRemoteVideo();
+          const tracks = stream.getVideoTracks();
           console.log("RESUMED_VIDEO_BROADCAST_1", tracks);
-          const audioTracks = await StreamManager.getRemoteAudio();
+          const audioTracks = await stream.getAudioTracks();
           const newStream = new MediaStream(tracks.concat(audioTracks));
           player.addRemoteStream(newStream);
         });
@@ -515,19 +514,18 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
           client.onNewTrack((stream) => {
             StreamManager.setCurrentRemoteMediaStream(stream);
-            //const globalMediaStream = new MediaStream(stream.getAudioTracks());
-            const globalMediaStream = new MediaStream(stream.getTracks());
+            const globalMediaStream = new MediaStream(stream.getAudioTracks());
             player.addRemoteStream(globalMediaStream);
 
             socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
             socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
-              const m = await StreamManager.getRemoteAudio();
+              const m = await stream.getAudioTracks();
               const newStream = new MediaStream(m);
               player.addRemoteStream(newStream);
             });
             socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
-              const tracks = await StreamManager.getRemoteVideo();
-              const audioTracks = await StreamManager.getRemoteAudio();
+              const tracks = await stream.getVideoTracks();
+              const audioTracks = await stream.getAudioTracks();
               const newStream = new MediaStream(tracks.concat(audioTracks));
               player.addRemoteStream(newStream);
               StreamManager.onTrackAdded((newT) => {

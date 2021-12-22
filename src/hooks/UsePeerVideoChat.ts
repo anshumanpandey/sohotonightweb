@@ -338,11 +338,12 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
         );
       } else {
         StreamManager.setCurrentRemoteMediaStream(stream);
-        const globalMediaStream = new MediaStream(
+        /*const globalMediaStream = new MediaStream(
           invitation.videoChat.startWithVoice
             ? stream.getAudioTracks()
             : stream.getTracks()
-        );
+        );*/
+        const globalMediaStream = new MediaStream(stream.getTracks());
         player.addRemoteStream(globalMediaStream);
 
         socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
@@ -514,7 +515,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
           client.onNewTrack((stream) => {
             StreamManager.setCurrentRemoteMediaStream(stream);
-            const globalMediaStream = new MediaStream(stream.getAudioTracks());
+            //const globalMediaStream = new MediaStream(stream.getAudioTracks());
+            const globalMediaStream = new MediaStream(stream.getTracks());
             player.addRemoteStream(globalMediaStream);
 
             socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());

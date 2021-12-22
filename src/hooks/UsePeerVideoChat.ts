@@ -580,15 +580,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
   };
 
   const shareVideo = () => {
-    if (!currentPeer) return;
-    StreamManager.shareVideo({ peer: currentPeer })?.then((localMedia) => {
-      if (localMedia) {
-        const videoT = localMedia.getVideoTracks()[0];
-        if (videoT) {
-          player.displayPreview(videoT);
-        }
-      }
-    });
+    StreamManager.shareVideo();
     const socket = startSocketConnection();
     const currentVideoChat = getGlobalVideoState("currentVideoChat");
     socket?.emit("RESUME_VIDEO_BROADCAST", { currentVideoChat });

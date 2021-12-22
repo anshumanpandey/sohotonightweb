@@ -170,60 +170,23 @@ export const UseMediaStreamManager = () => {
 
   const stopVideoBroadcast = () => {
     setBroadcasting((p) => [...p.filter((t) => t !== BroadcastTypes.VIDEO)]);
-    getGlobalState("currentMediaStream")
-      ?.getVideoTracks()
-      .forEach((t) => {
-        t.enabled = false;
-      });
   };
 
   const stopAudioBroadcast = () => {
     setBroadcasting((p) => [...p.filter((t) => t !== BroadcastTypes.AUDIO)]);
-    getGlobalState("currentMediaStream")
-      ?.getAudioTracks()
-      .forEach((t) => {
-        t.enabled = false;
-      });
   };
 
-  const shareVideo = ({ peer }: { peer?: RTCPeerConnection }) => {
+  const shareVideo = () => {
     setBroadcasting((p) =>
       p.filter((t) => t !== BroadcastTypes.VIDEO).concat([BroadcastTypes.VIDEO])
     );
-    const localStream = getGlobalState("currentMediaStream");
-    if (!localStream) return;
-
-    if (hasRequestedVideo() === false) {
-      const newStream = new MediaStream();
-      return navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => stream.getVideoTracks())
-        .then((videoTracks) => {
-          videoTracks.forEach((t) => {
-            newStream.addTrack(t);
-            peer?.addTrack(t, newStream);
-          });
-          setCurrentMediaStream(newStream);
-        })
-        .then(() => setRequestedTracks((p) => [...p, BroadcastTypes.VIDEO]))
-        .then(() => newStream);
-    } else {
-      localStream.getVideoTracks().forEach((t) => {
-        t.enabled = true;
-      });
-      return Promise.resolve(localStream);
-    }
+    setRequestedTracks((p) => [...p, BroadcastTypes.VIDEO]);
   };
 
   const shareAudio = () => {
     setBroadcasting((p) =>
       p.filter((t) => t !== BroadcastTypes.AUDIO).concat([BroadcastTypes.AUDIO])
     );
-    getGlobalState("currentMediaStream")
-      ?.getAudioTracks()
-      .forEach((t) => {
-        t.enabled = true;
-      });
   };
 
   const getLocalVideo = () => {

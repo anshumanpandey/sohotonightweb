@@ -43,14 +43,7 @@ export const GetMasterClient = async (p: {
       eventEmitter.emit("track", event.streams[0]);
     });
 
-    //await p.onReadyToSendTrack(peerConnection);
-    const localStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    });
-    localStream
-      .getTracks()
-      .forEach((track) => peerConnection?.addTrack(track, localStream));
+    await p.onReadyToSendTrack(peerConnection);
     await peerConnection.setRemoteDescription(offer);
 
     await peerConnection.setLocalDescription(

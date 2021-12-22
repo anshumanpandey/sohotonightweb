@@ -20,16 +20,6 @@ export const GetMasterClient = async (p: {
   }
   const { signalingClient, peerConfig } = kinesis;
 
-  const resolution = { width: { ideal: 640 }, height: { ideal: 480 } };
-  const constraints: MediaStreamConstraints = {
-    video: resolution,
-    audio: true,
-  };
-
-  if (p.startWithVoice === true) {
-    constraints.video = false;
-  }
-
   signalingClient.on("open", async () => {
     console.log("[MASTER] Connected to signaling service");
   });
@@ -53,7 +43,14 @@ export const GetMasterClient = async (p: {
       eventEmitter.emit("track", event.streams[0]);
     });
 
-    await p.onReadyToSendTrack(peerConnection);
+    //await p.onReadyToSendTrack(peerConnection);
+    const localStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+    localStream
+      .getTracks()
+      .forEach((track) => peerConnection?.addTrack(track, localStream));
     await peerConnection.setRemoteDescription(offer);
 
     await peerConnection.setLocalDescription(

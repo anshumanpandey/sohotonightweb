@@ -315,7 +315,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
       onReadyToSendTrack: (peer: RTCPeerConnection) => {
         setCurrentPeer(peer);
         return StreamManager.getMediaStreams({
-          ignoreVideo: true,
+          //TODO: commented for testing purposes
+          //ignoreVideo: true,
         }).then((streams) => {
           streams.getTracks().forEach((track) => {
             peer.addTrack(track, streams);
@@ -507,7 +508,8 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
           setModalMessage("Waiting for the other user to start the connection");
 
           const streams = await StreamManager.getMediaStreams({
-            ignoreVideo: invitation.videoChat.startWithVoice,
+            //TODO: commented for testing purposes
+            //ignoreVideo: invitation.videoChat.startWithVoice,
           });
           const tracks = streams.getTracks();
           const p = {

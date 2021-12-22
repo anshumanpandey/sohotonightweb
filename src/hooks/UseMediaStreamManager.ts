@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { createGlobalState } from "react-hooks-global-state";
-import SimplePeer from "simple-peer";
 var DetectRTC = require("detectrtc");
 
 enum BroadcastTypes {

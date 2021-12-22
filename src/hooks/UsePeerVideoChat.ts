@@ -12,6 +12,20 @@ import { UseNotificationManager } from "./UseNotificationManager";
 import { GetMasterClient } from "../utils/peerClient/MasterClient";
 import { getViewClient } from "../utils/peerClient/ViewerClient";
 
+const StreamStore = new Map();
+const StreamPool = {
+  addTrack: (forType: "AUDIO" | "VIDEO", track: MediaStreamTrack) => {
+    StreamStore.set(forType, track);
+  },
+  removeTrack: (forType: "AUDIO" | "VIDEO") => {
+    StreamStore.delete(forType);
+  },
+  getGeneratedStream: () => {
+    const allTracks = Array.from(StreamStore.values());
+    return new MediaStream(allTracks);
+  },
+};
+
 const suggestionDivId = "suggestiondivid";
 const buildPlayerSuggestion = () => {
   const newContent = document.createTextNode(`X`);
@@ -347,16 +361,23 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
         socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
         socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
-          const m = await stream.getAudioTracks();
-          const newStream = new MediaStream(m);
-          player.addRemoteStream(newStream);
+          StreamPool.removeTrack("VIDEO");
+          player.addRemoteStream(StreamPool.getGeneratedStream());
         });
         socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
           const tracks = stream.getVideoTracks();
-          console.log("RESUMED_VIDEO_BROADCAST_1", tracks);
-          const audioTracks = await stream.getAudioTracks();
-          const newStream = new MediaStream(tracks.concat(audioTracks));
-          player.addRemoteStream(newStream);
+          StreamPool.addTrack("VIDEO", tracks[0]);
+          player.addRemoteStream(StreamPool.getGeneratedStream());
+        });
+
+        socket?.on("STOPPED_AUDIO_BROADCAST", async (i: any) => {
+          StreamPool.removeTrack("AUDIO");
+          player.addRemoteStream(StreamPool.getGeneratedStream());
+        });
+        socket?.on("RESUMED_AUDIO_BROADCAST", async (i: any) => {
+          const tracks = await stream.getAudioTracks();
+          StreamPool.addTrack("AUDIO", tracks[0]);
+          player.addRemoteStream(StreamPool.getGeneratedStream());
         });
 
         timeTracker.startTracker({
@@ -519,20 +540,23 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
             socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
             socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
-              const m = await stream.getAudioTracks();
-              const newStream = new MediaStream(m);
-              player.addRemoteStream(newStream);
+              StreamPool.removeTrack("VIDEO");
+              player.addRemoteStream(StreamPool.getGeneratedStream());
             });
             socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
               const tracks = await stream.getVideoTracks();
-              const audioTracks = await stream.getAudioTracks();
-              const newStream = new MediaStream(tracks.concat(audioTracks));
-              player.addRemoteStream(newStream);
-              StreamManager.onTrackAdded((newT) => {
-                if (newT) {
-                  newStream.addTrack(newT);
-                }
-              });
+              StreamPool.addTrack("VIDEO", tracks[0]);
+              player.addRemoteStream(StreamPool.getGeneratedStream());
+            });
+
+            socket?.on("STOPPED_AUDIO_BROADCAST", async (i: any) => {
+              StreamPool.removeTrack("AUDIO");
+              player.addRemoteStream(StreamPool.getGeneratedStream());
+            });
+            socket?.on("RESUMED_AUDIO_BROADCAST", async (i: any) => {
+              const tracks = await stream.getAudioTracks();
+              StreamPool.addTrack("AUDIO", tracks[0]);
+              player.addRemoteStream(StreamPool.getGeneratedStream());
             });
             setIsOnCall(true);
           });

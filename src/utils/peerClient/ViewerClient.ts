@@ -66,11 +66,11 @@ export const getViewClient = async (p: {
     eventEmitter.emit("error", error);
   });
 
-  peerConnection.addEventListener("icecandidate", ({ candidate }) => {
+  peerConnection.onicecandidate = ({ candidate }) => {
     if (candidate) {
       signalingClient.sendIceCandidate(candidate);
     }
-  });
+  };
 
   peerConnection.ontrack = (event) => {
     eventEmitter.emit("track", event.streams[0]);

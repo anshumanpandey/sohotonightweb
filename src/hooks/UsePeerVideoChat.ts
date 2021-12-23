@@ -319,13 +319,13 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
           //TODO: commented for testing purposes
           //ignoreVideo: true,
         })*/
-        navigator.mediaDevices
+        /*navigator.mediaDevices
           .getUserMedia({ video: true, audio: true })
           .then((streams) => {
             streams.getTracks().forEach((track) => {
               peer.addTrack(track, streams);
             });
-          });
+          });*/
       },
     };
     const client = await getViewClient(p);

@@ -26,7 +26,14 @@ export const getViewClient = async (p: {
   signalingClient.on("open", async () => {
     console.log("[VIEWER] Connected to signaling service");
 
-    await p.onReadyToSendTrack(peerConnection);
+    //await p.onReadyToSendTrack(peerConnection);
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((streams) => {
+        streams.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, streams);
+        });
+      });
     await peerConnection.setLocalDescription(
       await peerConnection.createOffer({
         offerToReceiveAudio: true,

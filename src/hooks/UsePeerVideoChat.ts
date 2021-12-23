@@ -314,6 +314,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
       startWithVoice: invitation.videoChat.startWithVoice,
       onReadyToSendTrack: (peer: RTCPeerConnection) => {
         setCurrentPeer(peer);
+        player.addDetailMessage("sending tracks to other user");
         return StreamManager.getMediaStreams({
           //TODO: commented for testing purposes
           //ignoreVideo: true,
@@ -337,6 +338,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
       setCurrentPeer(peer);
     });
     client.onNewTrack((stream) => {
+      player.addDetailMessage("tracks received");
       if (
         stream.getVideoTracks().length === 0 &&
         invitation.startWithVoice === false
@@ -519,6 +521,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             startWithVoice: invitation.videoChat.startWithVoice,
             onReadyToSendTrack: (peer: RTCPeerConnection) => {
               setCurrentPeer(peer);
+              player.addDetailMessage("sending tracks to other user");
               tracks.forEach((track) => peer.addTrack(track, streams));
             },
           };
@@ -536,6 +539,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
           });
 
           client.onNewTrack((stream) => {
+            player.addDetailMessage("tracks received");
             StreamManager.setCurrentRemoteMediaStream(stream);
             const globalMediaStream = new MediaStream(stream.getAudioTracks());
             player.addRemoteStream(globalMediaStream);

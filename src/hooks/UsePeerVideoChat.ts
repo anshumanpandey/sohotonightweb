@@ -529,7 +529,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             onReadyToSendTrack: (peer: RTCPeerConnection) => {
               setCurrentPeer(peer);
               player.addDetailMessage("sending tracks to other user");
-              tracks.forEach((track) => peer.addTrack(track, streams));
+              tracks.forEach((track) => peer.addTrack(track, s));
             },
           };
           const client = await GetMasterClient(p);

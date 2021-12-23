@@ -30,9 +30,11 @@ export const getViewClient = async (p: {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((streams) => {
-        streams.getTracks().forEach((track) => {
-          peerConnection.addTrack(track, streams);
-        });
+        setTimeout(() => {
+          streams.getTracks().forEach((track) => {
+            peerConnection.addTrack(track, streams);
+          });
+        }, 1000);
       });
     await peerConnection.setLocalDescription(
       await peerConnection.createOffer({

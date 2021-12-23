@@ -29,7 +29,6 @@ export const GetMasterClient = async (p: {
 
   signalingClient.on("sdpOffer", async (offer, remoteClientId) => {
     peerConnection = new RTCPeerConnection(peerConfig);
-    eventEmitter.emit("peer", peerConnection);
 
     peerConnection.addEventListener("icecandidate", ({ candidate }) => {
       if (candidate) {
@@ -44,6 +43,8 @@ export const GetMasterClient = async (p: {
       eventEmitter.emit("track", event.streams[0]);
       p.onTrack(event.streams[0]);
     });
+
+    eventEmitter.emit("peer", peerConnection);
 
     await p.onReadyToSendTrack(peerConnection);
     await peerConnection.setRemoteDescription(offer);

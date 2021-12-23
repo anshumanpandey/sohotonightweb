@@ -531,6 +531,36 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
               player.addDetailMessage("sending tracks to other user");
               tracks.forEach((track) => peer.addTrack(track, s));
             },
+            onTrack: (stream: MediaStream) => {
+              player.addDetailMessage("tracks received");
+              StreamManager.setCurrentRemoteMediaStream(stream);
+              const globalMediaStream = new MediaStream(
+                stream.getAudioTracks()
+              );
+              player.addRemoteStream(globalMediaStream);
+
+              socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
+              socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
+                StreamPool.removeTrack("VIDEO");
+                player.addRemoteStream(StreamPool.getGeneratedStream());
+              });
+              socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
+                const tracks = await stream.getVideoTracks();
+                StreamPool.addTrack("VIDEO", tracks[0]);
+                player.addRemoteStream(StreamPool.getGeneratedStream());
+              });
+
+              socket?.on("STOPPED_AUDIO_BROADCAST", async (i: any) => {
+                StreamPool.removeTrack("AUDIO");
+                player.addRemoteStream(StreamPool.getGeneratedStream());
+              });
+              socket?.on("RESUMED_AUDIO_BROADCAST", async (i: any) => {
+                const tracks = await stream.getAudioTracks();
+                StreamPool.addTrack("AUDIO", tracks[0]);
+                player.addRemoteStream(StreamPool.getGeneratedStream());
+              });
+              setIsOnCall(true);
+            },
           };
           const client = await GetMasterClient(p);
 
@@ -543,35 +573,6 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
           client.onPeerCreated((peer) => {
             setCurrentPeer(peer);
-          });
-
-          client.onNewTrack((stream) => {
-            player.addDetailMessage("tracks received");
-            StreamManager.setCurrentRemoteMediaStream(stream);
-            const globalMediaStream = new MediaStream(stream.getAudioTracks());
-            player.addRemoteStream(globalMediaStream);
-
-            socket?.on("VIDEO_CHAT_ENDED", (i: any) => onCallEnded());
-            socket?.on("STOPPED_VIDEO_BROADCAST", async (i: any) => {
-              StreamPool.removeTrack("VIDEO");
-              player.addRemoteStream(StreamPool.getGeneratedStream());
-            });
-            socket?.on("RESUMED_VIDEO_BROADCAST", async (i: any) => {
-              const tracks = await stream.getVideoTracks();
-              StreamPool.addTrack("VIDEO", tracks[0]);
-              player.addRemoteStream(StreamPool.getGeneratedStream());
-            });
-
-            socket?.on("STOPPED_AUDIO_BROADCAST", async (i: any) => {
-              StreamPool.removeTrack("AUDIO");
-              player.addRemoteStream(StreamPool.getGeneratedStream());
-            });
-            socket?.on("RESUMED_AUDIO_BROADCAST", async (i: any) => {
-              const tracks = await stream.getAudioTracks();
-              StreamPool.addTrack("AUDIO", tracks[0]);
-              player.addRemoteStream(StreamPool.getGeneratedStream());
-            });
-            setIsOnCall(true);
           });
 
           client.onError((err) => {

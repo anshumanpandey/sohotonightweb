@@ -7,6 +7,7 @@ export const GetMasterClient = async (p: {
   videoChatUuid: string;
   startWithVoice: boolean;
   onReadyToSendTrack: Function;
+  onTrack: Function;
 }) => {
   const eventEmitter = new EventEmitter();
   const kinesis = await setupKinesis({
@@ -41,6 +42,7 @@ export const GetMasterClient = async (p: {
         "[MASTER] Received remote track from client: " + remoteClientId
       );
       eventEmitter.emit("track", event.streams[0]);
+      p.onTrack(event.streams[0]);
     });
 
     await p.onReadyToSendTrack(peerConnection);

@@ -565,7 +565,7 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
           client.onError((err) => {
             setModalMessage(
-              `There was an error when making the connection to the other client: ${err.message}`,
+              `There was an error when making the connection to the other client: ${err.toString()}`,
               true
             );
             logActionToServer({

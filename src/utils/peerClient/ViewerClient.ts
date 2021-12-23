@@ -72,9 +72,9 @@ export const getViewClient = async (p: {
     }
   });
 
-  peerConnection.addEventListener("track", (event) => {
+  peerConnection.ontrack = (event) => {
     eventEmitter.emit("track", event.streams[0]);
-  });
+  };
 
   console.log("[VIEWER] Starting viewer connection");
   signalingClient.open();

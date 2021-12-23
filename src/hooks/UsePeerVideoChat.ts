@@ -512,10 +512,10 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
 
           setModalMessage("Waiting for the other user to start the connection");
 
-          const streams = await StreamManager.getMediaStreams({
+          /*const streams = await StreamManager.getMediaStreams({
             //TODO: commented for testing purposes
             //ignoreVideo: invitation.videoChat.startWithVoice,
-          });
+          });*/
           const s = await navigator.mediaDevices.getUserMedia({
             audio: true,
             video: true,

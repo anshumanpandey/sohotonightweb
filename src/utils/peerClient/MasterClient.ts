@@ -28,21 +28,21 @@ export const GetMasterClient = async (p: {
   let peerConnection: RTCPeerConnection | undefined = undefined;
 
   signalingClient.on("sdpOffer", async (offer, remoteClientId) => {
-    const peeer = new RTCPeerConnection(peerConfig);
+    peerConnection = new RTCPeerConnection(peerConfig);
 
-    peeer.addEventListener("icecandidate", ({ candidate }) => {
+    peerConnection.addEventListener("icecandidate", ({ candidate }) => {
       if (candidate) {
         signalingClient.sendIceCandidate(candidate, remoteClientId);
       }
     });
 
-    peeer.addEventListener("track", (event) => {
+    peerConnection.ontrack = (event) => {
       console.log(
         "[MASTER] Received remote track from client: " + remoteClientId
       );
       eventEmitter.emit("track", event.streams[0]);
       p.onTrack(event.streams[0]);
-    });
+    };
 
     eventEmitter.emit("peer", peerConnection);
 

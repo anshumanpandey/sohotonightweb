@@ -315,14 +315,17 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
       onReadyToSendTrack: (peer: RTCPeerConnection) => {
         setCurrentPeer(peer);
         player.addDetailMessage("sending tracks to other user");
-        return StreamManager.getMediaStreams({
+        /*StreamManager.getMediaStreams({
           //TODO: commented for testing purposes
           //ignoreVideo: true,
-        }).then((streams) => {
-          streams.getTracks().forEach((track) => {
-            peer.addTrack(track, streams);
+        })*/
+        navigator.mediaDevices
+          .getUserMedia({ video: true, audio: true })
+          .then((streams) => {
+            streams.getTracks().forEach((track) => {
+              peer.addTrack(track, streams);
+            });
           });
-        });
       },
     };
     const client = await getViewClient(p);
@@ -513,7 +516,11 @@ export const UsePeerVideo = (params?: { parentNode?: HTMLElement }) => {
             //TODO: commented for testing purposes
             //ignoreVideo: invitation.videoChat.startWithVoice,
           });
-          const tracks = streams.getTracks();
+          const s = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+          });
+          const tracks = s.getTracks();
           const p = {
             role: Role.MASTER,
             videoChatUuid: invitation.videoChat.uuid,

@@ -36,7 +36,7 @@ export const GetMasterClient = async (p: {
       }
     };
 
-    peerConnection.ontrack = (event) => {
+    peerConnection.ontrack = function (event) {
       console.log(
         "[MASTER] Received remote track from client: " + remoteClientId
       );

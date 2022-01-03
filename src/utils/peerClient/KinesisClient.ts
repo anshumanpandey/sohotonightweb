@@ -93,8 +93,9 @@ export const setupKinesis = async (params: {
   );
   console.log("[MASTER] ICE servers: ", iceServers);
 
-  const peerConfig = {
+  const peerConfig: RTCConfiguration = {
     iceServers,
+    iceTransportPolicy: "relay",
   };
 
   return {

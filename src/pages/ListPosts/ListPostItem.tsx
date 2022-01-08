@@ -47,35 +47,6 @@ const ListPostItem = ({ girl: g }: { girl: any }) => {
             className="img-responsive"
             alt="profile"
           />
-          <div
-            style={{
-              alignItems: "center",
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              position: "absolute",
-              bottom: "10%",
-              right: "20%",
-            }}
-          >
-            {g?.isLogged ? (
-              <>
-                <i
-                  style={{ color: "green", marginRight: "0.5%" }}
-                  className="fa fa-circle"
-                  aria-hidden="true"
-                ></i>
-              </>
-            ) : (
-              <>
-                <i
-                  style={{ color: "gray", marginRight: "0.5%" }}
-                  className="fa fa-circle"
-                  aria-hidden="true"
-                ></i>
-              </>
-            )}
-          </div>
         </Link>
       </div>
       <div

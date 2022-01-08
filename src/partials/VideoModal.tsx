@@ -44,6 +44,10 @@ const SohoVideoModal: React.FC = () => {
 
   const closeCallback = () => {
     setCurrentVideoChat(null);
+    const div = document.getElementById("video-div");
+    if (div) {
+      div.innerHTML = "";
+    }
     return videoPeer.isOnCall ? endCall() : cancelNotification();
   };
 
